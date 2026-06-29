@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Tutorial | Menmozhi Technologies Pvt Ltd</title>
+    <style>
+        :root {
+            --primary-dark: #0f172a;
+            --primary-blue: #1e3a8a;
+            --accent-blue: #2563eb;
+            --bg-light: #f8fafc;
+            --text-dark: #334155;
+            --text-light: #64748b;
+            --white: #ffffff;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* --- Navbar --- */
+        nav {
+            background-color: var(--primary-dark);
+            color: var(--white);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .logo span {
+            color: var(--accent-blue);
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-blue) 100%);
+            color: var(--white);
+            padding: 100px 5%;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            font-weight: 800;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            max-width: 800px;
+            margin: 0 auto 30px auto;
+            color: #cbd5e1;
+        }
+
+        .mission-badge {
+            display: inline-block;
+            background-color: rgba(37, 99, 235, 0.3);
+            border: 1px solid var(--accent-blue);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--accent-blue);
+            color: var(--white);
+            padding: 15px 35px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #1d4ed8;
+        }
+
+        /* --- Course Modules Grid --- */
+        .curriculum-section {
+            padding: 80px 5%;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            color: var(--primary-blue);
+            margin-bottom: 10px;
+        }
+
+        .section-header p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+        
+        .category-title {
+            font-size: 1.8rem;
+            color: var(--primary-dark);
+            margin: 60px 0 30px 0;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--border-color);
+            display: flex;
+            align-items: center;
+        }
+        
+        .category-title span {
+            background: var(--accent-blue);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 1rem;
+            margin-right: 15px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            border-left: 5px solid var(--accent-blue);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-tag {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .card h3 {
+            font-size: 1.25rem;
+            color: var(--primary-dark);
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .card p {
+            color: var(--text-light);
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            flex-grow: 1;
+        }
+
+        .card a {
+            text-decoration: none;
+            color: var(--accent-blue);
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .card a:hover {
+            text-decoration: underline;
+        }
+
+        .card a::after {
+            content: ' →';
+            margin-left: 5px;
+            transition: margin-left 0.2s ease;
+        }
+
+        .card a:hover::after {
+            margin-left: 10px;
+        }
+
+        /* --- Instructor Section --- */
+        .instructor-info {
+            background: #e2e8f0;
+            padding: 50px 5%;
+            text-align: center;
+            border-radius: 12px;
+            max-width: 1300px;
+            margin: 0 auto 80px auto;
+        }
+
+        .instructor-info h3 {
+            color: var(--primary-dark);
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        .instructor-info p {
+            color: var(--text-dark);
+            font-size: 1.1rem;
+        }
+
+        /* --- Footer --- */
+        footer {
+            background: var(--primary-dark);
+            color: var(--white);
+            text-align: center;
+            padding: 30px 5%;
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .hero p { font-size: 1.1rem; }
+            .category-title { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">Python & Gen AI</div>
+        <div style="font-weight: 600;">Menmozhi Technologies Pvt Ltd</div>
+    </nav>
+
+    <header class="hero">
+        <div class="mission-badge">Mission: Train 1000+ Gen AI Engineers</div>
+        <h1>Master Python & Artificial Intelligence</h1>
+        <p>A comprehensive, 23-chapter curriculum guiding you from foundational programming paradigms to advanced Large Language Models and production-level RAG architectures.</p>
+        <a href="#curriculum" class="btn">Explore Curriculum</a>
+    </header>
+
+    <section id="curriculum" class="curriculum-section">
+        <div class="section-header">
+            <h2>Training Modules</h2>
+            <p>Access your learning materials and comprehensive technical guides below.</p>
+        </div>
+
+        <h3 class="category-title"><span>Part 1</span> Python Fundamentals</h3>
+        
+        <div class="grid">
+            <div class="card">
+                <span class="card-tag">Chapter 1</span>
+                <h3>Introduction</h3>
+                <p>Welcome to Python. Learn about the ecosystem, installation, and writing your very first scripts.</p>
+                <a href="./Chapter1_Introduction.html">Read Chapter</a>
+            </div>
+
+            <div class="card">
+                <span class="card-tag">Chapter 2</span>
+                <h3>Variables and Data Types</h3>
+                <p>Understand how memory is managed, defining variables, and working with integers, floats, and booleans.</p>
+                <a href="./Chapter2_Variables_DataTypes.html">Read Chapter</a>
+            </div>
+
+            <div class="card">
+                <span class="card-tag">Chapter 3</span>
+                <h3>Python Operators</h3>
+                <p>Master arithmetic, logical, relational, and assignment operators to perform complex calculations.</p>
+                <a href="./Chapter3_Python_Operators.html">Read Chapter</a>
+            </div>
+
+            <div class="card">
+                <span class="card-tag">Chapter 4</span>
+                <h3>Input, Output and Type Conversion</h3>
+                <p>Interact with users through console inputs, format print statements, and safely cast data types.</p>
+                <a href="./Chapter4_Input_Output_TypeConversion.html">Read Chapter</a>
+            </div>
+
+            <div class="card">
+                <span class="card-tag">Chapter 5</span>
+                <h3>Conditional Statements</h3>
+                <p>Control the flow of your applications using if, elif, and else branching logic.</p>
+                <a href="./Chapter5_Conditional_Statements.html">Read Chapter</a>
+            </div>
+
+            <div class="card">
+                <span class="card-tag">Chapter 6</span>
+                <h3>Loops</h3>
+                <p>Automate repetitive tasks and iterate over data structures using for and while loops.</p>
+                <a href="./Chapter6_Loops.html">Read Chapter</a>
+            </div>
+
+            <div class="card">
+                <span class="card-tag">Chapter 7</span>
+                <h3>Strings</h3>
+                <p>Process, slice, format, and manipulate text data securely and efficiently.</p>
+                <a href="./Chapter7_Strings.html">Read Chapter</a>
+            </div>
+
+            <div class="card">
+                <span class="card-tag">Chapter 8</span>
+                <h3>Lists</h3>
+                <p>Store ordered collections of data. Learn indexing, appending, popping, and list comprehensions.</p>
+                <a href="./Chapter8_Lists.html">Read Chapter</a>
+            </div>
+
+            <div class="card">
+                <span class="card-tag">Chapter 9</span>
+                <h3>Tuples</h3>
+                <p>Work with immutable data structures, tuple packing, and safe variable unpacking.</p>
+                <a href="./Chapter9_Tuples.html">Read Chapter</a>
+            </div>
+
+            <div class="card">
+                <span class="card-tag">Chapter 10</span>
+                <h3>Sets</h3>
+                <p>Manage unique elements and perform mathematical set operations like unions and intersections.</p>
+                <a href="./Chapter10_Sets.html">Read Chapter</a>
+            </div>
+
+            <div class="card">
+                <span class="card-tag">Chapter 11</span>
+                <h3>Modules and Packages</h3>
+                <p>Organize your codebase, import external libraries, and build reusable Python packages.</p>
+                <a href="./Chapter11_Modules_and_Packages.html">Read Chapter</a>
+            </div>
+
+            <div class="card">
+                <span class="card-tag">Chapter 12</span>
+                <h3>Functions</h3>
+                <p>Write clean, modular code with custom functions, *args, **kwargs, and lambda expressions.</p>
+                <a href="./Chapter12_Functions.html">Read Chapter</a>
+            </div>
+
+            <div class="card">
+                <span class="card-tag">Chapter 13</span>
+                <h3>File Handling</h3>
+                <p>Read and write permanent data to the disk using text, binary, CSV, and JSON formats.</p>
+                <a href="./Chapter13_File_Handling.html">Read Chapter</a>
+            </div>
+
+            <div class="card">
+                <span class="card-tag">Chapter 14</span>
+                <h3>Object-Oriented Programming (OOP)</h3>
+                <p>Build scalable architectures using classes, inheritance, encapsulation, and polymorphism.</p>
+                <a href="./Chapter14_OOP.html">Read Chapter</a>
+            </div>
+        </div>
+
+        <h3 class="category-title" style="margin-top: 80px;"><span>Part 2</span> Artificial Intelligence & Generative AI</h3>
+
+        <div class="grid">
+            <div class="card">
+                <span class="card-tag">Chapter 15</span>
+                <h3>Introduction to AI and Generative AI</h3>
+                <p>Understand the evolution of AI and how GenAI is transforming the modern technological landscape.</p>
+                <a href="./Chapter15_Introduction_to_AI_and_GenAI.html">Read Chapter</a>
+            </div>
+
+            <div class="card">
+                <span class="card-tag">Chapter 16</span>
+                <h3>Machine Learning</h3>
+                <p>Dive into supervised vs unsupervised learning, data splitting, algorithms, and evaluation metrics.</p>
+                <a href="./Chapter16_Machine_Learning_Fundamentals.html">Read Chapter</a>
+            </div>
+
+            <div class="card">
+                <span class="card-tag">Chapter 17</span>
+                <h3>Deep Learning Fundamentals</h3>
+                <p>Explore Neural Networks, CNNs, LSTMs, activation functions, and backpropagation mechanics.</p>
+                <a href="./Chapter17_Deep_Learning_Fundamentals.html">Read Chapter</a>
+            </div>
+
+            <div class="card">
+                <span class="card-tag">Chapter 18</span>
+                <h3>Prompt Engineering</h3>
+                <p>Master the art of communicating with AI models. Learn zero-shot, few-shot, and chain-of-thought prompting.</p>
+                <a href="./Chapter18_Prompt_Engineering.html">Read Chapter</a>
+            </div>
+
+            <div class="card">
+                <span class="card-tag">Chapter 19</span>
+                <h3>Large Language Models (LLMs)</h3>
+                <p>Understand the Transformer architecture, attention mechanisms, and how modern LLMs are trained.</p>
+                <a href="./Chapter19_Large_Language_Models.html">Read Chapter</a>
+            </div>
+
+            <div class="card">
+                <span class="card-tag">Chapter 20</span>
+                <h3>Retrieval-Augmented Generation (RAG)</h3>
+                <p>Combine LLMs with Vector Databases (ChromaDB) to ground AI responses in your private enterprise data.</p>
+                <a href="./Chapter20_RAG.html">Read Chapter</a>
+            </div>
+
+            <div class="card">
+                <span class="card-tag">Chapter 21</span>
+                <h3>AI Agents and Agentic AI</h3>
+                <p>Build autonomous systems that can utilize external tools, browse the web, and execute complex workflows.</p>
+                <a href="./Chapter21_AI_Agents_and_Agentic_AI.html">Read Chapter</a>
+            </div>
+
+            <div class="card">
+                <span class="card-tag">Chapter 22</span>
+                <h3>AI Applications and Projects</h3>
+                <p>Apply your knowledge by building end-to-end projects like resume screeners and AI voice call agents.</p>
+                <a href="./Chapter22_AI_Applications_and_Projects.html">Read Chapter</a>
+            </div>
+
+            <div class="card">
+                <span class="card-tag">Chapter 23</span>
+                <h3>Responsible AI, Ethics, Security and Future Trends</h3>
+                <p>Navigate the ethical implications, data privacy, bias mitigation, and the future horizon of AI development.</p>
+                <a href="./Chapter23_Responsible_AI_Ethics_Security_Future.html">Read Chapter</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="instructor-info">
+        <h3>Program Director</h3>
+        <p><strong>Dr. Suresh Kannaiyan Ph.D</strong><br>
+        Founder & Director, Menmozhi Technologies Pvt Ltd</p>
+        <p style="margin-top: 15px; font-size: 1rem; color: #475569;">Dedicated to empowering the next generation of engineers in Trichy to master Generative AI and build real-world applications.</p>
+    </section>
+
+    <footer>
+    <p><strong>Menmozhi Technologies Pvt Ltd</strong></p>
+    <p>📧 contact@menmozhi.com</p>
+    <p>📞 +91 82200 33325</p>
+    <p>&copy; 2026 Menmozhi Technologies. All rights reserved.</p>
+</footer>
+
+
+
+<!-- =========================
+     WHATSAPP FLOATING BUTTON
+========================= -->
+<a href="https://wa.me/918220033325?text=Hello%20Menmozhi%20Technologies"
+   class="whatsapp-btn"
+   target="_blank">
+   💬
+</a>
+
+
+<style>
+
+/* HOME BUTTON */
+.home-btn{
+    position:fixed;
+    top:15px;
+    right:20px;
+    z-index:9999;
+
+    background:linear-gradient(135deg,#2563eb,#1e40af);
+    color:white;
+
+    text-decoration:none;
+    font-weight:600;
+
+    padding:12px 22px;
+    border-radius:50px;
+
+    box-shadow:0 5px 15px rgba(0,0,0,0.25);
+
+    animation:pulse 2s infinite;
+    transition:0.3s;
+}
+
+.home-btn:hover{
+    transform:translateY(-3px);
+}
+
+@keyframes pulse{
+    0%{
+        box-shadow:0 0 0 0 rgba(37,99,235,.7);
+    }
+    70%{
+        box-shadow:0 0 0 18px rgba(37,99,235,0);
+    }
+    100%{
+        box-shadow:0 0 0 0 rgba(37,99,235,0);
+    }
+}
+
+/* WHATSAPP BUTTON */
+.whatsapp-btn{
+    position:fixed;
+    bottom:25px;
+    right:25px;
+
+    width:65px;
+    height:65px;
+
+    border-radius:50%;
+    background:#25D366;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-size:34px;
+    text-decoration:none;
+
+    z-index:9999;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.25);
+
+    animation:bounce 1.5s infinite;
+}
+
+@keyframes bounce{
+    0%,100%{
+        transform:translateY(0);
+    }
+    50%{
+        transform:translateY(-10px);
+    }
+}
+
+/* CONTACT BAR */
+.contact-bar{
+    background:#0f172a;
+    color:white;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:40px;
+
+    flex-wrap:wrap;
+
+    padding:18px;
+    font-size:16px;
+}
+
+.contact-bar a{
+    color:white;
+    text-decoration:none;
+}
+
+.contact-bar a:hover{
+    color:#60a5fa;
+}
+
+/* TABLET */
+@media (max-width:1024px){
+
+    .hero h1{
+        font-size:2.7rem;
+    }
+
+    .hero p{
+        font-size:1.1rem;
+    }
+
+    .grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+/* MOBILE */
+@media (max-width:768px){
+
+    nav{
+        flex-direction:column;
+        gap:8px;
+        text-align:center;
+    }
+
+    .hero{
+        padding:70px 20px;
+    }
+
+    .hero h1{
+        font-size:2rem;
+        line-height:1.2;
+    }
+
+    .hero p{
+        font-size:1rem;
+    }
+
+    .section-header h2{
+        font-size:2rem;
+    }
+
+    .grid{
+        grid-template-columns:1fr;
+    }
+
+    .home-btn{
+        top:10px;
+        right:10px;
+        padding:10px 16px;
+        font-size:14px;
+    }
+
+    .whatsapp-btn{
+        width:55px;
+        height:55px;
+        font-size:28px;
+        bottom:15px;
+        right:15px;
+    }
+
+    .contact-bar{
+        flex-direction:column;
+        gap:10px;
+        text-align:center;
+        font-size:14px;
+    }
+}
+
+/* LARGE SCREEN */
+@media (min-width:1400px){
+
+    .curriculum-section{
+        max-width:1400px;
+    }
+
+    .hero h1{
+        font-size:4rem;
+    }
+}
+
+</style>
+
+</body>
+</html>

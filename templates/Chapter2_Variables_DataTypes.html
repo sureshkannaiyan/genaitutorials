@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 2 - Variables, Data Types & Memory Management (Expanded)</title>
+<style>
+body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#f8fafc;display:flex}
+.sidebar{width:320px;position:fixed;height:100vh;overflow:auto;background:#0f172a;color:white}
+.sidebar h2{padding:20px;text-align:center}
+.sidebar a{display:block;color:white;text-decoration:none;padding:10px 20px}
+.sidebar a:hover{background:#1e293b}
+.content{margin-left:320px;padding:30px;max-width:1300px}
+h1,h2,h3{color:#1e3a8a}
+pre{background:#f1f5f9;padding:12px;border-left:5px solid #2563eb;overflow:auto}
+.note{background:#dbeafe;padding:15px;border-radius:8px}
+table{width:100%;border-collapse:collapse}
+th,td{border:1px solid #ccc;padding:10px}
+
+
+/* Home Button */
+.home-btn{
+    position:fixed;
+    top:20px;
+    right:20px;
+    z-index:9999;
+    background:linear-gradient(135deg,#0f172a,#2563eb);
+    color:#fff;
+    text-decoration:none;
+    padding:12px 20px;
+    border-radius:50px;
+    font-weight:600;
+    font-family:Arial,sans-serif;
+    box-shadow:0 5px 15px rgba(0,0,0,0.3);
+    animation:pulseHome 2s infinite;
+    transition:0.3s;
+}
+
+.home-btn:hover{
+    transform:translateY(-3px) scale(1.05);
+}
+
+@keyframes pulseHome{
+    0%{
+        box-shadow:0 0 0 0 rgba(37,99,235,0.7);
+    }
+    70%{
+        box-shadow:0 0 0 15px rgba(37,99,235,0);
+    }
+    100%{
+        box-shadow:0 0 0 0 rgba(37,99,235,0);
+    }
+}
+
+/* WhatsApp Button */
+.whatsapp-float{
+    position:fixed;
+    width:65px;
+    height:65px;
+    bottom:25px;
+    right:25px;
+    background:#25D366;
+    color:white;
+    border-radius:50%;
+    text-align:center;
+    font-size:34px;
+    line-height:65px;
+    text-decoration:none;
+    z-index:9999;
+    box-shadow:0 5px 20px rgba(0,0,0,0.3);
+    animation:whatsappBounce 1.5s infinite;
+}
+
+.whatsapp-float:hover{
+    transform:scale(1.1);
+}
+
+@keyframes whatsappBounce{
+    0%,100%{
+        transform:translateY(0);
+    }
+    50%{
+        transform:translateY(-10px);
+    }
+}
+
+/* Mobile Responsive */
+@media(max-width:768px){
+    .home-btn{
+        top:10px;
+        right:10px;
+        padding:10px 15px;
+        font-size:14px;
+    }
+
+    .whatsapp-float{
+        width:55px;
+        height:55px;
+        line-height:55px;
+        font-size:28px;
+        bottom:15px;
+        right:15px;
+    }
+}
+</style>
+</head>
+<body>
+
+
+<a href="ai.html" class="home-btn">
+    🏠 Home
+</a>
+
+<!-- WHATSAPP FLOATING BUTTON -->
+<a href="https://wa.me/918220033325?text=Hello%20I%20would%20like%20to%20know%20more"
+   class="whatsapp-float"
+   target="_blank">
+    💬
+</a>
+
+<div class="sidebar">
+<h2>Chapter 2. Variables & Datatypes</h2>
+<a href="#intro">Variables</a>
+<a href="#dynamic">Dynamic Typing</a>
+<a href="#memory">Memory Concepts</a>
+<a href="#datatypes">Data Types</a>
+<a href="#numeric">Numeric Types</a>
+<a href="#strings">Strings</a>
+<a href="#bool">Boolean</a>
+<a href="#mutable">Mutable vs Immutable</a>
+<a href="#casting">Type Casting</a>
+<a href="#input">User Input</a>
+<a href="#id">id() Function</a>
+<a href="#memorymgmt">Memory Management</a>
+<a href="#gc">Garbage Collection</a>
+<a href="#comparison">is vs ==</a>
+<a href="#programs">Programs</a>
+<a href="#mcq">Q & A</a>
+</div>
+
+<div class="content">
+<h2>Chapter 2: Variables, Data Types and Memory Management</h2>
+
+<h2 id="intro">1. Variables</h2>
+<p>A variable is a name used to store data in memory. Variables allow programs to work with dynamic values instead of fixed values.</p>
+
+<pre>
+name = "Suresh"
+age = 35
+salary = 50000
+</pre>
+
+<p>Python automatically determines the type of value assigned to a variable.</p>
+
+<div class="note">
+Unlike C or Java, Python does not require explicit datatype declarations.
+</div>
+
+<h3>Variable Naming Rules</h3>
+<ul>
+<li>Must begin with a letter or underscore (_)</li>
+<li>Cannot begin with a number</li>
+<li>Cannot contain spaces</li>
+<li>Case sensitive</li>
+<li>Keywords cannot be used as variable names</li>
+</ul>
+
+<h2 id="dynamic">2. Dynamic Typing</h2>
+<p>Python is dynamically typed, meaning the datatype is determined during execution.</p>
+
+<pre>
+x = 100
+print(type(x))
+
+x = "Python"
+print(type(x))
+</pre>
+
+<p>The same variable can hold different data types at different times.</p>
+
+<h2 id="memory">3. Understanding Memory</h2>
+
+<pre>
+x = 100
+</pre>
+
+<p>Python performs the following operations:</p>
+<ol>
+<li>Create an object 100 in memory.</li>
+<li>Create a reference variable x.</li>
+<li>Link x to the object.</li>
+</ol>
+
+<pre>
+x = 100
+y = x
+</pre>
+
+<p>Both variables refer to the same memory object.</p>
+
+<h2 id="datatypes">4. Python Data Types</h2>
+
+<table>
+<tr><th>Category</th><th>Datatype</th><th>Example</th></tr>
+<tr><td>Numeric</td><td>int</td><td>100</td></tr>
+<tr><td>Numeric</td><td>float</td><td>99.99</td></tr>
+<tr><td>Numeric</td><td>complex</td><td>3+4j</td></tr>
+<tr><td>Text</td><td>str</td><td>"Python"</td></tr>
+<tr><td>Logical</td><td>bool</td><td>True</td></tr>
+<tr><td>Collection</td><td>list</td><td>[1,2,3]</td></tr>
+<tr><td>Collection</td><td>tuple</td><td>(1,2,3)</td></tr>
+<tr><td>Collection</td><td>set</td><td>{1,2,3}</td></tr>
+<tr><td>Collection</td><td>dict</td><td>{"name":"John"}</td></tr>
+</table>
+
+<h2 id="numeric">5. Numeric Data Types</h2>
+
+<h3>Integer</h3>
+<pre>
+count = 100
+</pre>
+
+<h3>Float</h3>
+<pre>
+price = 99.99
+</pre>
+
+<h3>Complex Numbers</h3>
+<pre>
+z = 5 + 3j
+</pre>
+
+<h3>Arithmetic Operations</h3>
+<pre>
+a = 20
+b = 10
+
+print(a+b)
+print(a-b)
+print(a*b)
+print(a/b)
+print(a//b)
+print(a%b)
+print(a**b)
+</pre>
+
+<h2 id="strings">6. String Data Type</h2>
+
+<p>Strings are sequences of characters enclosed within quotes.</p>
+
+<pre>
+language = "Python"
+</pre>
+
+<h3>Common String Operations</h3>
+
+<pre>
+text = "Python Programming"
+
+print(text.upper())
+print(text.lower())
+print(len(text))
+print(text.replace("Python","AI"))
+</pre>
+
+<h3>String Slicing</h3>
+
+<pre>
+word = "Python"
+
+print(word[0:3])
+print(word[2:])
+print(word[::-1])
+</pre>
+
+<h2 id="bool">7. Boolean Data Type</h2>
+
+<pre>
+is_active = True
+is_admin = False
+</pre>
+
+<pre>
+print(10 > 5)
+print(5 == 10)
+</pre>
+
+<p>Booleans are heavily used in decision making and loops.</p>
+
+<h2 id="mutable">8. Mutable vs Immutable Objects</h2>
+
+<table>
+<tr><th>Mutable</th><th>Immutable</th></tr>
+<tr><td>list</td><td>int</td></tr>
+<tr><td>dict</td><td>float</td></tr>
+<tr><td>set</td><td>str</td></tr>
+<tr><td>bytearray</td><td>tuple</td></tr>
+</table>
+
+<h3>Mutable Example</h3>
+<pre>
+numbers = [10,20]
+numbers.append(30)
+</pre>
+
+<h3>Immutable Example</h3>
+<pre>
+name = "Python"
+name = name + " AI"
+</pre>
+
+<h2 id="casting">9. Type Casting</h2>
+
+<pre>
+age = "25"
+age = int(age)
+</pre>
+
+<pre>
+price = 99.99
+print(int(price))
+</pre>
+
+<pre>
+marks = 95
+print(str(marks))
+</pre>
+
+<h3>Built-in Conversion Functions</h3>
+<ul>
+<li>int()</li>
+<li>float()</li>
+<li>str()</li>
+<li>bool()</li>
+<li>list()</li>
+<li>tuple()</li>
+<li>set()</li>
+</ul>
+
+<h2 id="input">10. User Input</h2>
+
+<pre>
+name = input("Enter Name: ")
+print(name)
+</pre>
+
+<h3>Calculator Example</h3>
+
+<pre>
+a = int(input("Enter Number 1: "))
+b = int(input("Enter Number 2: "))
+
+print("Sum =", a+b)
+</pre>
+
+<h2 id="id">11. id() Function</h2>
+
+<p>The id() function returns the memory address of an object.</p>
+
+<pre>
+a = 100
+b = 100
+
+print(id(a))
+print(id(b))
+</pre>
+
+<p>Often both IDs are the same because Python reuses objects.</p>
+
+<h2 id="memorymgmt">12. Memory Management</h2>
+
+<p>Python automatically allocates and deallocates memory.</p>
+
+<pre>
+a = 100
+a = 200
+</pre>
+
+<p>The old object becomes unused and may be removed later.</p>
+
+<h3>Reference Counting</h3>
+
+<p>Python tracks how many references point to an object.</p>
+
+<h2 id="gc">13. Garbage Collection</h2>
+
+<p>Garbage Collection removes unused objects from memory.</p>
+
+<pre>
+import gc
+
+gc.collect()
+</pre>
+
+<p>This helps prevent memory leaks.</p>
+
+<h2 id="comparison">14. Difference Between == and is</h2>
+
+<table>
+<tr><th>Operator</th><th>Purpose</th></tr>
+<tr><td>==</td><td>Compares values</td></tr>
+<tr><td>is</td><td>Compares memory references</td></tr>
+</table>
+
+<pre>
+a = [1,2]
+b = [1,2]
+
+print(a == b)
+print(a is b)
+</pre>
+
+<h2 id="programs">15. Practical Programs</h2>
+
+<h3>Student Profile</h3>
+<pre>
+name = "John"
+age = 20
+course = "AI ML"
+
+print(name, age, course)
+</pre>
+
+<h3>Area of Rectangle</h3>
+<pre>
+length = 10
+breadth = 5
+area = length * breadth
+print(area)
+</pre>
+
+<h3>Temperature Conversion</h3>
+<pre>
+celsius = 35
+fahrenheit = (celsius * 9/5) + 32
+print(fahrenheit)
+</pre>
+
+<h3>Simple Interest</h3>
+<pre>
+p = 10000
+r = 10
+t = 2
+
+si = (p*r*t)/100
+print(si)
+</pre>
+
+<h2 id="mcq">16. Q & A</h2>
+<ol>
+<li>Which function returns datatype? <b>type()</b></li>
+<li>Which datatype stores text? <b>str</b></li>
+<li>Which datatype stores decimal values? <b>float</b></li>
+<li>Python is statically typed? <b>No</b></li>
+<li>Which function returns memory address? <b>id()</b></li>
+<li>Which operator compares values? <b>==</b></li>
+<li>Which operator compares objects? <b>is</b></li>
+<li>What removes unused objects? <b>Garbage Collection</b></li>
+<li>Can variables change datatype? <b>Yes</b></li>
+<li>Python memory management is automatic? <b>Yes</b></li>
+</ol>
+
+
+</div>
+</body>
+</html>

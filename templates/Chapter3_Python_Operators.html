@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 3 - Python Operators & Logical Expressions (Complete Expansion)</title>
+    <style>
+        body { margin: 0; font-family: 'Segoe UI', Arial, sans-serif; display: flex; background: #f8fafc; color: #334155; }
+        .sidebar { width: 320px; position: fixed; height: 100vh; overflow-auto; background: #0f172a; color: #fff; z-index: 100; }
+        .sidebar h2 { padding: 25px 20px; text-align: center; border-bottom: 1px solid #1e293b; margin: 0; font-size: 1.5rem; letter-spacing: 0.5px; }
+        .sidebar a { display: block; color: #cbd5e1; text-decoration: none; padding: 12px 20px; border-bottom: 1px solid #1e293b; font-size: 0.95rem; transition: all 0.2s ease; }
+        .sidebar a:hover { background: #1e293b; color: #fff; padding-left: 25px; }
+        .content { margin-left: 320px; padding: 40px; max-width: 1100px; line-height: 1.7; }
+        h1, h2, h3 { color: #1e3a8a; font-weight: 700; }
+        h1 { font-size: 2.5rem; border-bottom: 3px solid #e2e8f0; padding-bottom: 15px; margin-bottom: 30px; }
+        h2 { font-size: 1.8rem; margin-top: 40px; border-bottom: 1px solid #cbd5e1; padding-bottom: 8px; }
+        h3 { font-size: 1.3rem; margin-top: 25px; color: #2563eb; }
+        p { font-size: 1.05rem; margin-bottom: 20px; }
+        pre { background: #f1f5f9; padding: 18px; border-left: 5px solid #2563eb; overflow-auto; border-radius: 0 6px 6px 0; font-family: 'Fira Code', 'Courier New', Courier, monospace; font-size: 0.95rem; margin: 20px 0; }
+        table { width: 100%; border-collapse: collapse; margin: 25px 0; background: #fff; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border-radius: 8px; overflow: hidden; }
+        th, td { border: 1px solid #cbd5e1; padding: 14px; text-align: left; font-size: 0.95rem; }
+        th { background: #f1f5f9; color: #1e3a8a; font-weight: 600; }
+        tr:nth-child(even) { background: #f8fafc; }
+        .note { background: #dbeafe; padding: 18px; border-radius: 8px; border-left: 5px solid #3b82f6; margin: 25px 0; font-size: 1rem; }
+        .note strong { color: #1e3a8a; }
+        .warning { background: #fef2f2; padding: 18px; border-radius: 8px; border-left: 5px solid #ef4444; margin: 25px 0; color: #991b1b; font-size: 1rem; }
+        .warning strong { color: #991b1b; }
+        ul, ol { padding-left: 25px; margin-bottom: 20px; }
+        li { margin-bottom: 10px; font-size: 1.05rem; }
+        code { background: #e2e8f0; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 0.95rem; color: #0f172a; }
+        .image-placeholder { background: #e2e8f0; border: 2px dashed #94a3b8; border-radius: 8px; padding: 30px; text-align: center; margin: 25px 0; color: #475569; font-style: italic; font-weight: 500; }
+    
+/* Home Button */
+.home-btn{
+    position:fixed;
+    top:20px;
+    right:20px;
+    z-index:9999;
+    background:linear-gradient(135deg,#0f172a,#2563eb);
+    color:#fff;
+    text-decoration:none;
+    padding:12px 20px;
+    border-radius:50px;
+    font-weight:600;
+    font-family:Arial,sans-serif;
+    box-shadow:0 5px 15px rgba(0,0,0,0.3);
+    animation:pulseHome 2s infinite;
+    transition:0.3s;
+}
+
+.home-btn:hover{
+    transform:translateY(-3px) scale(1.05);
+}
+
+@keyframes pulseHome{
+    0%{
+        box-shadow:0 0 0 0 rgba(37,99,235,0.7);
+    }
+    70%{
+        box-shadow:0 0 0 15px rgba(37,99,235,0);
+    }
+    100%{
+        box-shadow:0 0 0 0 rgba(37,99,235,0);
+    }
+}
+
+/* WhatsApp Button */
+.whatsapp-float{
+    position:fixed;
+    width:65px;
+    height:65px;
+    bottom:25px;
+    right:25px;
+    background:#25D366;
+    color:white;
+    border-radius:50%;
+    text-align:center;
+    font-size:34px;
+    line-height:65px;
+    text-decoration:none;
+    z-index:9999;
+    box-shadow:0 5px 20px rgba(0,0,0,0.3);
+    animation:whatsappBounce 1.5s infinite;
+}
+
+.whatsapp-float:hover{
+    transform:scale(1.1);
+}
+
+@keyframes whatsappBounce{
+    0%,100%{
+        transform:translateY(0);
+    }
+    50%{
+        transform:translateY(-10px);
+    }
+}
+
+/* Mobile Responsive */
+@media(max-width:768px){
+    .home-btn{
+        top:10px;
+        right:10px;
+        padding:10px 15px;
+        font-size:14px;
+    }
+
+    .whatsapp-float{
+        width:55px;
+        height:55px;
+        line-height:55px;
+        font-size:28px;
+        bottom:15px;
+        right:15px;
+    }
+}
+	</style>
+</head>
+<body>
+
+<a href="ai.html" class="home-btn">
+    🏠 Home
+</a>
+
+<!-- WHATSAPP FLOATING BUTTON -->
+<a href="https://wa.me/918220033325?text=Hello%20I%20would%20like%20to%20know%20more"
+   class="whatsapp-float"
+   target="_blank">
+    💬
+</a>
+<div class="sidebar">
+    <h2>Chapter 3. Operators</h2>
+    <a href="#intro">1. Operational Concepts</a>
+    <a href="#arity">2. Operator Arity</a>
+    <a href="#arithmetic">3. Arithmetic Operators</a>
+    <a href="#assignment">4. Assignment Matrices</a>
+    <a href="#comparison">5. Comparison & Chaining</a>
+    <a href="#logical">6. Logical Operators</a>
+    <a href="#shortcircuit">7. Short-Circuit Evaluation</a>
+    <a href="#identity">8. Identity vs. Equality</a>
+    <a href="#membership">9. Membership Lookups</a>
+    <a href="#bitwise">10. Bitwise Algebra</a>
+    <a href="#precedence">11. Precedence Hierarchy</a>
+    <a href="#ternary">12. Ternary Expressions</a>
+    <a href="#programs">13. Real-World Applications</a>
+    <a href="#errors">14. Anti-Patterns & Bugs</a>
+    <a href="#mcq">15. Advanced Q&A Portfolio</a>
+</div>
+
+<div class="content">
+
+    <h1>Chapter 3: Operators in Python — Architecture & Implementation</h1>
+
+    <h2 id="intro">1. Operational Core Concepts</h2>
+    <p>In Python, <strong>Operators</strong> are specialized symbolic tokens or keywords that perform deterministic processing routines on data inputs known as <strong>Operands</strong>. Under the hood, Python treats operators as intuitive wrappers for standard object protocols. Every time you utilize an operator, Python implicitly calls a corresponding magic method (also called a "dunder method") defined on the left operand object.</p>
+
+<pre>
+# Abstract expression syntax
+x = 15
+y = 4
+print(x + y)  # Implicitly triggers the integer object method: x.__add__(y)
+</pre>
+
+    <div class="note">
+        <strong>Architectural Note:</strong> Custom classes can override these dunder methods (a concept known as operator overloading). This allows custom data models to natively use arithmetic or comparison operators.
+    </div>
+
+    <h2 id="arity">2. Operator Arity Dynamics</h2>
+    <p>Operators are categorized by their <strong>arity</strong>—the exact number of operands required to build a valid statement expression.</p>
+
+    <h3>Unary Operators</h3>
+    <p>Unary operators take a single operand. They are placed directly before the variable to modify its mathematical sign or invert its logical state.</p>
+<pre>
+base_value = 100
+negated_value = -base_value  # Unary negation evaluates to -100
+
+is_active = True
+inverted_state = not is_active  # Unary logical negation evaluates to False
+</pre>
+
+    <h3>Binary Operators</h3>
+    <p>Binary operators act upon two distinct operands. They use an infix syntax where the operator token sits between the two values.</p>
+<pre>
+coefficient_a = 40
+coefficient_b = 2
+product = coefficient_a * coefficient_b  # Binary multiplication evaluates to 80
+</pre>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Arity Classification</th>
+                <th>Operands Required</th>
+                <th>Syntactic Structural Representation</th>
+                <th>Production Example Code</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Unary</strong></td>
+                <td>Exactly One (1)</td>
+                <td><code>[Operator][Operand]</code></td>
+                <td><code>-balance</code>, <code>not validated</code></td>
+            </tr>
+            <tr>
+                <td><strong>Binary</strong></td>
+                <td>Exactly Two (2)</td>
+                <td><code>[Operand_1] [Operator] [Operand_2]</code></td>
+                <td><code>price + tax</code>, <code>score &gt; threshold</code></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2 id="arithmetic">3. Arithmetic Operators & Floor Boundary Evaluation</h2>
+    <p>Arithmetic operators perform foundational numerical calculations across numerical types like integers and floats.</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Operator Symbol</th>
+                <th>Mathematical Profile</th>
+                <th>Underlying Functional Behavior</th>
+                <th>Concrete Example</th>
+                <th>Output Type</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>+</code></td>
+                <td>Addition</td>
+                <td>Computes the mathematical sum of two numbers.</td>
+                <td><code>12 + 4.5</code></td>
+                <td><code>float</code> (16.5)</td>
+            </tr>
+            <tr>
+                <td><code>-</code></td>
+                <td>Subtraction</td>
+                <td>Computes the difference between two numbers.</td>
+                <td><code>50 - 15</code></td>
+                <td><code>int</code> (35)</td>
+            </tr>
+            <tr>
+                <td><code>*</code></td>
+                <td>Multiplication</td>
+                <td>Computes the product. Overloaded to repeat string collections.</td>
+                <td><code>"Core" * 2</code></td>
+                <td><code>str</code> ("CoreCore")</td>
+            </tr>
+            <tr>
+                <td><code>/</code></td>
+                <td>True Division</td>
+                <td>Divides values and always returns a floating-point result.</td>
+                <td><code>10 / 2</code></td>
+                <td><code>float</code> (5.0)</td>
+            </tr>
+            <tr>
+                <td><code>//</code></td>
+                <td>Floor Division</td>
+                <td>Divides values and rounds the result down to the nearest lower integer floor.</td>
+                <td><code>14 // 4</code></td>
+                <td><code>int</code> (3)</td>
+            </tr>
+            <tr>
+                <td><code>%</code></td>
+                <td>Modulus</td>
+                <td>Divides values and returns the remainder. Used to track cycles or parity.</td>
+                <td><code>19 % 5</code></td>
+                <td><code>int</code> (4)</td>
+            </tr>
+            <tr>
+                <td><code>**</code></td>
+                <td>Exponentiation</td>
+                <td>Raises the left operand to the power of the right operand.</td>
+                <td><code>3 ** 3</code></td>
+                <td><code>int</code> (27)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>Floor Division (<code>//</code>) with Negative Operands</h3>
+    <p>When working with negative values, floor division rounds the result down toward negative infinity. This can produce unexpected results if you are unfamiliar with Python's rounding logic.</p>
+<pre>
+print(11 // 4)   # Output: 2   (2.75 rounded down to the nearest whole integer)
+print(-11 // 4)  # Output: -3  (-2.75 rounded down to the next lower negative boundary)
+</pre>
+
+
+    <h2 id="assignment">4. Compound Assignment Matrix</h2>
+    <p>Assignment operators bind values back to variable reference labels. Compound assignment operators optimize your code by combining an arithmetic processing step with a variable update in a single operation.</p>
+
+<pre>
+# Explicit long-form notation
+total_points = 500
+total_points = total_points + 50
+
+# Optimized compound in-place variant
+total_points = 500
+total_points += 50  # Updates value in-place for mutables, rebinds reference pointer for immutables
+</pre>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Compound Operator</th>
+                <th>Syntactic Equivalence Pattern</th>
+                <th>Execution Processing Steps</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>x += y</code></td>
+                <td><code>x = x + y</code></td>
+                <td>Computes the sum of x and y, then assigns the result back to x.</td>
+            </tr>
+            <tr>
+                <td><code>x -= y</code></td>
+                <td><code>x = x - y</code></td>
+                <td>Subtracts y from x, then assigns the result back to x.</td>
+            </tr>
+            <tr>
+                <td><code>x *= y</code></td>
+                <td><code>x = x * y</code></td>
+                <td>Multiplies x by y, then assigns the result back to x.</td>
+            </tr>
+            <tr>
+                <td><code>x /= y</code></td>
+                <td><code>x = x / y</code></td>
+                <td>Divides x by y and assigns the floating-point result back to x.</td>
+            </tr>
+            <tr>
+                <td><code>x //= y</code></td>
+                <td><code>x = x // y</code></td>
+                <td>Performs floor division on x by y and assigns the integer result back to x.</td>
+            </tr>
+            <tr>
+                <td><code>x %= y</code></td>
+                <td><code>x = x % y</code></td>
+                <td>Calculates the remainder of x divided by y and assigns it back to x.</td>
+            </tr>
+            <tr>
+                <td><code>x **= y</code></td>
+                <td><code>x = x ** y</code></td>
+                <td>Raises x to the power of y and assigns the updated value back to x.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2 id="comparison">5. Comparison Operators & Value Chaining</h2>
+    <p>Comparison operators evaluate structural value matches between two expressions and return a boolean object (<code>True</code> or <code>False</code>).</p>
+
+    <h3>Comparison Chaining Architecture</h3>
+    <p>Python allows you to chain multiple comparison operators together into a single, clean expression. Behind the scenes, the compiler evaluates this by expanding it with implicit <code>and</code> conditions.</p>
+<pre>
+# Chained conditional syntax
+sensor_reading = 85
+is_nominal = 60 &lt; sensor_reading &lt;= 100  # Evaluates to True
+
+# Internal compiler expansion step
+is_nominal_expanded = (60 &lt; sensor_reading) and (sensor_reading &lt;= 100)
+</pre>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Operator Symbol</th>
+                <th>Evaluation Logic</th>
+                <th>Edge Case Condition</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>==</code></td>
+                <td>Verifies structural value equality between operands.</td>
+                <td><code>10 == "10"</code> evaluates to <code>False</code> due to mismatched types.</td>
+            </tr>
+            <tr>
+                <td><code>!=</code></td>
+                <td>Verifies that two operand values are not equal.</td>
+                <td><code>5 != 5</code> evaluates to <code>False</code>.</td>
+            </tr>
+            <tr>
+                <td><code>&gt;</code></td>
+                <td>Checks if the left operand is strictly greater than the right operand.</td>
+                <td><code>12 &gt; 12</code> evaluates to <code>False</code>.</td>
+            </tr>
+            <tr>
+                <td><code>&lt;</code></td>
+                <td>Checks if the left operand is strictly less than the right operand.</td>
+                <td><code>8 &lt; 3</code> evaluates to <code>False</code>.</td>
+            </tr>
+            <tr>
+                <td><code>&gt;=</code></td>
+                <td>Checks if the left operand is greater than or equal to the right operand.</td>
+                <td><code>15 &gt;= 15</code> evaluates to <code>True</code>.</td>
+            </tr>
+            <tr>
+                <td><code>&lt;=</code></td>
+                <td>Checks if the left operand is less than or equal to the right operand.</td>
+                <td><code>22 &lt;= 21</code> evaluates to <code>False</code>.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2 id="logical">6. Logical Operators & Truth Tables</h2>
+    <p>Logical operators combine or negate boolean values. In Python, these operators evaluate expressions using **Truthy** and **Falsy** states. Objects are treated as Falsy if they are numerical zeros (<code>0</code>, <code>0.0</code>), empty containers (<code>[]</code>, <code>{}</code>, <code>""</code>), or <code>None</code>. All other initialized values evaluate to Truthy by default.</p>
+
+    <h3>Boolean Truth Tables</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Condition A Pin</th>
+                <th>Condition B Pin</th>
+                <th>Expression: <code>A and B</code></th>
+                <th>Expression: <code>A or B</code></th>
+                <th>Expression: <code>not A</code></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>True</code></td>
+                <td><code>True</code></td>
+                <td><code>True</code></td>
+                <td><code>True</code></td>
+                <td><code>False</code></td>
+            </tr>
+            <tr>
+                <td><code>True</code></td>
+                <td><code>False</code></td>
+                <td><code>False</code></td>
+                <td><code>True</code></td>
+                <td><code>False</code></td>
+            </tr>
+            <tr>
+                <td><code>False</code></td>
+                <td><code>True</code></td>
+                <td><code>False</code></td>
+                <td><code>True</code></td>
+                <td><code>True</code></td>
+            </tr>
+            <tr>
+                <td><code>False</code></td>
+                <td><code>False</code></td>
+                <td><code>False</code></td>
+                <td><code>False</code></td>
+                <td><code>True</code></td>
+            </tr>
+        </tbody>
+    </table>
+
+<pre>
+# Combining logic criteria
+has_clearance = True
+has_mfa_token = False
+
+# The 'and' operator requires all flags to pass
+access_granted = has_clearance and has_mfa_token  # Resolves to False
+</pre>
+
+    <h2 id="shortcircuit">7. Short-Circuit Evaluation Mechanics</h2>
+    <p>Python optimizes compound logical expressions using **Short-Circuit Evaluation**. The evaluation engine reads expressions from left to right and stops processing immediately as soon as the final logical outcome is mathematically certain.</p>
+
+    <ul>
+        <li><strong>The <code>and</code> Short-Circuit Rule:</strong> If the left operand evaluates to a Falsy state, the entire expression cannot be true. Python aborts execution early, returning that Falsy value and completely skipping the right-hand expressions.</li>
+        <li><strong>The <code>or</code> Short-Circuit Rule:</strong> If the left operand evaluates to a Truthy state, the entire expression is guaranteed to be true. Python returns that Truthy value immediately and skips evaluating the rest of the statement.</li>
+    </ul>
+
+<pre>
+# Short-circuiting protects programs from runtime crashes
+divisor = 0
+
+# If Python processed the right side, it would raise a ZeroDivisionError.
+# Because 'divisor != 0' evaluates to False, the 'and' statement short-circuits 
+# and skips the division operation completely.
+if divisor != 0 and (100 / divisor) &gt; 5:
+    print("Expression processed successfully.")
+else:
+    print("Safely handled via short-circuit optimization!")
+</pre>
+
+    <div class="image-placeholder">
+        
+    </div>
+
+    <h2 id="identity">8. Identity Operators vs. Value Equality</h2>
+    <p>Identity operators check the exact memory addresses of objects, whereas equality operators evaluate the structural data values within those objects.</p>
+
+    <ul>
+        <li>The <code>==</code> operator compares the structural **values** of two separate memory objects to see if they match.</li>
+        <li>The <code>is</code> operator evaluates **object identity**. It checks whether two variables point to the exact same memory address. This is functionally equivalent to evaluating <code>id(a) == id(b)</code>.</li>
+    </ul>
+
+<pre>
+# Allocating distinct list objects in heap storage
+dataset_a = [1, 2, 3]
+dataset_b = [1, 2, 3]
+dataset_c = dataset_a  # Copies the reference address pointer
+
+print(dataset_a == dataset_b)  # True  -> Their structural values match
+print(dataset_a is dataset_b)  # False -> They are stored at different addresses in Heap space
+print(dataset_a is dataset_c)  # True  -> Both point to the exact same memory address
+</pre>
+
+    <div class="warning">
+        <strong>Interviewer Trap Alert:</strong> Avoid using the <code>is</code> operator for comparing scalar variables like integers or strings. Python optimizes memory by using an internal cache for small objects (such as integer interning for values from -5 to 256). This can make <code>is</code> evaluate to True for unrelated variables. Always use <code>==</code> for predictable value checking.
+    </div>
+
+    <h2 id="membership">9. Membership Operators & Lookup Complexity</h2>
+    <p>Membership operators evaluate whether a specific target element exists within an iterable collection or container data framework.</p>
+
+<pre>
+allowed_groups = {"Superuser", "Site_Reliability_Engineer", "Data_Analyst"}
+current_user_group = "Data_Analyst"
+
+is_permitted = current_user_group in allowed_groups  # Resolves to True
+</pre>
+
+    <h3>Collection Lookup Performance Profiles</h3>
+    <p>The time complexity of membership testing varies significantly depending on the underlying structure of your data collection:</p>
+    <ul>
+        <li><strong>Lists / Tuples:</strong> Uses a linear search pattern, denoted as <strong>$O(n)$ time complexity</strong>. Python checks each item sequentially, meaning the lookup time scales linearly with the size of the collection.</li>
+        <li><strong>Sets / Dictionaries:</strong> Uses a hashed direct-index mapping pattern, denoted as <strong>$O(1)$ constant time complexity</strong>. Membership lookups complete almost instantly, regardless of how large the collection grows.</li>
+    </ul>
+
+    <h2 id="bitwise">10. Bitwise Operators & Binary Transformations</h2>
+    <p>Bitwise operators work directly on the individual bits of integer values. They convert standard base-10 numbers into binary format, execute bit-level logic transformations, and then return the final result as a base-10 integer.</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Operator Symbol</th>
+                <th>Bitwise Operation</th>
+                <th>Mathematical Example</th>
+                <th>Binary Register Trace Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>&amp;</code></td>
+                <td><strong>Bitwise AND:</strong> Sets bit to 1 only if both matching bits are 1.</td>
+                <td><code>5 &amp; 3</code> (Yields 1)</td>
+                <td><code>0101</code> AND <code>0011</code> $\rightarrow$ <code>0001</code></td>
+            </tr>
+            <tr>
+                <td><code>|</code></td>
+                <td><strong>Bitwise OR:</strong> Sets bit to 1 if at least one matching bit is 1.</td>
+                <td><code>5 | 3</code> (Yields 7)</td>
+                <td><code>0101</code> OR <code>0011</code> $\rightarrow$ <code>0111</code></td>
+            </tr>
+            <tr>
+                <td><code>^</code></td>
+                <td><strong>Bitwise XOR:</strong> Sets bit to 1 if the matching bits are different.</td>
+                <td><code>5 ^ 3</code> (Yields 6)</td>
+                <td><code>0101</code> XOR <code>0011</code> $\rightarrow$ <code>0110</code></td>
+            </tr>
+            <tr>
+                <td><code>~</code></td>
+                <td><strong>Bitwise NOT:</strong> Inverts all bits. Formula: $-(x + 1)$.</td>
+                <td><code>~5</code> (Yields -6)</td>
+                <td>Flips 0s to 1s and 1s to 0s in memory.</td>
+            </tr>
+            <tr>
+                <td><code>&lt;&lt;</code></td>
+                <td><strong>Left Shift:</strong> Shifts bits left, filling empty spaces with 0s. Multiplies by $2^{\text{shift}}$.</td>
+                <td><code>5 &lt;&lt; 1</code> (Yields 10)</td>
+                <td><code>0101</code> shifted left by 1 bit $\rightarrow$ <code>1010</code></td>
+            </tr>
+            <tr>
+                <td><code>&gt;&gt;</code></td>
+                <td><strong>Right Shift:</strong> Shifts bits right, dropping trailing bits. Divides by $2^{\text{shift}}$.</td>
+                <td><code>8 &gt;&gt; 2</code> (Yields 2)</td>
+                <td><code>1000</code> shifted right by 2 bits $\rightarrow$ <code>0010</code></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2 id="precedence">11. Operator Precedence Hierarchy</h2>
+    <p>When an expression contains multiple operators, Python resolves them according to a strict order of precedence. To override this default order and ensure predictable calculations, use parentheses <code>()</code> to explicitly group operations.</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Priority Rank</th>
+                <th>Operator Symbol Matrix</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1 (Highest Priority)</td>
+                <td><code>()</code></td>
+                <td>Parenthetical Expression Scope grouping.</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td><code>**</code></td>
+                <td>Exponentiation calculation.</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td><code>~</code>, <code>+x</code>, <code>-x</code></td>
+                <td>Unary sign flags and Bitwise NOT.</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td><code>*</code>, <code>/</code>, <code>//</code>, <code>%</code></td>
+                <td>Multiplication, Division, Floor Division, Modulus.</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td><code>+</code>, <code>-</code></td>
+                <td>Addition and Subtraction operations.</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td><code>&lt;&lt;</code>, <code>&gt;&gt;</code></td>
+                <td>Bitwise register shifting actions.</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td><code>&amp;</code></td>
+                <td>Bitwise AND transformations.</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td><code>^</code></td>
+                <td>Bitwise XOR transformations.</td>
+            </tr>
+            <tr>
+                <td>9</td>
+                <td><code>|</code></td>
+                <td>Bitwise OR transformations.</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td><code>==</code>, <code>!=</code>, <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code>, <code>is</code>, <code>in</code></td>
+                <td>Comparison, Identity, and Membership operations.</td>
+            </tr>
+            <tr>
+                <td>11 (Lowest Priority)</td>
+                <td><code>not</code>, <code>and</code>, <code>or</code></td>
+                <td>Logical evaluation operators.</td>
+            </tr>
+        </tbody>
+    </table>
+
+<pre>
+# Precedence sorting examples
+calculation_unstructured = 20 + 4 * 2    # Evaluates to 28 (Multiplication executes first)
+calculation_structured = (20 + 4) * 2    # Evaluates to 48 (Parentheses force prioritization)
+</pre>
+
+    <h2 id="ternary">12. Ternary Expressions & Inline Evaluation</h2>
+    <p>Python supports a ternary operator syntax that lets you evaluate conditional assignments inline, providing a clean alternative to full block-level <code>if-else</code> structures.</p>
+
+    <h3>Ternary Expression Blueprint Structure</h3>
+    <pre><code>[Value_If_Condition_Is_True] if [Boolean_Conditional_Statement] else [Value_If_Condition_Is_False]</code></pre>
+
+<pre>
+# Inline conditional assignment
+account_balance = 45000
+account_status = "Premium Tier" if account_balance &gt;= 25000 else "Standard Tier"
+print(account_status)  # Outputs: Premium Tier
+</pre>
+
+    <h2 id="programs">13. Real-World Applications & Complete Projects</h2>
+    <p>These reference implementations show how to apply operators to common programming scenarios. Each program conforms to standard PEP 8 styling conventions and includes comprehensive error-handling protections.</p>
+
+    <h3>Project 1: Body Mass Index (BMI) Health Analytics Engine</h3>
+    <p>This utility calculates a user's Body Mass Index using metric inputs and classifies their risk profile using multi-tiered ternary expressions.</p>
+<pre>
+# BMI Health Metrics Calculator System
+print("=== Global Health Analytics System ===")
+try:
+    weight_input = input("Enter body weight in Kilograms (e.g., 72.5): ").strip()
+    height_input = input("Enter height in Meters (e.g., 1.78): ").strip()
+    
+    # Cast to float parameters
+    weight_kg = float(weight_input)
+    height_meters = float(height_input)
+    
+    # Calculate BMI score using exponentiation operators
+    bmi_score = weight_kg / (height_meters ** 2)
+    
+    print("\n" + "-" * 40)
+    print(f"Your Computed BMI Score: {bmi_score:.2f}")
+    
+    # Classify metrics using clean ternary branching logic
+    risk_profile = "Underweight" if bmi_score &lt; 18.5 else ("Normal weight" if bmi_score &lt; 25.0 else "Overweight")
+    print(f"Health Risk Status     : {risk_profile}")
+    print("-" * 40)
+
+except ValueError:
+    print("Execution Error: Invalid numerical characters entered.")
+except ZeroDivisionError:
+    print("Execution Error: Height variable input cannot be zero.")
+</pre>
+
+    <h3>Project 2: Financial Loan Eligibility Underwriting Engine</h3>
+    <p>This production-grade script combines comparison, logical, and assignment operations to evaluate a loan applicant's eligibility based on institutional risk thresholds.</p>
+<pre>
+# Automated Risk Assessment Core
+print("=== Automated Underwriting Management Risk Core ===")
+try:
+    monthly_income = float(input("Enter applicant primary monthly salary (INR): ").strip())
+    credit_score = int(input("Enter applicant bureau credit history score: ").strip())
+    has_defaults_input = input("Does applicant have active defaults? (yes/no): ").strip().lower()
+    
+    # Evaluate input flag
+    has_active_defaults = has_defaults_input == "yes"
+    
+    # Core credit underwriting rules
+    passes_income_check = monthly_income &gt;= 35000
+    passes_credit_check = credit_score &gt;= 750
+    has_clean_history = not has_active_defaults
+    
+    # Combine rules using compound logical expressions
+    loan_is_approved = passes_income_check and passes_credit_check and has_clean_history
+    
+    print("\n" + "=" * 45)
+    print("             UNDERWRITING REPORT            ")
+    print("=" * 45)
+    print(f"Income Threshold Met : {passes_income_check}")
+    print(f"Credit Rating Approved: {passes_credit_check}")
+    print(f"Clean Default History: {has_clean_history}")
+    print("-" * 45)
+    
+    decision = "LOAN PROPOSAL APPROVED" if loan_is_approved else "APPLICATION DENIED DUE TO RISK"
+    print(f"FINAL DECISION       : {decision}")
+    print("=" * 45)
+
+except ValueError:
+    print("Processing Error: Invalid data format type entry submitted.")
+</pre>
+
+    <h2 id="errors">14. Critical Errors, Anti-Patterns & Bug Prevention</h2>
+    <p>Avoid these common conceptual and syntactical operator errors during application development.</p>
+
+    <h3>Anti-Pattern 1: Assignment Inside Conditional Statements</h3>
+    <p>Using a single assignment token (<code>=</code>) instead of the equality operator (<code>==</code>) inside a conditional statement will trigger a syntax error in Python.</p>
+<pre>
+# Triggers a Syntax Error
+if target_count = 100:
+    pass
+
+# Correct Implementation Pattern
+if target_count == 100:
+    pass
+</pre>
+
+    <h3>Anti-Pattern 2: Type Traversal Violations (Strong Typing Failures)</h3>
+    <p>Python is strongly typed and will not implicitly convert mismatched types during calculations. For example, attempting to add a string to an integer will raise a <code>TypeError</code>.</p>
+<pre>
+# Raises TypeError: unsupported operand type(s) for +: 'int' and 'str'
+base_salary = 45000
+bonus_str = "2500"
+payout = base_salary + bonus_str
+
+# Correct Implementation Pattern using explicit casting
+payout_fixed = base_salary + int(bonus_str)
+</pre>
+
+    <h2 id="mcq">15. Q & A</h2>
+    <ol>
+        <li>
+            <strong>What is the structural difference between true division (<code>/</code>) and floor division (<code>//</code>)?</strong><br>
+            True division always calculates fractions down to a precise floating-point value. Floor division drops any decimal values and rounds the result down to the nearest lower whole integer boundary.
+        </li>
+        <li>
+            <strong>Explain the operational benefits of short-circuit evaluation in production code.</strong><br>
+            Short-circuit evaluation optimizes performance by skipping unnecessary logical checks. It also helps prevent runtime crashes by allowing you to place safeguard checks before operations that could throw errors (like zero-division checks).
+        </li>
+        <li>
+            <strong>What specific error is raised when a program tries to divide a number by zero?</strong><br>
+            It raises a <code>ZeroDivisionError</code>, which should be caught using standard structured <code>try-except</code> blocks to avoid unexpected application crashes.
+        </li>
+        <li>
+            <strong>Which operator has a higher precedence: multiplication (<code>*</code>) or exponentiation (<code>**</code>)?</strong><br>
+            Exponentiation (<code>**</code>) has a higher precedence rank and will execute before multiplication operations.
+        </li>
+        <li>
+            <strong>How can developers change the evaluation order of operations in complex mathematical expressions?</strong><br>
+            You can use parentheses <code>()</code> to explicitly group operations, which overrides the default operator precedence hierarchy.
+        </li>
+        <li>
+            <strong>What does the expression <code>14 % 4</code> evaluate to?</strong><br>
+            It evaluates to <code>2</code>. The calculation divides 14 by 4, which goes in 3 times with a remainder of 2.
+        </li>
+        <li>
+            <strong>What behavior occurs when you run membership operators (<code>in</code>) against dictionaries?</strong><br>
+            The <code>in</code> operator checks for matching keys at the root level of the dictionary index. It completely ignores the values stored inside those keys.
+        </li>
+        <li>
+            <strong>What is the mathematical formula used to determine the result of a bitwise NOT (<code>~</code>) operator?</strong><br>
+            The calculation follows the formula: <code>-(x + 1)</code>. For example, running <code>~5</code> will yield <code>-6</code>.
+        </li>
+        <li>
+            <strong>What are the structural requirements for building a valid ternary expression?</strong><br>
+            A ternary expression requires three distinct components: a primary return expression, a central boolean conditional statement, and a mandatory fallback <code>else</code> return expression.
+        </li>
+        <li>
+            <strong>Why does <code>print(-5 // 2)</code> evaluate to <code>-3</code> instead of <code>-2</code>?</strong><br>
+            Floor division always rounds down to the nearest lower integer boundary. Since dividing -5 by 2 results in -2.5, floor division rounds down to the next lower integer, which is -3.
+        </li>
+    </ol>
+
+</div>
+</body>
+</html>

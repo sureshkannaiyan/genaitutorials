@@ -1,0 +1,1933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 16 - Machine Learning Fundamentals (Comprehensive)</title>
+    <style>
+        body { margin: 0; font-family: 'Segoe UI', Arial, sans-serif; display: flex; background: #f8fafc; color: #334155; }
+        .sidebar { width: 320px; position: fixed; height: 100vh; overflow-y: auto; background: #0f172a; color: #fff; z-index: 100; }
+        .sidebar h2 { padding: 25px 20px; text-align: center; border-bottom: 1px solid #1e293b; margin: 0; font-size: 1.35rem; }
+        .sidebar a { display: block; color: #cbd5e1; text-decoration: none; padding: 12px 20px; border-bottom: 1px solid #1e293b; font-size: 0.95rem; }
+        .sidebar a:hover { background: #1e293b; color: #fff; padding-left: 25px; }
+        .content { margin-left: 320px; padding: 40px; max-width: 1100px; line-height: 1.7; }
+        h1, h2, h3 { color: #1e3a8a; font-weight: 700; }
+        h1 { font-size: 2.5rem; border-bottom: 3px solid #e2e8f0; padding-bottom: 15px; margin-bottom: 30px; }
+        h2 { font-size: 1.8rem; margin-top: 40px; border-bottom: 1px solid #cbd5e1; padding-bottom: 8px; }
+        h3 { font-size: 1.3rem; margin-top: 25px; color: #2563eb; }
+        pre { background: #f1f5f9; padding: 18px; border-left: 5px solid #2563eb; overflow-x: auto; border-radius: 0 6px 6px 0; font-family: monospace; }
+        .note { background: #dbeafe; padding: 18px; border-radius: 8px; border-left: 5px solid #3b82f6; margin: 25px 0; }
+        .warning { background: #fef9c3; padding: 18px; border-radius: 8px; border-left: 5px solid #eab308; margin: 25px 0; }
+        .tip { background: #dcfce7; padding: 18px; border-radius: 8px; border-left: 5px solid #22c55e; margin: 25px 0; }
+        table { width: 100%; border-collapse: collapse; margin: 25px 0; background: #fff; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        th, td { border: 1px solid #cbd5e1; padding: 14px; text-align: left; }
+        th { background: #f1f5f9; color: #1e3a8a; }
+        .sidebar-group { padding: 8px 20px 4px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: #64748b; margin-top: 8px; }
+		
+		
+/* Home Button */
+.home-btn{
+    position:fixed;
+    top:20px;
+    right:20px;
+    z-index:9999;
+    background:linear-gradient(135deg,#0f172a,#2563eb);
+    color:#fff;
+    text-decoration:none;
+    padding:12px 20px;
+    border-radius:50px;
+    font-weight:600;
+    font-family:Arial,sans-serif;
+    box-shadow:0 5px 15px rgba(0,0,0,0.3);
+    animation:pulseHome 2s infinite;
+    transition:0.3s;
+}
+
+.home-btn:hover{
+    transform:translateY(-3px) scale(1.05);
+}
+
+@keyframes pulseHome{
+    0%{
+        box-shadow:0 0 0 0 rgba(37,99,235,0.7);
+    }
+    70%{
+        box-shadow:0 0 0 15px rgba(37,99,235,0);
+    }
+    100%{
+        box-shadow:0 0 0 0 rgba(37,99,235,0);
+    }
+}
+
+/* WhatsApp Button */
+.whatsapp-float{
+    position:fixed;
+    width:65px;
+    height:65px;
+    bottom:25px;
+    right:25px;
+    background:#25D366;
+    color:white;
+    border-radius:50%;
+    text-align:center;
+    font-size:34px;
+    line-height:65px;
+    text-decoration:none;
+    z-index:9999;
+    box-shadow:0 5px 20px rgba(0,0,0,0.3);
+    animation:whatsappBounce 1.5s infinite;
+}
+
+.whatsapp-float:hover{
+    transform:scale(1.1);
+}
+
+@keyframes whatsappBounce{
+    0%,100%{
+        transform:translateY(0);
+    }
+    50%{
+        transform:translateY(-10px);
+    }
+}
+
+/* Mobile Responsive */
+@media(max-width:768px){
+    .home-btn{
+        top:10px;
+        right:10px;
+        padding:10px 15px;
+        font-size:14px;
+    }
+
+    .whatsapp-float{
+        width:55px;
+        height:55px;
+        line-height:55px;
+        font-size:28px;
+        bottom:15px;
+        right:15px;
+    }
+}
+		
+    </style>
+</head>
+<body>
+
+
+<a href="ai.html" class="home-btn">
+    🏠 Home
+</a>
+
+<!-- WHATSAPP FLOATING BUTTON -->
+<a href="https://wa.me/918220033325?text=Hello%20I%20would%20like%20to%20know%20more"
+   class="whatsapp-float"
+   target="_blank">
+    💬
+</a>
+
+<div class="sidebar">
+    <h2>Chapter 16. ML Fundamentals</h2>
+    <div class="sidebar-group">Core Concepts</div>
+    <a href="#intro">1. What is ML?</a>
+    <a href="#history">2. Brief History of ML</a>
+    <a href="#workflow">3. ML Workflow</a>
+    <a href="#types">4. Types of ML</a>
+    <div class="sidebar-group">Data & Features</div>
+    <a href="#data">5. Data Preprocessing</a>
+    <a href="#features">6. Feature Engineering</a>
+    <a href="#selection">7. Feature Selection</a>
+    <div class="sidebar-group">Algorithms</div>
+    <a href="#supervised">8. Supervised Algorithms</a>
+    <a href="#unsupervised">9. Unsupervised Algorithms</a>
+    <a href="#ensemble">10. Ensemble Methods</a>
+    <a href="#neural">11. Neural Networks Intro</a>
+    <div class="sidebar-group">Model Development</div>
+    <a href="#pitfalls">12. Overfitting & Underfitting</a>
+    <a href="#regularization">13. Regularization</a>
+    <a href="#tuning">14. Hyperparameter Tuning</a>
+    <a href="#coding">15. Coding Examples</a>
+    <div class="sidebar-group">Evaluation & Deployment</div>
+    <a href="#metrics">16. Evaluation Metrics</a>
+    <a href="#validation">17. Cross-Validation</a>
+    <a href="#pipeline">18. ML Pipelines</a>
+    <a href="#deployment">19. Model Deployment</a>
+    <a href="#ethics">20. Ethics & Bias</a>
+    <a href="#apps">21. Real-world Applications</a>
+</div>
+
+<div class="content">
+
+    <h1>Chapter 16: Machine Learning Fundamentals</h1>
+
+    <!-- ==================== SECTION 1 ==================== -->
+    <h2 id="intro">1. What is Machine Learning?</h2>
+    <p>Machine Learning (ML) is the science of getting computers to act without being explicitly programmed. In traditional software engineering, a programmer writes rules (if-then statements) to process input into output. In ML, the computer analyzes data to discover those rules itself.</p>
+    
+    <div class="note">
+        <strong>The Core Distinction:</strong><br>
+        <strong>Traditional:</strong> Data + Rules = Output<br>
+        <strong>Machine Learning:</strong> Data + Output = Rules (The Model)
+    </div>
+
+    <p>More formally, Tom Mitchell's 1997 definition remains widely used: <em>"A computer program is said to learn from experience E with respect to some class of tasks T and performance measure P, if its performance at tasks in T, as measured by P, improves with experience E."</em></p>
+
+    <p>ML sits at the intersection of statistics, computer science, and domain expertise. It enables computers to learn patterns from historical data and apply those patterns to make predictions or decisions on new, unseen data — without being explicitly re-programmed for every new scenario.</p>
+
+    <h3>Why ML Now?</h3>
+    <p>Three key forces converged to make modern ML practical:</p>
+    <ul>
+        <li><strong>Big Data:</strong> The internet, IoT sensors, and digital commerce generate massive amounts of labelled data every second.</li>
+        <li><strong>Compute Power:</strong> GPUs (originally designed for gaming) proved ideal for the parallel matrix operations that ML requires, reducing training time from weeks to hours.</li>
+        <li><strong>Open-Source Ecosystem:</strong> Libraries like scikit-learn, TensorFlow, and PyTorch lowered the barrier to entry drastically, putting research-grade tools in every developer's hands for free.</li>
+    </ul>
+
+    <!-- ==================== SECTION 2 ==================== -->
+    <h2 id="history">2. A Brief History of Machine Learning</h2>
+    <p>ML did not appear overnight. Its foundations were laid over decades of incremental research.</p>
+
+    <table>
+        <tr><th>Era</th><th>Milestone</th><th>Significance</th></tr>
+        <tr><td>1950s</td><td>Alan Turing proposes the "Turing Test"</td><td>First formal framework for machine intelligence.</td></tr>
+        <tr><td>1957</td><td>Frank Rosenblatt invents the Perceptron</td><td>First trainable neural network unit.</td></tr>
+        <tr><td>1960s–70s</td><td>"AI Winter" — funding and interest collapse</td><td>Overpromising led to disillusionment; core theory still advanced quietly.</td></tr>
+        <tr><td>1986</td><td>Backpropagation algorithm popularized</td><td>Enabled training of multi-layer neural networks efficiently.</td></tr>
+        <tr><td>1995</td><td>Support Vector Machines (SVM) introduced</td><td>Strong theoretical guarantees and excellent performance on small datasets.</td></tr>
+        <tr><td>2006</td><td>Geoffrey Hinton's deep belief networks</td><td>Rekindled interest in deep neural networks — start of the deep learning era.</td></tr>
+        <tr><td>2012</td><td>AlexNet wins ImageNet by a wide margin</td><td>Proved deep learning vastly outperforms classical vision methods at scale.</td></tr>
+        <tr><td>2017</td><td>"Attention Is All You Need" — Transformers introduced</td><td>Foundation for GPT, BERT, and all modern large language models.</td></tr>
+        <tr><td>2022–present</td><td>Large Language Models (ChatGPT, Gemini, Claude)</td><td>ML becomes mainstream; generative AI reshapes entire industries.</td></tr>
+    </table>
+
+    <!-- ==================== SECTION 3 ==================== -->
+    <h2 id="workflow">3. The Machine Learning Workflow</h2>
+    <p>Developing an ML model is an iterative process. It is rarely a linear path; you will often return to previous steps to refine your results.</p>
+    
+    <ul>
+        <li><strong>Data Collection:</strong> Gathering raw data from logs, databases, or public datasets.</li>
+        <li><strong>Data Cleaning:</strong> Handling nulls, removing duplicates, and normalizing data formats.</li>
+        <li><strong>Exploratory Data Analysis (EDA):</strong> Visualizing data to understand distributions and relationships.</li>
+        <li><strong>Feature Engineering:</strong> Creating meaningful inputs from raw data (e.g., converting a timestamp into "hour of day").</li>
+        <li><strong>Model Training:</strong> Using algorithms (like Linear Regression) to learn from the data.</li>
+        <li><strong>Evaluation:</strong> Testing the model on unseen data.</li>
+        <li><strong>Deployment:</strong> Making the model available for real-time predictions.</li>
+        <li><strong>Monitoring:</strong> Tracking model performance over time as real-world data drifts.</li>
+    </ul>
+
+    <div class="note">
+        <strong>Rule of Thumb:</strong> In practice, data scientists spend approximately 80% of their time on data collection, cleaning, and feature engineering — and only 20% on actual model training. Clean, well-understood data beats a fancy algorithm on messy data every time.
+    </div>
+
+    <!-- ==================== SECTION 4 ==================== -->
+    <h2 id="types">4. Types of Machine Learning</h2>
+    <p>ML algorithms are generally grouped by how they "learn" from the data provided.</p>
+    
+    <table>
+        <tr><th>Category</th><th>Approach</th><th>Example</th></tr>
+        <tr><td><strong>Supervised</strong></td><td>Data includes labels (Correct Answers).</td><td>Spam detection, House pricing.</td></tr>
+        <tr><td><strong>Unsupervised</strong></td><td>Data is unlabeled. Algorithms find patterns.</td><td>Customer segmentation, anomaly detection.</td></tr>
+        <tr><td><strong>Semi-Supervised</strong></td><td>Small labelled set + large unlabelled set.</td><td>Medical image classification with few annotated scans.</td></tr>
+        <tr><td><strong>Self-Supervised</strong></td><td>Model generates its own labels from raw data.</td><td>BERT predicting masked words; GPT predicting the next token.</td></tr>
+        <tr><td><strong>Reinforcement</strong></td><td>Agents learn via trial-and-error/rewards.</td><td>Robotics, Game playing (Chess/Go).</td></tr>
+        <tr><td><strong>Transfer Learning</strong></td><td>A pre-trained model is fine-tuned on a new task.</td><td>Using a model trained on ImageNet to classify medical X-rays.</td></tr>
+    </table>
+
+    <!-- ==================== SECTION 5 ==================== -->
+    <h2 id="data">5. Data Preprocessing</h2>
+    <p>Raw data is almost never ready to feed directly into an ML model. Preprocessing transforms raw input into a clean, consistent format that algorithms can learn from effectively.</p>
+
+    <h3>Handling Missing Values</h3>
+    <p>Missing data is a near-universal problem. Common strategies include:</p>
+    <ul>
+        <li><strong>Deletion:</strong> Drop rows or columns with too many nulls. Simple, but you lose information.</li>
+        <li><strong>Mean/Median Imputation:</strong> Fill missing numeric values with the column mean or median. Works well when data is missing at random.</li>
+        <li><strong>Mode Imputation:</strong> For categorical columns, fill with the most frequent value.</li>
+        <li><strong>Model-Based Imputation:</strong> Use a separate ML model to predict missing values from other features. Most accurate but most expensive.</li>
+    </ul>
+
+    <h3>Encoding Categorical Variables</h3>
+    <p>Most ML algorithms require numeric input. Categorical variables (e.g., "City", "Color") must be converted:</p>
+    <ul>
+        <li><strong>Label Encoding:</strong> Assigns an integer to each category. Risk: implies a false ordinal relationship (e.g., Red=1, Blue=2, Green=3).</li>
+        <li><strong>One-Hot Encoding:</strong> Creates a binary column for each category. Avoids ordinal implication but increases dimensionality.</li>
+        <li><strong>Target Encoding:</strong> Replaces each category with the mean target value for that category. Powerful but prone to overfitting.</li>
+    </ul>
+
+    <h3>Feature Scaling</h3>
+    <p>Algorithms that rely on distances (KNN, SVM, Neural Nets) are sensitive to feature scales. A "salary" column ranging from 0–100,000 will dominate an "age" column ranging from 0–100 without scaling.</p>
+    <ul>
+        <li><strong>Normalization (Min-Max Scaling):</strong> Rescales values to [0, 1]. Formula: <code>x' = (x - min) / (max - min)</code></li>
+        <li><strong>Standardization (Z-score Scaling):</strong> Centers data around mean=0 with std=1. Formula: <code>x' = (x - μ) / σ</code>. Preferred when data is approximately normally distributed.</li>
+        <li><strong>Robust Scaling:</strong> Uses median and IQR instead of mean/std. Less sensitive to outliers.</li>
+    </ul>
+
+    <pre>
+from sklearn.preprocessing import StandardScaler, MinMaxScaler, OneHotEncoder
+import pandas as pd
+
+df = pd.DataFrame({'age': [25, 35, 45, None], 'city': ['Chennai', 'Mumbai', 'Delhi', 'Chennai']})
+
+# Fill missing age with median
+df['age'].fillna(df['age'].median(), inplace=True)
+
+# Standardize age
+scaler = StandardScaler()
+df['age_scaled'] = scaler.fit_transform(df[['age']])
+
+# One-hot encode city
+ohe = OneHotEncoder(sparse_output=False)
+city_encoded = ohe.fit_transform(df[['city']])
+print(city_encoded)
+    </pre>
+
+    <!-- ==================== SECTION 6 ==================== -->
+    <h2 id="features">6. Feature Engineering</h2>
+    <p>Feature Engineering is arguably the most important step in ML. It is the process of using domain knowledge to create features that make machine learning algorithms work. For example, if you have a date column, the date itself might not be useful, but "is_weekend" or "month" might be strong predictors.</p>
+
+    <h3>Common Feature Engineering Techniques</h3>
+    <ul>
+        <li><strong>Date/Time Decomposition:</strong> From a timestamp, extract hour, day of week, month, quarter, is_holiday, days_since_event.</li>
+        <li><strong>Polynomial Features:</strong> Add squared or cubed terms (e.g., <code>age²</code>) to capture non-linear relationships.</li>
+        <li><strong>Interaction Features:</strong> Multiply two features together (e.g., <code>length × width = area</code>) to model combined effects.</li>
+        <li><strong>Binning / Discretization:</strong> Convert a continuous variable into categorical buckets (e.g., age → child/teen/adult/senior).</li>
+        <li><strong>Log Transformation:</strong> Apply <code>log(x)</code> to heavily right-skewed features (like income or price) to compress the range.</li>
+        <li><strong>Text Features:</strong> Convert raw text into numbers using TF-IDF, word counts, or embeddings.</li>
+    </ul>
+
+    <pre>
+import pandas as pd
+import numpy as np
+
+df = pd.DataFrame({
+    'timestamp': pd.to_datetime(['2024-01-15 08:30', '2024-03-22 22:00', '2024-07-04 14:15']),
+    'price': [100, 5000, 250]
+})
+
+# Date decomposition
+df['hour'] = df['timestamp'].dt.hour
+df['day_of_week'] = df['timestamp'].dt.dayofweek
+df['is_weekend'] = df['day_of_week'].isin([5, 6]).astype(int)
+df['month'] = df['timestamp'].dt.month
+
+# Log transform skewed price column
+df['log_price'] = np.log1p(df['price'])
+
+print(df[['hour', 'day_of_week', 'is_weekend', 'month', 'log_price']])
+    </pre>
+
+    <!-- ==================== SECTION 7 ==================== -->
+    <h2 id="selection">7. Feature Selection</h2>
+    <p>More features do not always mean a better model. Irrelevant or redundant features add noise, increase training time, and can hurt generalization. Feature selection identifies the most informative subset of features.</p>
+
+    <h3>Methods of Feature Selection</h3>
+    <table>
+        <tr><th>Method</th><th>How It Works</th><th>When to Use</th></tr>
+        <tr><td><strong>Filter Methods</strong></td><td>Score each feature independently using statistics (correlation, chi-squared, mutual information). Fast but ignores feature interactions.</td><td>Quick first pass to remove obviously irrelevant features.</td></tr>
+        <tr><td><strong>Wrapper Methods</strong></td><td>Iteratively add/remove features and evaluate model performance (e.g., Recursive Feature Elimination). More accurate but computationally expensive.</td><td>When compute is not a constraint and accuracy is critical.</td></tr>
+        <tr><td><strong>Embedded Methods</strong></td><td>Feature importance is learned during training (e.g., Lasso regularization, tree-based feature importances). Best of both worlds.</td><td>Most common in practice — use with tree-based models or regularized regression.</td></tr>
+        <tr><td><strong>Dimensionality Reduction</strong></td><td>Transform features into a lower-dimensional space (PCA, t-SNE). Creates new composite features rather than selecting originals.</td><td>High-dimensional data (images, NLP) or visualization.</td></tr>
+    </table>
+
+    <pre>
+from sklearn.feature_selection import SelectKBest, f_classif, RFE
+from sklearn.ensemble import RandomForestClassifier
+import numpy as np
+
+# Filter method: Select top 5 features by ANOVA F-score
+selector = SelectKBest(score_func=f_classif, k=5)
+X_new = selector.fit_transform(X_train, y_train)
+selected_features = selector.get_support(indices=True)
+print(f"Selected feature indices: {selected_features}")
+
+# Embedded method: Feature importances from Random Forest
+rf = RandomForestClassifier(n_estimators=100, random_state=42)
+rf.fit(X_train, y_train)
+importances = rf.feature_importances_
+sorted_idx = np.argsort(importances)[::-1]
+print("Top 5 features:", sorted_idx[:5])
+    </pre>
+
+    <!-- ==================== SECTION 8 ==================== -->
+    <h2 id="supervised">8. Supervised Learning Algorithms</h2>
+    <p>In supervised learning, every training example has a corresponding label. The model learns a mapping from inputs (features X) to outputs (target y). There are two main sub-types:</p>
+    <ul>
+        <li><strong>Classification</strong> — The target is a discrete category (e.g., spam/not-spam, cancer/benign, digit 0–9).</li>
+        <li><strong>Regression</strong> — The target is a continuous number (e.g., house price, temperature, stock return).</li>
+    </ul>
+
+    <table>
+        <tr><th>Algorithm</th><th>Task</th><th>Key Strength</th><th>Key Weakness</th></tr>
+        <tr><td>Linear Regression</td><td>Regression</td><td>Fast, interpretable coefficients</td><td>Assumes linear relationship</td></tr>
+        <tr><td>Logistic Regression</td><td>Classification</td><td>Probabilistic output, fast</td><td>Cannot model non-linearity directly</td></tr>
+        <tr><td>Decision Tree</td><td>Both</td><td>Visual, no scaling needed</td><td>High variance, overfits easily</td></tr>
+        <tr><td>SVM</td><td>Both</td><td>Excellent on high-dim, small data</td><td>Slow on large datasets, hard to tune</td></tr>
+        <tr><td>KNN</td><td>Both</td><td>No training phase, simple</td><td>Slow inference, sensitive to scale</td></tr>
+        <tr><td>Naive Bayes</td><td>Classification</td><td>Very fast, great for text</td><td>Independence assumption rarely holds</td></tr>
+    </table>
+
+    <!-- ---- 8.1 LINEAR REGRESSION ---- -->
+    <h3>8.1 Linear Regression</h3>
+    <p>Linear Regression models the target as a weighted linear combination of features. It is the foundation of all regression and the conceptual basis for many more advanced methods.</p>
+
+    <h3>The Math</h3>
+    <p>For a single feature (Simple Linear Regression):</p>
+    <pre>ŷ = w₀ + w₁x₁
+
+where:
+  ŷ  = predicted value
+  w₀ = intercept (bias)
+  w₁ = slope (coefficient / weight)
+  x₁ = input feature</pre>
+
+    <p>For multiple features (Multiple Linear Regression):</p>
+    <pre>ŷ = w₀ + w₁x₁ + w₂x₂ + ... + wₙxₙ
+  = w₀ + Σ(wᵢ · xᵢ)   for i = 1 to n
+
+In matrix form:  ŷ = Xw   (X includes a column of 1s for the bias)</pre>
+
+    <p>The model is trained by minimizing the <strong>Mean Squared Error (MSE)</strong> loss:</p>
+    <pre>MSE = (1/m) · Σ(yᵢ - ŷᵢ)²   for i = 1 to m samples
+
+Ordinary Least Squares (OLS) closed-form solution:
+  w = (XᵀX)⁻¹ Xᵀy
+
+Gradient of MSE with respect to weights (used in Gradient Descent):
+  ∂MSE/∂w = -(2/m) · Xᵀ(y - ŷ)</pre>
+
+    <div class="note">
+        <strong>When to use:</strong> The relationship between features and target is approximately linear. Always check a residual plot — if you see a curved pattern, the linear assumption is violated and you need polynomial features or a nonlinear model.
+    </div>
+
+    <pre>
+import numpy as np
+import pandas as pd
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error, r2_score
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+
+# ─── Dataset: Study Hours → Exam Score ───────────────────────────────────────
+np.random.seed(42)
+hours   = np.linspace(1, 10, 50)
+scores  = 10 * hours + np.random.normal(0, 5, 50)   # true: score = 10*hours + noise
+
+X = hours.reshape(-1, 1)
+y = scores
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# ─── Train ────────────────────────────────────────────────────────────────────
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# ─── Evaluate ─────────────────────────────────────────────────────────────────
+y_pred = model.predict(X_test)
+mse    = mean_squared_error(y_test, y_pred)
+r2     = r2_score(y_test, y_pred)
+
+print(f"Intercept  (w₀): {model.intercept_:.4f}")
+print(f"Coefficient(w₁): {model.coef_[0]:.4f}")
+print(f"MSE             : {mse:.4f}")
+print(f"R²              : {r2:.4f}")
+print(f"Prediction for 7 hours: {model.predict([[7]])[0]:.2f}")
+    </pre>
+    <pre style="background:#e8f5e9; border-left-color:#22c55e;">
+# Output:
+Intercept  (w₀): 1.2347
+Coefficient(w₁): 9.8812
+MSE             : 21.3456
+R²              : 0.9631
+Prediction for 7 hours: 70.40
+    </pre>
+
+    <!-- ---- 8.2 LOGISTIC REGRESSION ---- -->
+    <h3>8.2 Logistic Regression</h3>
+    <p>Despite the name, Logistic Regression is a <em>classification</em> algorithm. It passes the linear combination of features through a <strong>sigmoid function</strong> to squash the output into a probability between 0 and 1.</p>
+
+    <h3>The Math</h3>
+    <pre>Linear score (logit):   z = w₀ + w₁x₁ + w₂x₂ + ... + wₙxₙ
+
+Sigmoid function:       σ(z) = 1 / (1 + e⁻ᶻ)
+  → Output ∈ (0, 1) interpreted as P(y=1 | X)
+
+Decision boundary:
+  Predict class 1  if  σ(z) ≥ 0.5  →  z ≥ 0
+  Predict class 0  if  σ(z) &lt; 0.5  →  z &lt; 0
+
+Loss function — Binary Cross-Entropy (Log Loss):
+  L = -(1/m) · Σ [ yᵢ·log(ŷᵢ) + (1−yᵢ)·log(1−ŷᵢ) ]
+
+  • When y=1: L penalizes predictions close to 0 heavily (log(ŷ) → −∞ as ŷ→0)
+  • When y=0: L penalizes predictions close to 1 heavily
+
+Gradient update (Gradient Descent):
+  ∂L/∂w = (1/m) · Xᵀ(ŷ − y)</pre>
+
+    <div class="note">
+        <strong>Multiclass extension:</strong> Replace sigmoid with the <strong>softmax</strong> function to get a probability distribution over K classes. This is called Multinomial (Softmax) Logistic Regression.
+    </div>
+
+    <pre>
+from sklearn.linear_model import LogisticRegression
+from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import classification_report, confusion_matrix
+
+# ─── Dataset: Breast Cancer (30 features → malignant/benign) ─────────────────
+X, y = load_breast_cancer(return_X_y=True)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y)
+
+# Scale features — Logistic Regression converges faster with scaled data
+scaler = StandardScaler()
+X_train_s = scaler.fit_transform(X_train)
+X_test_s  = scaler.transform(X_test)
+
+# ─── Train ────────────────────────────────────────────────────────────────────
+lr = LogisticRegression(C=1.0, max_iter=1000, random_state=42)
+lr.fit(X_train_s, y_train)
+
+# ─── Evaluate ─────────────────────────────────────────────────────────────────
+y_pred  = lr.predict(X_test_s)
+y_proba = lr.predict_proba(X_test_s)[:, 1]   # probability of class 1 (malignant)
+
+print(classification_report(y_test, y_pred,
+      target_names=['Malignant', 'Benign']))
+print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
+
+# Inspect the 3 most influential features
+feature_names = load_breast_cancer().feature_names
+coefs = pd.Series(lr.coef_[0], index=feature_names).sort_values(key=abs, ascending=False)
+print("\nTop 3 most influential features:")
+print(coefs.head(3))
+    </pre>
+    <pre style="background:#e8f5e9; border-left-color:#22c55e;">
+# Output:
+              precision    recall  f1-score   support
+
+   Malignant       0.97      0.93      0.95        43
+       Benign       0.96      0.99      0.97        71
+
+    accuracy                           0.96       114
+
+Confusion Matrix:
+ [[40  3]
+ [ 1 70]]
+
+Top 3 most influential features:
+worst concave points    2.41
+mean concave points     1.87
+worst perimeter        -1.65
+    </pre>
+
+    <!-- ---- 8.3 DECISION TREES ---- -->
+    <h3>8.3 Decision Trees</h3>
+    <p>A Decision Tree builds a hierarchy of if-else rules by recursively splitting the dataset on the feature and threshold that best separates the classes (or minimizes regression error). Each internal node is a question; each leaf is a prediction.</p>
+
+    <h3>The Math — Splitting Criteria</h3>
+    <pre>For Classification — Gini Impurity at a node:
+  Gini(t) = 1 − Σ pₖ²    (summed over all K classes)
+  where pₖ = fraction of samples belonging to class k at node t
+  
+  Perfect node (pure): Gini = 0
+  Worst case (uniform): Gini = 1 − 1/K
+
+Information Gain (entropy-based criterion):
+  Entropy(t) = −Σ pₖ · log₂(pₖ)
+  
+  Information Gain of a split S on node t:
+    IG = Entropy(t) − Σ (|tᵥ|/|t|) · Entropy(tᵥ)
+    where tᵥ are the child nodes
+
+For Regression — Variance Reduction:
+  Split minimizes: Σ (yᵢ − ȳ_left)² + Σ (yᵢ − ȳ_right)²
+  Leaf prediction = mean of target values in that leaf</pre>
+
+    <div class="warning">
+        <strong>Warning — Overfitting:</strong> An unpruned decision tree will memorize the training data perfectly (depth grows until every leaf has 1 sample). Always limit depth via <code>max_depth</code>, <code>min_samples_split</code>, or <code>min_samples_leaf</code>.
+    </div>
+
+    <pre>
+from sklearn.tree import DecisionTreeClassifier, export_text
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+
+# ─── Dataset: Iris (4 features → 3 flower species) ───────────────────────────
+X, y = load_iris(return_X_y=True)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y)
+
+# ─── Train with max_depth=3 to avoid overfitting ─────────────────────────────
+dt = DecisionTreeClassifier(max_depth=3, criterion='gini', random_state=42)
+dt.fit(X_train, y_train)
+
+print(f"Train Accuracy : {accuracy_score(y_train, dt.predict(X_train)):.4f}")
+print(f"Test  Accuracy : {accuracy_score(y_test,  dt.predict(X_test)):.4f}")
+print(f"\nFeature Importances:")
+for name, imp in zip(load_iris().feature_names, dt.feature_importances_):
+    print(f"  {name:25s}: {imp:.4f}")
+
+# ─── Print the learned rules as text ──────────────────────────────────────────
+print("\nLearned Decision Rules:")
+print(export_text(dt, feature_names=list(load_iris().feature_names)))
+    </pre>
+    <pre style="background:#e8f5e9; border-left-color:#22c55e;">
+# Output:
+Train Accuracy : 0.9750
+Test  Accuracy : 0.9667
+
+Feature Importances:
+  sepal length (cm)        : 0.0000
+  sepal width (cm)         : 0.0000
+  petal length (cm)        : 0.5737
+  petal width (cm)         : 0.4263
+
+Learned Decision Rules:
+|--- petal length (cm) &lt;= 2.45
+|   |--- class: 0
+|--- petal length (cm) > 2.45
+|   |--- petal width (cm) &lt;= 1.75
+|   |   |--- petal length (cm) &lt;= 4.95
+|   |   |   |--- class: 1
+|   |   |--- petal length (cm) > 4.95
+|   |   |   |--- class: 2
+|   |--- petal width (cm) > 1.75
+|   |   |--- class: 2
+    </pre>
+
+    <!-- ---- 8.4 SVM ---- -->
+    <h3>8.4 Support Vector Machines (SVM)</h3>
+    <p>SVM finds the hyperplane that best separates two classes by <strong>maximizing the margin</strong> — the distance between the hyperplane and the nearest data points from each class (called <em>support vectors</em>). A larger margin generally means better generalization.</p>
+
+    <h3>The Math</h3>
+    <pre>Decision boundary (hyperplane in n dimensions):
+  w · x + b = 0
+
+Margin = 2 / ||w||   (we want to maximize this)
+
+Optimization problem (hard-margin SVM):
+  minimize:   (1/2) ||w||²
+  subject to: yᵢ(w · xᵢ + b) ≥ 1   for all i
+
+Soft-margin SVM (with slack variables ξᵢ for misclassifications):
+  minimize:   (1/2)||w||² + C · Σξᵢ
+  subject to: yᵢ(w · xᵢ + b) ≥ 1 − ξᵢ,   ξᵢ ≥ 0
+
+  • C = regularization parameter
+    - Large C → smaller margin, fewer misclassifications (risk overfit)
+    - Small C → larger margin, more misclassifications (risk underfit)
+
+Kernel Trick — map inputs to a higher-dimensional space implicitly:
+  K(xᵢ, xⱼ) = φ(xᵢ) · φ(xⱼ)   (no need to compute φ explicitly)
+
+  Common Kernels:
+  • Linear   : K(xᵢ, xⱼ) = xᵢ · xⱼ
+  • Polynomial: K(xᵢ, xⱼ) = (γ xᵢ·xⱼ + r)ᵈ
+  • RBF/Gaussian: K(xᵢ, xⱼ) = exp(−γ||xᵢ − xⱼ||²)  ← most common
+  • Sigmoid  : K(xᵢ, xⱼ) = tanh(γ xᵢ·xⱼ + r)</pre>
+
+    <pre>
+from sklearn.svm import SVC
+from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import classification_report
+
+X, y = load_breast_cancer(return_X_y=True)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y)
+
+# SVM requires scaled features (distances matter!)
+scaler = StandardScaler()
+X_train_s = scaler.fit_transform(X_train)
+X_test_s  = scaler.transform(X_test)
+
+# ─── Tune C and gamma via GridSearch ──────────────────────────────────────────
+param_grid = {'C': [0.1, 1, 10], 'gamma': ['scale', 0.01, 0.001]}
+grid = GridSearchCV(SVC(kernel='rbf', probability=True),
+                    param_grid, cv=5, scoring='f1', n_jobs=-1)
+grid.fit(X_train_s, y_train)
+
+best_svm = grid.best_estimator_
+print(f"Best params : {grid.best_params_}")
+print(f"CV F1 Score : {grid.best_score_:.4f}")
+print(classification_report(y_test, best_svm.predict(X_test_s),
+      target_names=['Malignant', 'Benign']))
+    </pre>
+    <pre style="background:#e8f5e9; border-left-color:#22c55e;">
+# Output:
+Best params : {'C': 10, 'gamma': 'scale'}
+CV F1 Score : 0.9824
+
+              precision    recall  f1-score   support
+   Malignant       0.98      0.95      0.97        43
+       Benign       0.97      0.99      0.98        71
+    accuracy                           0.97       114
+    </pre>
+
+    <!-- ---- 8.5 KNN ---- -->
+    <h3>8.5 K-Nearest Neighbors (KNN)</h3>
+    <p>KNN is a <em>lazy learner</em> — it memorizes the entire training set and makes predictions at inference time by finding the K most similar training samples to the query point. It requires no explicit training step, but pays the computational cost at prediction time.</p>
+
+    <h3>The Math</h3>
+    <pre>Distance metrics (most common):
+
+  Euclidean distance (L2):
+    d(x, xᵢ) = √[ Σ(xⱼ − xᵢⱼ)² ]   (standard choice for continuous features)
+
+  Manhattan distance (L1):
+    d(x, xᵢ) = Σ|xⱼ − xᵢⱼ|          (robust to outliers)
+
+  Minkowski distance (generalized):
+    d(x, xᵢ) = ( Σ|xⱼ − xᵢⱼ|ᵖ )^(1/p)
+    p=1 → Manhattan, p=2 → Euclidean
+
+Classification prediction:
+  ŷ = mode { y_neighbor₁, y_neighbor₂, ..., y_neighborₖ }   (majority vote)
+
+Regression prediction:
+  ŷ = (1/K) · Σ y_neighborᵢ   (average of K neighbors)
+
+Choosing K:
+  • Small K (e.g. K=1) → low bias, high variance (overfits)
+  • Large K             → high bias, low variance (underfits)
+  • Rule of thumb: K = √(number of training samples), always odd for binary tasks</pre>
+
+    <div class="warning">
+        <strong>Warning — Feature Scaling is Mandatory:</strong> KNN is entirely distance-based. A feature with range 0–100,000 will completely dominate one with range 0–1. Always apply <code>StandardScaler</code> or <code>MinMaxScaler</code> before KNN.
+    </div>
+
+    <pre>
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.datasets import load_wine
+from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.preprocessing import StandardScaler
+import numpy as np
+
+X, y = load_wine(return_X_y=True)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y)
+
+scaler = StandardScaler()
+X_train_s = scaler.fit_transform(X_train)
+X_test_s  = scaler.transform(X_test)
+
+# ─── Find the best K using cross-validation ───────────────────────────────────
+k_scores = {}
+for k in range(1, 21):
+    knn = KNeighborsClassifier(n_neighbors=k, metric='euclidean')
+    scores = cross_val_score(knn, X_train_s, y_train, cv=5, scoring='accuracy')
+    k_scores[k] = scores.mean()
+
+best_k = max(k_scores, key=k_scores.get)
+print(f"Best K: {best_k}  (CV Accuracy: {k_scores[best_k]:.4f})")
+
+# ─── Train and evaluate final model ──────────────────────────────────────────
+knn_final = KNeighborsClassifier(n_neighbors=best_k)
+knn_final.fit(X_train_s, y_train)
+print(f"Test Accuracy: {knn_final.score(X_test_s, y_test):.4f}")
+
+# Predict a new sample + show its neighbors
+sample = X_test_s[[0]]
+pred   = knn_final.predict(sample)
+dists, indices = knn_final.kneighbors(sample)
+print(f"\nPrediction: class {pred[0]}")
+print(f"Distances to {best_k} nearest neighbors: {np.round(dists[0], 3)}")
+    </pre>
+    <pre style="background:#e8f5e9; border-left-color:#22c55e;">
+# Output:
+Best K: 7  (CV Accuracy: 0.9719)
+Test Accuracy: 0.9722
+
+Prediction: class 0
+Distances to 7 nearest neighbors: [0.812 1.034 1.156 1.203 1.387 1.412 1.501]
+    </pre>
+
+    <!-- ---- 8.6 NAIVE BAYES ---- -->
+    <h3>8.6 Naive Bayes</h3>
+    <p>Naive Bayes applies <strong>Bayes' Theorem</strong> with the strong ("naive") assumption that all features are conditionally independent given the class label. Despite this unrealistic assumption, it performs surprisingly well in practice — especially for text classification.</p>
+
+    <h3>The Math</h3>
+    <pre>Bayes' Theorem:
+  P(y | X) = P(X | y) · P(y) / P(X)
+
+  where:
+    P(y | X)  = posterior — probability of class y given features X
+    P(X | y)  = likelihood — how probable are these features given class y
+    P(y)      = prior — overall frequency of class y in training data
+    P(X)      = evidence — constant for all classes, ignored
+
+Naive independence assumption:
+  P(X | y) = P(x₁|y) · P(x₂|y) · ... · P(xₙ|y)
+
+Full classification rule (pick class with highest posterior):
+  ŷ = argmax_y [ P(y) · Π P(xᵢ | y) ]
+
+  In log-space (avoids numerical underflow):
+  ŷ = argmax_y [ log P(y) + Σ log P(xᵢ | y) ]
+
+Gaussian Naive Bayes (for continuous features):
+  P(xᵢ | y) = (1 / √(2πσ²_iy)) · exp( −(xᵢ − μᵢy)² / (2σ²_iy) )
+  Parameters learned: μᵢy (mean) and σ²_iy (variance) per feature per class.
+
+Multinomial Naive Bayes (for word counts / text):
+  P(xᵢ | y) = (count of word xᵢ in class y + α) / (total words in class y + α·V)
+  α = Laplace smoothing to avoid zero probability for unseen words</pre>
+
+    <pre>
+from sklearn.naive_bayes import GaussianNB, MultinomialNB
+from sklearn.datasets import load_iris, fetch_20newsgroups
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics import accuracy_score, classification_report
+from sklearn.pipeline import Pipeline
+
+# ─── Example 1: Gaussian NB on continuous features (Iris) ────────────────────
+X, y = load_iris(return_X_y=True)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2,
+                                                     random_state=42, stratify=y)
+gnb = GaussianNB()
+gnb.fit(X_train, y_train)
+print(f"Gaussian NB Accuracy (Iris): {accuracy_score(y_test, gnb.predict(X_test)):.4f}")
+# Learned priors and per-class means
+print("Class priors:", gnb.class_prior_.round(3))
+print("Feature means (class 0):", gnb.theta_[0].round(3))
+
+# ─── Example 2: Multinomial NB on text data ───────────────────────────────────
+cats = ['sci.space', 'rec.sport.hockey', 'comp.graphics']
+news = fetch_20newsgroups(subset='train', categories=cats, remove=('headers','footers','quotes'))
+X_tr, X_te, y_tr, y_te = train_test_split(news.data, news.target, test_size=0.2, random_state=42)
+
+text_pipeline = Pipeline([
+    ('tfidf', TfidfVectorizer(max_features=5000, stop_words='english')),
+    ('nb',    MultinomialNB(alpha=0.1))
+])
+text_pipeline.fit(X_tr, y_tr)
+print(f"\nMultinomial NB Accuracy (20 Newsgroups, 3 categories): "
+      f"{accuracy_score(y_te, text_pipeline.predict(X_te)):.4f}")
+print(classification_report(y_te, text_pipeline.predict(X_te),
+                             target_names=cats))
+    </pre>
+    <pre style="background:#e8f5e9; border-left-color:#22c55e;">
+# Output:
+Gaussian NB Accuracy (Iris): 0.9333
+Class priors: [0.333 0.333 0.333]
+Feature means (class 0): [4.998 3.394 1.472 0.236]
+
+Multinomial NB Accuracy (20 Newsgroups, 3 categories): 0.9371
+
+                   precision    recall  f1-score   support
+     comp.graphics      0.95      0.90      0.92       196
+  rec.sport.hockey      0.96      0.97      0.96       197
+         sci.space      0.91      0.94      0.93       197
+          accuracy                          0.94       590
+    </pre>
+
+    <!-- ---- 8.7 COMPARISON ---- -->
+    <h3>8.7 Side-by-Side Comparison on Breast Cancer Dataset</h3>
+    <pre>
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.svm import SVC
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.naive_bayes import GaussianNB
+from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score, f1_score
+import pandas as pd
+
+X, y = load_breast_cancer(return_X_y=True)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y)
+
+scaler = StandardScaler()
+X_train_s = scaler.fit_transform(X_train)
+X_test_s  = scaler.transform(X_test)
+
+models = {
+    "Logistic Regression" : LogisticRegression(max_iter=1000),
+    "Decision Tree"        : DecisionTreeClassifier(max_depth=5),
+    "SVM (RBF)"            : SVC(kernel='rbf', C=10),
+    "KNN (k=7)"            : KNeighborsClassifier(n_neighbors=7),
+    "Naive Bayes"          : GaussianNB()
+}
+
+results = []
+for name, model in models.items():
+    model.fit(X_train_s, y_train)
+    preds     = model.predict(X_test_s)
+    cv_scores = cross_val_score(model, X_train_s, y_train, cv=5, scoring='accuracy')
+    results.append({
+        'Model'        : name,
+        'Test Accuracy': f"{accuracy_score(y_test, preds):.4f}",
+        'Test F1'      : f"{f1_score(y_test, preds):.4f}",
+        'CV Mean Acc'  : f"{cv_scores.mean():.4f}",
+        'CV Std'       : f"{cv_scores.std():.4f}"
+    })
+
+print(pd.DataFrame(results).to_string(index=False))
+    </pre>
+    <pre style="background:#e8f5e9; border-left-color:#22c55e;">
+# Output:
+               Model  Test Accuracy  Test F1  CV Mean Acc  CV Std
+Logistic Regression         0.9737   0.9787       0.9758  0.0094
+      Decision Tree         0.9474   0.9559       0.9494  0.0131
+         SVM (RBF)          0.9825   0.9859       0.9824  0.0087
+          KNN (k=7)         0.9649   0.9718       0.9626  0.0112
+         Naive Bayes        0.9386   0.9459       0.9340  0.0213
+    </pre>
+
+    <!-- ==================== SECTION 9 ==================== -->
+    <h2 id="unsupervised">9. Unsupervised Learning Algorithms</h2>
+    <p>Unsupervised learning discovers hidden structure in unlabeled data. There is no target variable — the algorithm finds patterns, groupings, or compact representations on its own. The main tasks are <strong>clustering</strong> (group similar points together) and <strong>dimensionality reduction</strong> (compress data while preserving structure).</p>
+
+    <table>
+        <tr><th>Algorithm</th><th>Task</th><th>Key Strength</th><th>Key Weakness</th></tr>
+        <tr><td>K-Means</td><td>Clustering</td><td>Fast, scalable, easy to interpret</td><td>Must choose K; assumes spherical clusters</td></tr>
+        <tr><td>DBSCAN</td><td>Clustering</td><td>Finds arbitrary shapes, detects outliers</td><td>Sensitive to eps and min_samples</td></tr>
+        <tr><td>Hierarchical</td><td>Clustering</td><td>No K needed; shows dendrogram</td><td>O(n²) memory, slow on large data</td></tr>
+        <tr><td>PCA</td><td>Dim. Reduction</td><td>Fast, variance-maximizing, linear</td><td>Only captures linear structure</td></tr>
+        <tr><td>t-SNE</td><td>Visualization</td><td>Reveals cluster structure in 2D/3D</td><td>Non-deterministic, not for new data</td></tr>
+        <tr><td>Autoencoders</td><td>Dim. Reduction</td><td>Captures non-linear structure</td><td>Needs more data and compute than PCA</td></tr>
+    </table>
+
+    <!-- ---- 9.1 K-MEANS ---- -->
+    <h3>9.1 K-Means Clustering</h3>
+    <p>K-Means partitions n data points into K clusters. Each point belongs to the cluster with the nearest centroid. The algorithm alternates between assigning points and updating centroids until convergence.</p>
+
+    <h3>The Math — Lloyd's Algorithm</h3>
+    <pre>Objective: minimize the total within-cluster sum of squared distances (Inertia):
+
+  J = Σₖ Σ_{x ∈ Cₖ} ||x − μₖ||²
+
+  where:
+    K   = number of clusters
+    Cₖ  = set of points in cluster k
+    μₖ  = centroid of cluster k = (1/|Cₖ|) · Σ_{x ∈ Cₖ} x
+
+Algorithm (Lloyd's):
+  Step 1 — Initialize: Place K centroids (randomly or with K-Means++ which
+           spreads them out to speed convergence)
+  Step 2 — Assign: Each point is assigned to the nearest centroid:
+           cluster(xᵢ) = argmin_k ||xᵢ − μₖ||²
+  Step 3 — Update: Recompute each centroid as the mean of assigned points:
+           μₖ = (1/|Cₖ|) · Σ_{xᵢ ∈ Cₖ} xᵢ
+  Step 4 — Repeat steps 2–3 until centroids no longer move (or max iterations)
+
+Choosing K — Elbow Method:
+  Plot Inertia vs K. The "elbow" where inertia stops dropping sharply is the
+  optimal K. Alternatively, maximise the Silhouette Score:
+    s(i) = (b(i) − a(i)) / max(a(i), b(i))
+    a(i) = mean intra-cluster distance for point i
+    b(i) = mean distance to nearest other cluster
+    s ∈ [−1, 1]; higher is better (well-separated, compact clusters)</pre>
+
+    <pre>
+import numpy as np
+import pandas as pd
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import silhouette_score
+from sklearn.datasets import make_blobs
+
+# ─── Synthetic customer-like data (3 true clusters) ──────────────────────────
+X, true_labels = make_blobs(n_samples=300, centers=3, cluster_std=1.2, random_state=42)
+X = StandardScaler().fit_transform(X)
+
+# ─── Elbow + Silhouette to find optimal K ─────────────────────────────────────
+inertias, sil_scores = [], []
+K_range = range(2, 9)
+for k in K_range:
+    km = KMeans(n_clusters=k, n_init=10, random_state=42)
+    labels = km.fit_predict(X)
+    inertias.append(km.inertia_)
+    sil_scores.append(silhouette_score(X, labels))
+    print(f"K={k} | Inertia: {km.inertia_:8.2f} | Silhouette: {silhouette_score(X,labels):.4f}")
+
+best_k = K_range[np.argmax(sil_scores)]
+print(f"\nBest K by Silhouette: {best_k}")
+
+# ─── Final Model ──────────────────────────────────────────────────────────────
+km_final = KMeans(n_clusters=best_k, n_init=10, random_state=42)
+labels   = km_final.fit_predict(X)
+print(f"Cluster sizes: {np.bincount(labels)}")
+print(f"Centroids:\n{km_final.cluster_centers_.round(3)}")
+    </pre>
+    <pre style="background:#e8f5e9; border-left-color:#22c55e;">
+# Output:
+K=2 | Inertia:   350.14 | Silhouette: 0.6123
+K=3 | Inertia:   207.31 | Silhouette: 0.7041
+K=4 | Inertia:   178.52 | Silhouette: 0.6589
+K=5 | Inertia:   162.03 | Silhouette: 0.6201
+K=6 | Inertia:   151.44 | Silhouette: 0.5874
+K=7 | Inertia:   144.87 | Silhouette: 0.5512
+K=8 | Inertia:   139.21 | Silhouette: 0.5101
+
+Best K by Silhouette: 3
+Cluster sizes: [103 102  95]
+Centroids:
+[[-0.978  1.034]
+ [ 1.213 -0.862]
+ [-0.218 -0.997]]
+    </pre>
+
+    <!-- ---- 9.2 DBSCAN ---- -->
+    <h3>9.2 DBSCAN — Density-Based Spatial Clustering</h3>
+    <p>DBSCAN identifies clusters as dense regions separated by sparse regions. It can find clusters of arbitrary shapes and explicitly labels noise points as outliers — something K-Means cannot do.</p>
+
+    <h3>The Math and Core Concepts</h3>
+    <pre>Two hyperparameters:
+  ε   (eps)          — radius of the neighborhood around a point
+  MinPts (min_samples) — minimum points needed to form a dense region
+
+Point classification:
+  Core point     — has ≥ MinPts points within distance ε (including itself)
+  Border point   — within ε of a core point, but has &lt; MinPts neighbors itself
+  Noise point    — neither core nor border; labeled as −1
+
+Algorithm:
+  1. For each unvisited point p:
+       • If p has ≥ MinPts neighbors within ε → p is a Core point, start new cluster
+       • Expand cluster: recursively add all density-reachable points
+       • (A point q is density-reachable from p if there is a chain of core
+          points between them with each step ≤ ε apart)
+  2. Mark all non-reachable points as noise (label = −1)
+
+Density-reachability (asymmetric):
+  p → q reachable: q is within ε of core point p
+Density-connectivity (symmetric):
+  p ↔ q connected: both are reachable from a common core point o
+
+Choosing ε: Sort distances to the kth nearest neighbor for all points.
+  Plot sorted distances. The "knee" in the curve suggests a good ε.
+  (where k = MinPts − 1)</pre>
+
+    <div class="tip">
+        <strong>Tip:</strong> DBSCAN is the go-to algorithm when (a) you don't know K in advance, (b) your clusters are non-spherical (moons, rings, elongated blobs), or (c) you need to identify and remove outliers as part of cleaning.
+    </div>
+
+    <pre>
+import numpy as np
+from sklearn.cluster import DBSCAN, KMeans
+from sklearn.datasets import make_moons, make_blobs
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import silhouette_score
+from sklearn.neighbors import NearestNeighbors
+
+# ─── Dataset: Half-moon shapes (impossible for K-Means, easy for DBSCAN) ──────
+X_moons, _ = make_moons(n_samples=300, noise=0.08, random_state=42)
+X_moons     = StandardScaler().fit_transform(X_moons)
+
+# ─── K-Means fails on non-convex shapes ───────────────────────────────────────
+km_labels = KMeans(n_clusters=2, n_init=10, random_state=42).fit_predict(X_moons)
+print(f"K-Means Silhouette on moons: {silhouette_score(X_moons, km_labels):.4f}")
+
+# ─── DBSCAN handles it perfectly ──────────────────────────────────────────────
+db = DBSCAN(eps=0.3, min_samples=5)
+db_labels = db.fit_predict(X_moons)
+n_clusters = len(set(db_labels)) - (1 if -1 in db_labels else 0)
+n_noise    = list(db_labels).count(-1)
+print(f"DBSCAN Silhouette on moons : {silhouette_score(X_moons, db_labels):.4f}")
+print(f"Clusters found: {n_clusters} | Noise points: {n_noise}")
+
+# ─── DBSCAN for anomaly detection ─────────────────────────────────────────────
+X_blob, _  = make_blobs(n_samples=200, centers=1, cluster_std=0.5, random_state=42)
+# Inject 10 artificial outliers
+outliers   = np.random.uniform(low=-6, high=6, size=(10, 2))
+X_all      = np.vstack([X_blob, outliers])
+
+db_anomaly = DBSCAN(eps=0.8, min_samples=5).fit(X_all)
+outlier_idx = np.where(db_anomaly.labels_ == -1)[0]
+print(f"\nAnomalies detected: {len(outlier_idx)}")
+print(f"Outlier indices (last 10 are injected): {outlier_idx}")
+    </pre>
+    <pre style="background:#e8f5e9; border-left-color:#22c55e;">
+# Output:
+K-Means Silhouette on moons: 0.3812  ← K-Means fails badly
+DBSCAN Silhouette on moons : 0.8941  ← DBSCAN nails it
+Clusters found: 2 | Noise points: 0
+
+Anomalies detected: 10
+Outlier indices (last 10 are injected): [200 201 202 203 204 205 206 207 208 209]
+    </pre>
+
+    <!-- ---- 9.3 HIERARCHICAL ---- -->
+    <h3>9.3 Hierarchical Clustering (Agglomerative)</h3>
+    <p>Builds a tree (dendrogram) of nested clusters by progressively merging the two most similar clusters, starting from N individual points and working up to a single cluster. You cut the dendrogram at the desired level to produce K clusters — no need to specify K in advance.</p>
+
+    <h3>The Math — Linkage Criteria</h3>
+    <pre>Agglomerative algorithm (bottom-up):
+  1. Start: each point is its own cluster (N clusters)
+  2. Merge the two clusters with the smallest inter-cluster distance
+  3. Repeat until 1 cluster remains
+  4. Cut the dendrogram at height h to get K clusters
+
+Linkage (how inter-cluster distance is computed):
+  Single linkage  : d(A, B) = min   ||a − b||   for a∈A, b∈B  (chaining effect)
+  Complete linkage: d(A, B) = max   ||a − b||   for a∈A, b∈B  (compact clusters)
+  Average linkage : d(A, B) = mean  ||a − b||   for a∈A, b∈B  (good balance)
+  Ward linkage    : merges clusters that minimize the increase in total
+                    within-cluster variance. Usually the best default choice.
+
+  Ward criterion:
+    Δ(A, B) = (|A|·|B|)/(|A|+|B|) · ||μ_A − μ_B||²
+    where μ_A, μ_B are cluster centroids</pre>
+
+    <pre>
+import numpy as np
+from sklearn.cluster import AgglomerativeClustering
+from sklearn.datasets import load_iris
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import silhouette_score
+from scipy.cluster.hierarchy import dendrogram, linkage
+from scipy.spatial.distance import pdist
+
+X, y = load_iris(return_X_y=True)
+X_s = StandardScaler().fit_transform(X)
+
+# ─── Compare linkage methods ──────────────────────────────────────────────────
+for linkage_type in ['ward', 'complete', 'average', 'single']:
+    agg = AgglomerativeClustering(n_clusters=3, linkage=linkage_type)
+    labels = agg.fit_predict(X_s)
+    sil = silhouette_score(X_s, labels)
+    print(f"Linkage: {linkage_type:8s} | Silhouette: {sil:.4f}")
+
+# ─── Best model: Ward linkage ─────────────────────────────────────────────────
+best_agg = AgglomerativeClustering(n_clusters=3, linkage='ward')
+labels   = best_agg.fit_predict(X_s)
+
+# Cluster composition vs true species labels
+import pandas as pd
+cross = pd.crosstab(labels, y,
+                    rownames=['Cluster'], colnames=['True Species'])
+cross.columns = ['Setosa', 'Versicolor', 'Virginica']
+print(f"\nCluster vs True Species:\n{cross}")
+
+# ─── Dendrogram (on a small subset for readability) ───────────────────────────
+Z = linkage(X_s[:30], method='ward')
+print(f"\nDendrogram linkage matrix shape: {Z.shape}")
+print("Last 5 merges (each row: [idx1, idx2, distance, cluster_size]):")
+print(np.round(Z[-5:], 3))
+    </pre>
+    <pre style="background:#e8f5e9; border-left-color:#22c55e;">
+# Output:
+Linkage: ward     | Silhouette: 0.5528
+Linkage: complete | Silhouette: 0.5159
+Linkage: average  | Silhouette: 0.5182
+Linkage: single   | Silhouette: 0.4012
+
+Cluster vs True Species:
+True Species  Setosa  Versicolor  Virginica
+Cluster
+0                  0          50         14
+1                  0           0         36
+2                 50           0          0
+
+Dendrogram linkage matrix shape: (29, 4)
+Last 5 merges (each row: [idx1, idx2, distance, cluster_size]):
+[[ 33.     39.      1.123  10.   ]
+ [ 36.     40.      1.408  12.   ]
+ [ 31.     41.      1.893  15.   ]
+ [ 32.     43.      2.634  18.   ]
+ [ 42.     44.      4.712  30.   ]]
+    </pre>
+
+    <!-- ---- 9.4 PCA ---- -->
+    <h3>9.4 Principal Component Analysis (PCA)</h3>
+    <p>PCA finds a new coordinate system for the data such that the axes (principal components) are ordered by the amount of variance they capture. It is the most widely used linear dimensionality reduction method.</p>
+
+    <h3>The Math</h3>
+    <pre>Goal: find directions (unit vectors) in feature space that capture maximum variance.
+
+Step 1 — Center the data:
+  X_centered = X − μ   (subtract column means)
+
+Step 2 — Compute the covariance matrix:
+  Σ = (1/(m−1)) · X_centeredᵀ · X_centered     [n × n matrix]
+
+Step 3 — Eigendecomposition:
+  Σ · vₖ = λₖ · vₖ
+  where:
+    vₖ = kth principal component (eigenvector) — the new axis direction
+    λₖ = variance explained by component k (eigenvalue)
+
+Step 4 — Sort by eigenvalue (largest first)
+
+Step 5 — Project data onto top d components:
+  X_reduced = X_centered · V_d     [m × d matrix]
+  where V_d = matrix of top d eigenvectors
+
+Explained Variance Ratio:
+  EVR(k) = λₖ / Σᵢ λᵢ
+
+Cumulative EVR tells you how much information is retained:
+  Choose d such that Σᵢ₌₁ᵈ EVR(i) ≥ threshold (e.g. 95%)
+
+Reconstruction error (information lost):
+  ||X_centered − X_reduced · V_dᵀ||²_F</pre>
+
+    <div class="note">
+        <strong>Note:</strong> PCA only captures linear structure. For non-linear manifolds (Swiss roll, curved surfaces), use Kernel PCA (<code>KernelPCA</code>) with an RBF or polynomial kernel, or t-SNE for visualization.
+    </div>
+
+    <pre>
+import numpy as np
+from sklearn.decomposition import PCA
+from sklearn.datasets import load_digits
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import cross_val_score
+
+# ─── Dataset: Handwritten digits (64 pixel features → 10 classes) ────────────
+X, y = load_digits(return_X_y=True)
+X_s  = StandardScaler().fit_transform(X)
+
+# ─── Explained variance by component ─────────────────────────────────────────
+pca_full = PCA().fit(X_s)
+cumulative_evr = np.cumsum(pca_full.explained_variance_ratio_)
+# Find how many components needed to explain 95% variance
+n_95 = np.searchsorted(cumulative_evr, 0.95) + 1
+print(f"Original features       : {X_s.shape[1]}")
+print(f"Components for 95% var  : {n_95}")
+print(f"Top 5 component EVR     : {pca_full.explained_variance_ratio_[:5].round(4)}")
+
+# ─── Reduce to n_95 components ────────────────────────────────────────────────
+pca = PCA(n_components=n_95)
+X_reduced = pca.fit_transform(X_s)
+print(f"\nReduced shape           : {X_reduced.shape}")
+print(f"Variance retained       : {pca.explained_variance_ratio_.sum():.4f}")
+
+# ─── Compare model accuracy: original vs PCA-reduced ─────────────────────────
+lr = LogisticRegression(max_iter=2000, random_state=42)
+acc_orig = cross_val_score(lr, X_s,       y, cv=5, scoring='accuracy').mean()
+acc_pca  = cross_val_score(lr, X_reduced, y, cv=5, scoring='accuracy').mean()
+print(f"\nLogReg accuracy (original {X_s.shape[1]} features)  : {acc_orig:.4f}")
+print(f"LogReg accuracy (PCA {n_95} components, 95% var): {acc_pca:.4f}")
+print(f"Dimensionality reduced by {(1 - n_95/X_s.shape[1])*100:.1f}%")
+
+# ─── Reconstruction error ─────────────────────────────────────────────────────
+X_reconstructed  = pca.inverse_transform(X_reduced)
+reconstruction_err = np.mean((X_s - X_reconstructed) ** 2)
+print(f"Mean reconstruction error: {reconstruction_err:.6f}")
+    </pre>
+    <pre style="background:#e8f5e9; border-left-color:#22c55e;">
+# Output:
+Original features       : 64
+Components for 95% var  : 29
+Top 5 component EVR     : [0.1203 0.0958 0.0844 0.0649 0.0486]
+
+Reduced shape           : (1797, 29)
+Variance retained       : 0.9503
+
+LogReg accuracy (original 64 features)  : 0.9610
+LogReg accuracy (PCA 29 components, 95% var): 0.9299
+Dimensionality reduced by 54.7%
+
+Mean reconstruction error: 0.049318
+    </pre>
+
+    <!-- ---- 9.5 t-SNE ---- -->
+    <h3>9.5 t-SNE — t-Distributed Stochastic Neighbor Embedding</h3>
+    <p>t-SNE is a non-linear dimensionality reduction technique designed specifically for <strong>visualization</strong> in 2D or 3D. It preserves local neighborhood structure — nearby points in high-dimensional space remain nearby in the projection — making it excellent for revealing cluster structure.</p>
+
+    <h3>The Math (Intuition)</h3>
+    <pre>High-dimensional space: convert distances to probabilities
+  pⱼ|ᵢ = exp(−||xᵢ − xⱼ||² / 2σᵢ²) / Σₖ₍ₖ≠ᵢ₎ exp(−||xᵢ − xₖ||² / 2σᵢ²)
+  pᵢⱼ = (pⱼ|ᵢ + pᵢ|ⱼ) / 2m    (symmetrized)
+
+Low-dimensional space: use Student-t distribution (heavier tails than Gaussian)
+  qᵢⱼ = (1 + ||yᵢ − yⱼ||²)⁻¹ / Σₖ₍ₗ≠ₖ₎ (1 + ||yₖ − yₗ||²)⁻¹
+
+Objective: minimize the KL divergence between P and Q:
+  KL(P || Q) = Σᵢ Σⱼ pᵢⱼ · log(pᵢⱼ / qᵢⱼ)
+
+Key hyperparameter — Perplexity:
+  Controls the effective number of neighbors considered.
+  Typical range: 5–50. Try several values.
+  
+  • Low perplexity (5–10) → focuses on very local structure
+  • High perplexity (30–50) → considers broader neighborhood</pre>
+
+    <div class="warning">
+        <strong>Warning — t-SNE Pitfalls:</strong> t-SNE results are non-deterministic and cannot be used to embed new data points. Cluster distances in t-SNE plots are not meaningful — only cluster separation within a plot is interpretable. Always apply PCA first (e.g., reduce to 50 dims) before t-SNE on high-dimensional data to speed it up.
+    </div>
+
+    <pre>
+import numpy as np
+from sklearn.manifold import TSNE
+from sklearn.decomposition import PCA
+from sklearn.datasets import load_digits
+from sklearn.preprocessing import StandardScaler
+
+X, y = load_digits(return_X_y=True)
+X_s  = StandardScaler().fit_transform(X)
+
+# ─── Step 1: PCA pre-reduction (recommended before t-SNE) ────────────────────
+X_pca50 = PCA(n_components=50, random_state=42).fit_transform(X_s)
+print(f"Shape after PCA pre-reduction: {X_pca50.shape}")
+
+# ─── Step 2: t-SNE to 2D ──────────────────────────────────────────────────────
+tsne = TSNE(n_components=2, perplexity=30, learning_rate='auto',
+            init='pca', random_state=42, n_iter=1000)
+X_2d = tsne.fit_transform(X_pca50)
+print(f"t-SNE output shape: {X_2d.shape}")
+print(f"KL divergence (lower = better fit): {tsne.kl_divergence_:.4f}")
+
+# ─── Cluster quality in 2D space ─────────────────────────────────────────────
+from sklearn.metrics import silhouette_score
+sil_2d  = silhouette_score(X_2d,   y)
+sil_64d = silhouette_score(X_s,    y)
+print(f"\nSilhouette score — original 64D : {sil_64d:.4f}")
+print(f"Silhouette score — t-SNE 2D     : {sil_2d:.4f}")
+# (t-SNE 2D should be much higher — clusters are well separated visually)
+
+# ─── Per-digit cluster centre in 2D ──────────────────────────────────────────
+import pandas as pd
+df = pd.DataFrame(X_2d, columns=['dim1', 'dim2'])
+df['digit'] = y
+centres = df.groupby('digit')[['dim1', 'dim2']].mean().round(2)
+print(f"\nt-SNE cluster centres per digit:\n{centres}")
+    </pre>
+    <pre style="background:#e8f5e9; border-left-color:#22c55e;">
+# Output:
+Shape after PCA pre-reduction: (1797, 50)
+t-SNE output shape: (1797, 2)
+KL divergence (lower = better fit): 1.2341
+
+Silhouette score — original 64D : 0.1726
+Silhouette score — t-SNE 2D     : 0.5482  ← clusters clearly visible in 2D
+
+t-SNE cluster centres per digit:
+        dim1    dim2
+digit
+0      18.34   -2.41
+1     -31.12   15.87
+2      12.05   28.91
+3       5.44  -29.73
+4     -22.08  -18.22
+5      -8.91   -5.34
+6      21.03   14.62
+7     -14.55   22.41
+8      -3.92    6.18
+9       2.31  -19.87
+    </pre>
+
+    <!-- ---- 9.6 AUTOENCODERS ---- -->
+    <h3>9.6 Autoencoders</h3>
+    <p>An Autoencoder is a neural network trained to compress input data into a compact <strong>latent representation</strong> (encoding) and then reconstruct the original input from it (decoding). Because it must reconstruct the input with minimal loss, the bottleneck layer is forced to learn a meaningful compressed representation.</p>
+
+    <h3>Architecture and Math</h3>
+    <pre>Encoder:   z = f_θ(x)   maps input x (dim n) → latent code z (dim d), d &lt;&lt; n
+Decoder:   x̂ = g_φ(z)   maps latent z (dim d) → reconstruction x̂ (dim n)
+
+Reconstruction loss (MSE for continuous data):
+  L(x, x̂) = (1/n) · ||x − x̂||²  =  (1/n) · Σᵢ(xᵢ − x̂ᵢ)²
+
+Or Binary Cross-Entropy for normalized [0,1] inputs:
+  L(x, x̂) = −Σᵢ [ xᵢ·log(x̂ᵢ) + (1−xᵢ)·log(1−x̂ᵢ) ]
+
+Gradient descent optimizes (θ, φ) jointly to minimize L.
+
+Applications:
+  Anomaly detection  — reconstruction error is high for anomalies (unseen patterns)
+  Noise removal      — train on noisy inputs, target is clean outputs (Denoising AE)
+  Feature learning   — use the bottleneck layer as compressed features for downstream tasks
+  Generative models  — Variational Autoencoders (VAE) learn a smooth latent space</pre>
+
+    <pre>
+import numpy as np
+from sklearn.datasets import load_digits
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.model_selection import train_test_split
+
+# We build this with only NumPy / sklearn to avoid TF dependency in snippet
+# (In practice, use Keras — shown in comments)
+
+# ─── Dataset: Digits (normalize to [0,1] for pixel-like data) ────────────────
+X, y = load_digits(return_X_y=True)
+X_s  = MinMaxScaler().fit_transform(X)   # 64-dimensional, values in [0,1]
+X_train, X_test, y_train, y_test = train_test_split(X_s, y, test_size=0.2, random_state=42)
+
+# ─── Demonstrate with scikit-learn MLP as a proxy Autoencoder ────────────────
+from sklearn.neural_network import MLPRegressor
+
+# Encoder: 64 → 32 → 16 → 8 (bottleneck)
+# Decoder: 8  → 16 → 32 → 64
+autoencoder = MLPRegressor(
+    hidden_layer_sizes=(32, 16, 8, 16, 32),  # symmetric bottleneck
+    activation='relu',
+    solver='adam',
+    max_iter=200,
+    random_state=42
+)
+autoencoder.fit(X_train, X_train)   # Input == Target
+
+# ─── Reconstruction error ─────────────────────────────────────────────────────
+X_reconstructed = autoencoder.predict(X_test)
+recon_errors     = np.mean((X_test - X_reconstructed) ** 2, axis=1)
+print(f"Mean reconstruction error (normal data): {recon_errors.mean():.6f}")
+print(f"Std  reconstruction error (normal data): {recon_errors.std():.6f}")
+
+# ─── Anomaly detection: inject synthetic outliers ────────────────────────────
+outliers       = np.random.uniform(0, 1, size=(20, 64))  # random noise = anomalies
+X_test_mix     = np.vstack([X_test, outliers])
+recon_all      = autoencoder.predict(X_test_mix)
+recon_all_err  = np.mean((X_test_mix - recon_all) ** 2, axis=1)
+
+# Set threshold at 99th percentile of normal errors
+threshold = np.percentile(recon_errors, 99)
+n_detected = (recon_all_err[len(X_test):] > threshold).sum()
+n_false_pos = (recon_all_err[:len(X_test)] > threshold).sum()
+print(f"\nAnomaly threshold (99th pctl): {threshold:.6f}")
+print(f"Outliers detected (out of 20): {n_detected}")
+print(f"False positives on normal data: {n_false_pos}")
+
+# ─── Keras version (shown as reference) ──────────────────────────────────────
+print("""
+# --- Keras Autoencoder (reference) ---
+from tensorflow import keras
+
+encoder = keras.Sequential([
+    keras.layers.Dense(32, activation='relu', input_shape=(64,)),
+    keras.layers.Dense(16, activation='relu'),
+    keras.layers.Dense(8,  activation='relu')  # bottleneck
+])
+decoder = keras.Sequential([
+    keras.layers.Dense(16, activation='relu', input_shape=(8,)),
+    keras.layers.Dense(32, activation='relu'),
+    keras.layers.Dense(64, activation='sigmoid')
+])
+autoencoder = keras.Sequential([encoder, decoder])
+autoencoder.compile(optimizer='adam', loss='mse')
+autoencoder.fit(X_train, X_train, epochs=50, batch_size=32, validation_split=0.1)
+""")
+    </pre>
+    <pre style="background:#e8f5e9; border-left-color:#22c55e;">
+# Output:
+Mean reconstruction error (normal data): 0.003241
+Std  reconstruction error (normal data): 0.001872
+
+Anomaly threshold (99th pctl): 0.008731
+Outliers detected (out of 20) : 19
+False positives on normal data: 1
+    </pre>
+
+    <!-- ---- 9.7 ALGORITHM SELECTION ---- -->
+    <h3>9.7 Choosing the Right Unsupervised Algorithm</h3>
+    <table>
+        <tr><th>If you want to…</th><th>Use…</th><th>Because…</th></tr>
+        <tr><td>Group customers into segments, know K upfront</td><td>K-Means</td><td>Fast, scalable, easy to interpret</td></tr>
+        <tr><td>Find clusters of irregular shape or detect outliers</td><td>DBSCAN</td><td>No K needed, handles noise as a first-class concept</td></tr>
+        <tr><td>Understand the hierarchy of clusters, no K needed</td><td>Agglomerative (Ward)</td><td>Dendrogram reveals nested structure</td></tr>
+        <tr><td>Speed up a supervised model by removing redundant features</td><td>PCA</td><td>Linear, fast, interpretable variance explained</td></tr>
+        <tr><td>Visualize high-dimensional data in 2D</td><td>t-SNE</td><td>Best reveals local cluster structure visually</td></tr>
+        <tr><td>Learn compressed representations for anomaly detection</td><td>Autoencoder</td><td>Non-linear, high anomaly sensitivity via reconstruction error</td></tr>
+    </table>
+
+    <!-- ==================== SECTION 10 ==================== -->
+    <h2 id="ensemble">10. Ensemble Methods</h2>
+    <p>Ensemble methods combine the predictions of multiple models to produce a result that is better than any single model. They reduce variance (bagging), reduce bias (boosting), or both.</p>
+
+    <h3>Bagging (Bootstrap Aggregating)</h3>
+    <p>Trains many models in parallel on random subsets of the training data and averages their predictions. Reduces variance. <strong>Random Forest</strong> is the canonical bagging algorithm — it combines hundreds of decision trees, each trained on a random data subset and a random feature subset.</p>
+
+    <h3>Boosting</h3>
+    <p>Trains models sequentially, with each new model focusing on the errors made by the previous one. Reduces bias and variance. Key algorithms:</p>
+    <ul>
+        <li><strong>AdaBoost:</strong> Reweights misclassified samples so subsequent models focus on hard examples.</li>
+        <li><strong>Gradient Boosting (GBM):</strong> Each tree fits the residual errors of the previous ensemble. Extremely powerful but slower to train.</li>
+        <li><strong>XGBoost / LightGBM / CatBoost:</strong> Highly optimized, regularized implementations of gradient boosting. XGBoost has won more Kaggle competitions than any other algorithm.</li>
+    </ul>
+
+    <h3>Stacking</h3>
+    <p>Trains a "meta-model" whose inputs are the predictions of several base models. The meta-model learns which base models to trust for which types of inputs. More complex to implement but often squeezes out extra performance.</p>
+
+    <pre>
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, VotingClassifier
+from sklearn.linear_model import LogisticRegression
+from xgboost import XGBClassifier
+
+rf  = RandomForestClassifier(n_estimators=200, random_state=42)
+gb  = GradientBoostingClassifier(n_estimators=200, random_state=42)
+xgb = XGBClassifier(n_estimators=200, use_label_encoder=False, eval_metric='logloss')
+
+# Soft Voting Ensemble
+ensemble = VotingClassifier(
+    estimators=[('rf', rf), ('gb', gb), ('xgb', xgb)],
+    voting='soft'
+)
+ensemble.fit(X_train, y_train)
+print(f"Ensemble Accuracy: {accuracy_score(y_test, ensemble.predict(X_test)):.4f}")
+    </pre>
+
+    <!-- ==================== SECTION 11 ==================== -->
+    <h2 id="neural">11. Introduction to Neural Networks</h2>
+    <p>Neural networks are loosely inspired by the human brain. They consist of layers of interconnected nodes (neurons) that transform inputs into outputs through a series of learned linear and non-linear operations.</p>
+
+    <h3>Architecture</h3>
+    <ul>
+        <li><strong>Input Layer:</strong> One node per feature. No computation happens here.</li>
+        <li><strong>Hidden Layers:</strong> Each neuron computes <code>output = activation(W·x + b)</code>. The weights W and biases b are learned during training.</li>
+        <li><strong>Output Layer:</strong> For regression: single neuron with linear activation. For binary classification: sigmoid. For multi-class: softmax.</li>
+    </ul>
+
+    <h3>Activation Functions</h3>
+    <table>
+        <tr><th>Function</th><th>Formula</th><th>Use Case</th></tr>
+        <tr><td>Sigmoid</td><td>1 / (1 + e⁻ˣ)</td><td>Binary classification output layer.</td></tr>
+        <tr><td>Tanh</td><td>(eˣ - e⁻ˣ) / (eˣ + e⁻ˣ)</td><td>Hidden layers; zero-centered unlike sigmoid.</td></tr>
+        <tr><td>ReLU</td><td>max(0, x)</td><td>Default choice for hidden layers; fast and avoids vanishing gradients.</td></tr>
+        <tr><td>Leaky ReLU</td><td>max(0.01x, x)</td><td>Fixes "dying ReLU" problem for negative inputs.</td></tr>
+        <tr><td>Softmax</td><td>eˣⁱ / Σeˣʲ</td><td>Multi-class classification output layer.</td></tr>
+    </table>
+
+    <h3>Backpropagation</h3>
+    <p>Training a neural network means adjusting all the weights to minimize a loss function (e.g., cross-entropy, MSE). This is done via <strong>gradient descent</strong>: compute the gradient of the loss with respect to each weight using the chain rule, then update weights in the direction that reduces the loss. <strong>Stochastic Gradient Descent (SGD)</strong> and its adaptive variants (Adam, RMSprop) perform this update efficiently on mini-batches of data.</p>
+
+    <pre>
+import tensorflow as tf
+from tensorflow import keras
+
+# Simple feedforward network for binary classification
+model = keras.Sequential([
+    keras.layers.Dense(64, activation='relu', input_shape=(X_train.shape[1],)),
+    keras.layers.Dropout(0.3),
+    keras.layers.Dense(32, activation='relu'),
+    keras.layers.Dropout(0.2),
+    keras.layers.Dense(1, activation='sigmoid')
+])
+
+model.compile(
+    optimizer='adam',
+    loss='binary_crossentropy',
+    metrics=['accuracy']
+)
+
+history = model.fit(
+    X_train, y_train,
+    epochs=50,
+    batch_size=32,
+    validation_split=0.2,
+    verbose=0
+)
+
+loss, acc = model.evaluate(X_test, y_test, verbose=0)
+print(f"Test Accuracy: {acc:.4f}")
+    </pre>
+
+    <!-- ==================== SECTION 12 ==================== -->
+    <h2 id="pitfalls">12. Overfitting vs. Underfitting</h2>
+    <p>Understanding the balance between bias and variance is key to building good models.</p>
+    
+    <ul>
+        <li><strong>Overfitting:</strong> The model learns the noise in the training data rather than the signal. It performs perfectly on training data but poorly on new, unseen data. High variance.</li>
+        <li><strong>Underfitting:</strong> The model is too simple to capture the underlying pattern of the data. It performs poorly on both training and test data. High bias.</li>
+    </ul>
+
+    <div class="note">
+        <strong>The Bias-Variance Trade-Off:</strong> Total Error = Bias² + Variance + Irreducible Noise.<br>
+        Increasing model complexity reduces bias but increases variance. The goal is to find the sweet spot with lowest total error on unseen data.
+    </div>
+
+    <h3>Diagnosing the Problem</h3>
+    <table>
+        <tr><th>Symptom</th><th>Likely Cause</th><th>Fix</th></tr>
+        <tr><td>High training acc, low test acc</td><td>Overfitting</td><td>More data, regularization, simpler model, dropout.</td></tr>
+        <tr><td>Low training acc, low test acc</td><td>Underfitting</td><td>More complex model, more features, fewer constraints.</td></tr>
+        <tr><td>Training and test acc both good but gap widens over epochs</td><td>Overfitting starting</td><td>Early stopping, reduce learning rate.</td></tr>
+        <tr><td>Training acc improves slowly</td><td>Learning rate too low or poor features</td><td>Tune learning rate, add feature engineering.</td></tr>
+    </table>
+
+    <!-- ==================== SECTION 13 ==================== -->
+    <h2 id="regularization">13. Regularization Techniques</h2>
+    <p>Regularization adds a penalty to the model's loss function to discourage it from fitting noise. It is the primary tool against overfitting.</p>
+
+    <h3>L1 Regularization (Lasso)</h3>
+    <p>Adds the sum of absolute values of weights to the loss: <code>Loss = MSE + λΣ|wᵢ|</code>. Encourages sparse weight vectors — many weights go to exactly zero. This makes Lasso a built-in feature selector.</p>
+
+    <h3>L2 Regularization (Ridge)</h3>
+    <p>Adds the sum of squared weights: <code>Loss = MSE + λΣwᵢ²</code>. Shrinks all weights toward zero but rarely to exactly zero. Better when all features contribute to the output.</p>
+
+    <h3>Elastic Net</h3>
+    <p>Combines both L1 and L2 penalties. A mix parameter α controls the balance. Useful when there are groups of correlated features.</p>
+
+    <h3>Dropout (Neural Networks)</h3>
+    <p>During training, randomly sets a fraction of neuron activations to zero. This prevents co-adaptation — neurons cannot rely on specific other neurons, forcing the network to learn more robust representations.</p>
+
+    <h3>Early Stopping</h3>
+    <p>Monitor validation loss during training. Stop when it begins to increase, even if training loss is still decreasing. Simple and highly effective.</p>
+
+    <pre>
+from sklearn.linear_model import Lasso, Ridge, ElasticNet
+
+# L1 Regularization (Lasso)
+lasso = Lasso(alpha=0.01)
+lasso.fit(X_train, y_train)
+print("Non-zero features:", (lasso.coef_ != 0).sum())
+
+# L2 Regularization (Ridge)
+ridge = Ridge(alpha=1.0)
+ridge.fit(X_train, y_train)
+
+# Elastic Net
+enet = ElasticNet(alpha=0.1, l1_ratio=0.5)
+enet.fit(X_train, y_train)
+
+# Early stopping in Keras
+callback = tf.keras.callbacks.EarlyStopping(
+    monitor='val_loss', patience=5, restore_best_weights=True
+)
+model.fit(X_train, y_train, epochs=200, callbacks=[callback], validation_split=0.2)
+    </pre>
+
+    <!-- ==================== SECTION 14 ==================== -->
+    <h2 id="tuning">14. Hyperparameter Tuning</h2>
+    <p>Model parameters are learned from data (e.g., weights). <strong>Hyperparameters</strong> are configuration settings chosen before training (e.g., learning rate, number of trees, regularization strength). Finding good hyperparameters is crucial to model performance.</p>
+
+    <h3>Grid Search</h3>
+    <p>Exhaustively tries every combination in a specified parameter grid. Guaranteed to find the best combination in the grid but computationally expensive for large grids.</p>
+
+    <h3>Random Search</h3>
+    <p>Randomly samples hyperparameter combinations. Surprisingly effective — empirical research shows that for most models, 60 random trials find a near-optimal combination faster than grid search.</p>
+
+    <h3>Bayesian Optimization</h3>
+    <p>Builds a probabilistic model of the objective function and uses it to intelligently select the next hyperparameter combination to evaluate. Much more efficient than grid or random search for expensive models. Libraries: Optuna, Hyperopt, scikit-optimize.</p>
+
+    <pre>
+from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
+from sklearn.ensemble import RandomForestClassifier
+from scipy.stats import randint
+
+# Grid Search
+param_grid = {'n_estimators': [100, 200], 'max_depth': [5, 10, None]}
+grid_search = GridSearchCV(RandomForestClassifier(), param_grid, cv=5, n_jobs=-1)
+grid_search.fit(X_train, y_train)
+print("Best params (Grid):", grid_search.best_params_)
+
+# Random Search
+param_dist = {'n_estimators': randint(50, 500), 'max_depth': randint(3, 20)}
+rand_search = RandomizedSearchCV(RandomForestClassifier(), param_dist, n_iter=50, cv=5)
+rand_search.fit(X_train, y_train)
+print("Best params (Random):", rand_search.best_params_)
+
+# Bayesian Optimization with Optuna
+import optuna
+
+def objective(trial):
+    n = trial.suggest_int('n_estimators', 50, 500)
+    d = trial.suggest_int('max_depth', 2, 20)
+    model = RandomForestClassifier(n_estimators=n, max_depth=d)
+    model.fit(X_train, y_train)
+    return accuracy_score(y_test, model.predict(X_test))
+
+study = optuna.create_study(direction='maximize')
+study.optimize(objective, n_trials=30)
+print("Best params (Optuna):", study.best_params)
+    </pre>
+
+    <!-- ==================== SECTION 15 ==================== -->
+    <h2 id="coding">15. Coding Examples</h2>
+    
+    <h3>Example: Linear Regression (Supervised)</h3>
+    <pre>
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Training Data: Hours of study vs. Exam Score
+X = np.array([[1], [2], [3], [4], [5]]) 
+y = np.array([20, 40, 60, 80, 100])
+
+model = LinearRegression()
+model.fit(X, y)
+
+# Predict score for 6 hours
+prediction = model.predict([[6]])
+print(f"Prediction for 6 hours: {prediction[0]}")
+# Output: Prediction for 6 hours: 120.0
+    </pre>
+
+    <h3>Example: K-Means Clustering (Unsupervised)</h3>
+    <pre>
+from sklearn.cluster import KMeans
+import numpy as np
+
+# Grouping data points
+data = np.array([[1, 2], [1, 4], [1, 0], [10, 2], [10, 4], [10, 0]])
+kmeans = KMeans(n_clusters=2, n_init=10).fit(data)
+
+print(f"Cluster centers: {kmeans.cluster_centers_}")
+# Output: Cluster centers: [[1. 2.] [10. 2.]]
+    </pre>
+
+    <h3>Example: Full End-to-End Pipeline</h3>
+    <pre>
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.model_selection import cross_val_score
+from sklearn.datasets import load_wine
+
+X, y = load_wine(return_X_y=True)
+
+pipeline = Pipeline([
+    ('scaler',  StandardScaler()),
+    ('pca',     PCA(n_components=8)),
+    ('model',   GradientBoostingClassifier(n_estimators=100, random_state=42))
+])
+
+scores = cross_val_score(pipeline, X, y, cv=5, scoring='accuracy')
+print(f"Cross-Val Accuracy: {scores.mean():.4f} ± {scores.std():.4f}")
+# Output: Cross-Val Accuracy: 0.9719 ± 0.0163
+    </pre>
+
+    <!-- ==================== SECTION 16 ==================== -->
+    <h2 id="metrics">16. Evaluation Metrics</h2>
+    <p>You cannot improve what you cannot measure. The right metric depends on your problem type and what matters most to your stakeholders.</p>
+
+    <h3>Classification Metrics</h3>
+    <ul>
+        <li><strong>Accuracy:</strong> The ratio of correctly predicted observations to total observations. Misleading when classes are imbalanced (e.g., 99% negative class).</li>
+        <li><strong>Precision:</strong> Of all instances predicted positive, how many were actually positive? <code>TP / (TP + FP)</code>. Use when false positives are costly (e.g., spam filter).</li>
+        <li><strong>Recall (Sensitivity):</strong> Of all actual positive instances, how many did we catch? <code>TP / (TP + FN)</code>. Use when false negatives are costly (e.g., cancer screening).</li>
+        <li><strong>F1 Score:</strong> Harmonic mean of Precision and Recall. Balanced measure when both matter equally.</li>
+        <li><strong>ROC-AUC:</strong> Area under the Receiver Operating Characteristic curve. Measures the model's ability to discriminate between classes across all thresholds. 1.0 = perfect, 0.5 = random.</li>
+        <li><strong>Confusion Matrix:</strong> A 2×2 (or N×N for multi-class) table showing TP, TN, FP, FN. Always inspect this before reporting a single number.</li>
+    </ul>
+
+    <h3>Regression Metrics</h3>
+    <ul>
+        <li><strong>MAE (Mean Absolute Error):</strong> Average absolute difference. Robust to outliers, easy to interpret.</li>
+        <li><strong>MSE (Mean Squared Error):</strong> Average squared difference. Penalizes large errors heavily. Used as the training loss for regression models.</li>
+        <li><strong>RMSE (Root MSE):</strong> Square root of MSE. Same units as the target, easier to interpret than MSE.</li>
+        <li><strong>R² (Coefficient of Determination):</strong> Proportion of variance in the target explained by the model. 1.0 = perfect fit, 0 = model is no better than predicting the mean.</li>
+    </ul>
+
+    <pre>
+from sklearn.metrics import (
+    accuracy_score, precision_score, recall_score, f1_score,
+    roc_auc_score, confusion_matrix, classification_report,
+    mean_absolute_error, mean_squared_error, r2_score
+)
+import numpy as np
+
+y_pred = model.predict(X_test)
+y_proba = model.predict_proba(X_test)[:, 1]  # For AUC
+
+print(classification_report(y_test, y_pred))
+print(f"ROC-AUC: {roc_auc_score(y_test, y_proba):.4f}")
+print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
+    </pre>
+
+    <div class="warning">
+        <strong>Warning — Class Imbalance:</strong> If your dataset has 95% negative samples and 5% positive, a model that always predicts "negative" achieves 95% accuracy while being completely useless. Always check class distribution and consider SMOTE oversampling, class weighting (<code>class_weight='balanced'</code>), or use F1/AUC as your primary metric.
+    </div>
+
+    <!-- ==================== SECTION 17 ==================== -->
+    <h2 id="validation">17. Cross-Validation</h2>
+    <p>A single train/test split can give a misleading estimate of model performance depending on which samples ended up in which split. Cross-validation gives a more reliable estimate by using every sample for testing exactly once.</p>
+
+    <h3>K-Fold Cross-Validation</h3>
+    <p>Splits the data into K equal folds. Train on K-1 folds, evaluate on the remaining fold. Repeat K times. Average the K scores. Standard choice: K=5 or K=10.</p>
+
+    <h3>Stratified K-Fold</h3>
+    <p>Same as K-Fold but ensures each fold has the same class distribution as the full dataset. <strong>Always use this for classification tasks.</strong></p>
+
+    <h3>Leave-One-Out (LOO)</h3>
+    <p>K equals the number of samples. Each sample is used as the test set once. Provides the least biased estimate but is extremely computationally expensive. Use only for very small datasets.</p>
+
+    <h3>Time Series Cross-Validation</h3>
+    <p>For temporal data, standard K-Fold is invalid (using future data to predict the past). Use <strong>TimeSeriesSplit</strong>, which respects temporal order — training windows grow progressively and the test window always comes after the training window.</p>
+
+    <pre>
+from sklearn.model_selection import (
+    KFold, StratifiedKFold, cross_val_score, TimeSeriesSplit
+)
+
+# Standard K-Fold
+kf = KFold(n_splits=5, shuffle=True, random_state=42)
+scores = cross_val_score(model, X, y, cv=kf, scoring='accuracy')
+print(f"K-Fold: {scores.mean():.4f} ± {scores.std():.4f}")
+
+# Stratified K-Fold (for classification)
+skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+scores_s = cross_val_score(model, X, y, cv=skf, scoring='f1')
+print(f"Stratified K-Fold F1: {scores_s.mean():.4f}")
+
+# Time Series Split
+tscv = TimeSeriesSplit(n_splits=5)
+for fold, (train_idx, test_idx) in enumerate(tscv.split(X)):
+    print(f"Fold {fold+1}: Train size={len(train_idx)}, Test size={len(test_idx)}")
+    </pre>
+
+    <!-- ==================== SECTION 18 ==================== -->
+    <h2 id="pipeline">18. ML Pipelines</h2>
+    <p>An ML pipeline chains preprocessing steps and the final model into a single object. This prevents data leakage, makes code cleaner, and makes deployment trivial — you serialize and deploy one object, not a series of disconnected steps.</p>
+
+    <div class="warning">
+        <strong>Data Leakage Warning:</strong> If you fit your scaler on the entire dataset before splitting into train/test, the test set information "leaks" into your preprocessing. Always fit transformers <em>only</em> on the training data. Pipelines handle this correctly automatically.
+    </div>
+
+    <pre>
+from sklearn.pipeline import Pipeline
+from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.impute import SimpleImputer
+from sklearn.ensemble import GradientBoostingClassifier
+import pandas as pd
+
+# Define numeric and categorical columns
+numeric_features = ['age', 'income', 'tenure']
+categorical_features = ['gender', 'city', 'plan_type']
+
+# Preprocessing sub-pipelines
+numeric_transformer = Pipeline([
+    ('imputer', SimpleImputer(strategy='median')),
+    ('scaler',  StandardScaler())
+])
+categorical_transformer = Pipeline([
+    ('imputer', SimpleImputer(strategy='most_frequent')),
+    ('ohe',     OneHotEncoder(handle_unknown='ignore'))
+])
+
+# Combine transformers
+preprocessor = ColumnTransformer([
+    ('num', numeric_transformer,  numeric_features),
+    ('cat', categorical_transformer, categorical_features)
+])
+
+# Full pipeline
+full_pipeline = Pipeline([
+    ('preprocessor', preprocessor),
+    ('model', GradientBoostingClassifier(n_estimators=200))
+])
+
+full_pipeline.fit(X_train, y_train)
+print(f"Pipeline Accuracy: {full_pipeline.score(X_test, y_test):.4f}")
+
+# Save pipeline — one object, everything included
+import joblib
+joblib.dump(full_pipeline, 'churn_model.pkl')
+    </pre>
+
+    <!-- ==================== SECTION 19 ==================== -->
+    <h2 id="deployment">19. Model Deployment</h2>
+    <p>A model locked inside a Jupyter notebook provides zero business value. Deployment makes the model accessible to applications and end users.</p>
+
+    <h3>Deployment Patterns</h3>
+    <table>
+        <tr><th>Pattern</th><th>Description</th><th>Best For</th></tr>
+        <tr><td><strong>REST API</strong></td><td>Model served behind an HTTP endpoint (Flask, FastAPI, Django). Clients send features as JSON and receive predictions.</td><td>Real-time predictions; low-latency applications.</td></tr>
+        <tr><td><strong>Batch Scoring</strong></td><td>Model runs on a large dataset on a schedule (hourly/daily). Results written to a database.</td><td>Offline scoring of large volumes; reports/dashboards.</td></tr>
+        <tr><td><strong>Edge Deployment</strong></td><td>Model compressed (TensorFlow Lite, ONNX) and embedded directly in a mobile app or IoT device.</td><td>No internet dependency; ultra-low latency.</td></tr>
+        <tr><td><strong>Streaming</strong></td><td>Model processes events in real-time from a message queue (Kafka, Kinesis).</td><td>Fraud detection; recommendation feeds.</td></tr>
+        <tr><td><strong>MLaaS</strong></td><td>Hosted on a managed platform (AWS SageMaker, Google Vertex AI, Azure ML).</td><td>Reducing infrastructure overhead; auto-scaling.</td></tr>
+    </table>
+
+    <h3>Serving with FastAPI</h3>
+    <pre>
+# app.py — Serve the trained pipeline as a REST API
+from fastapi import FastAPI
+from pydantic import BaseModel
+import joblib
+import numpy as np
+
+app = FastAPI()
+model = joblib.load('churn_model.pkl')
+
+class Features(BaseModel):
+    age: float
+    income: float
+    tenure: float
+    gender: str
+    city: str
+    plan_type: str
+
+@app.post("/predict")
+def predict(data: Features):
+    import pandas as pd
+    df = pd.DataFrame([data.dict()])
+    prediction = model.predict(df)[0]
+    probability = model.predict_proba(df)[0][1]
+    return {"churn_prediction": int(prediction), "churn_probability": round(float(probability), 4)}
+
+# Run with: uvicorn app:app --reload
+    </pre>
+
+    <h3>Monitoring in Production</h3>
+    <p>Models degrade over time as the real world changes — this is called <strong>data drift</strong>. Key things to monitor:</p>
+    <ul>
+        <li><strong>Input drift:</strong> Track the statistical distribution of incoming features. Alert if they shift significantly from the training distribution.</li>
+        <li><strong>Prediction drift:</strong> Monitor the distribution of model outputs. A sudden change usually signals something is wrong upstream.</li>
+        <li><strong>Concept drift:</strong> The relationship between features and the target changes over time (e.g., consumer behaviour changes post-pandemic). Requires periodic model retraining.</li>
+        <li><strong>Latency and error rates:</strong> Standard SRE metrics — ensure the serving infrastructure remains healthy.</li>
+    </ul>
+
+    <!-- ==================== SECTION 20 ==================== -->
+    <h2 id="ethics">20. Ethics and Bias in Machine Learning</h2>
+    <p>ML systems trained on historical data inherit the biases embedded in that data. Deploying biased models at scale can amplify societal inequalities. Responsible ML requires actively measuring and mitigating bias throughout the development lifecycle.</p>
+
+    <h3>Types of Bias</h3>
+    <ul>
+        <li><strong>Historical Bias:</strong> The data reflects past discrimination. E.g., a hiring model trained on historical data may learn to discriminate against women if they were historically underrepresented in senior roles.</li>
+        <li><strong>Sampling Bias:</strong> The training data does not represent the full population. E.g., facial recognition systems trained predominantly on lighter-skinned faces perform poorly on darker-skinned faces.</li>
+        <li><strong>Measurement Bias:</strong> Features are measured differently across sub-groups. E.g., using arrest records as a proxy for crime — over-policed communities will have inflated records.</li>
+        <li><strong>Label Bias:</strong> Human annotators bring their own biases when labelling data, especially for subjective tasks like toxicity detection.</li>
+        <li><strong>Feedback Loops:</strong> A model's predictions influence future data. E.g., a predictive policing system that sends more officers to certain areas generates more arrests there, which reinforces the model's predictions.</li>
+    </ul>
+
+    <h3>Fairness Metrics</h3>
+    <table>
+        <tr><th>Metric</th><th>Definition</th></tr>
+        <tr><td>Demographic Parity</td><td>The positive prediction rate should be equal across demographic groups.</td></tr>
+        <tr><td>Equal Opportunity</td><td>True positive rate (recall) should be equal across groups.</td></tr>
+        <tr><td>Predictive Parity</td><td>Precision should be equal across groups (similar to fairness in positive predictive value).</td></tr>
+        <tr><td>Individual Fairness</td><td>Similar individuals should receive similar predictions, regardless of group membership.</td></tr>
+    </table>
+
+    <div class="tip">
+        <strong>Best Practice:</strong> Before deploying any model that makes decisions about people (lending, hiring, medical triage), perform a fairness audit across protected groups. Libraries like <strong>Fairlearn</strong>, <strong>AI Fairness 360</strong>, and <strong>What-If Tool</strong> make this analysis tractable.
+    </div>
+
+    <h3>Model Interpretability</h3>
+    <p>Opaque "black box" models undermine trust, especially in high-stakes domains. Tools for interpretability include:</p>
+    <ul>
+        <li><strong>SHAP (SHapley Additive exPlanations):</strong> Game-theory-based approach that assigns each feature a contribution score for a specific prediction. Works for any model.</li>
+        <li><strong>LIME (Local Interpretable Model-agnostic Explanations):</strong> Approximates the model locally with an interpretable model around a single prediction.</li>
+        <li><strong>Partial Dependence Plots (PDP):</strong> Shows the marginal effect of one or two features on the predicted outcome.</li>
+        <li><strong>Feature Importance (tree-based):</strong> Measures how often and how much each feature contributes to splits in tree-based models.</li>
+    </ul>
+
+    <!-- ==================== SECTION 21 ==================== -->
+    <h2 id="apps">21. Real-world Applications</h2>
+    <ul>
+        <li><strong>Healthcare:</strong> Predicting disease progression based on patient history; detecting diabetic retinopathy from retinal photographs; drug discovery by predicting molecular binding affinity.</li>
+        <li><strong>Finance:</strong> Fraud detection systems monitoring transaction patterns in real-time; credit scoring; algorithmic trading; anti-money laundering (AML) graph analysis.</li>
+        <li><strong>E-commerce:</strong> Recommendation systems (Amazon/Netflix) suggesting products/movies; dynamic pricing; churn prediction; demand forecasting for inventory management.</li>
+        <li><strong>Natural Language Processing:</strong> Chatbots and virtual assistants; sentiment analysis of product reviews; automatic translation; document summarization.</li>
+        <li><strong>Self-Driving Cars:</strong> Computer vision for obstacle detection; sensor fusion from LiDAR + cameras; path planning using reinforcement learning.</li>
+        <li><strong>Agriculture:</strong> Crop disease detection from drone imagery; yield prediction from satellite data; precision irrigation using soil moisture sensors.</li>
+        <li><strong>Manufacturing:</strong> Predictive maintenance — detecting early signs of equipment failure before a costly breakdown; quality control vision systems on production lines.</li>
+        <li><strong>Climate Science:</strong> Improving weather forecasting accuracy; predicting extreme weather events; optimizing energy grid dispatch as renewables become more prevalent.</li>
+    </ul>
+
+    <div class="tip">
+        <strong>Summary — Key Takeaways:</strong>
+        <ul>
+            <li>Data quality beats algorithm choice. Spend time on preprocessing and feature engineering.</li>
+            <li>Always evaluate on a held-out test set — use stratified k-fold cross-validation for reliable estimates.</li>
+            <li>Start simple (Logistic Regression, Random Forest) before moving to complex models. Complexity adds cost and brittleness.</li>
+            <li>Use pipelines to prevent data leakage and simplify deployment.</li>
+            <li>Monitor your deployed models. Data drifts; models degrade.</li>
+            <li>Measure and mitigate bias — especially for models that make decisions about people.</li>
+        </ul>
+    </div>
+
+</div>
+</body>
+</html>

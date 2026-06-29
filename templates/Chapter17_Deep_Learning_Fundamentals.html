@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 17 - Deep Learning Fundamentals</title>
+<style>
+body{font-family:Segoe UI,Arial,sans-serif;margin:0;display:flex;background:#f8fafc}
+.sidebar{width:320px;position:fixed;height:100vh;overflow:auto;background:#0f172a;color:white}
+.sidebar h2{padding:20px;text-align:center}
+.sidebar a{display:block;color:white;text-decoration:none;padding:10px 20px}
+.sidebar a:hover{background:#1e293b}
+.content{margin-left:320px;padding:30px;max-width:1300px}
+h1,h2,h3{color:#1e3a8a}
+pre{background:#f1f5f9;padding:12px;border-left:5px solid #2563eb;overflow:auto}
+table{width:100%;border-collapse:collapse}
+th,td{border:1px solid #ccc;padding:8px}
+th{background:#f1f5f9;color:#1e3a8a}
+.note{background:#dbeafe;padding:15px;border-radius:8px}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:16px 0}
+.card{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:16px 18px;box-shadow:0 1px 4px rgba(0,0,0,0.05)}
+.card h4{color:#1e3a8a;margin:0 0 6px;font-size:15px}
+.card p{margin:0;color:#475569;font-size:14px;line-height:1.6}
+.badge{display:inline-block;padding:3px 10px;border-radius:99px;font-size:12px;font-weight:600;margin:3px}
+.badge-blue{background:#dbeafe;color:#1e40af}
+.badge-teal{background:#d1fae5;color:#065f46}
+.badge-amber{background:#fef3c7;color:#92400e}
+.badge-coral{background:#fee2e2;color:#991b1b}
+.badge-purple{background:#ede9fe;color:#4c1d95}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:0;margin:16px 0}
+.flow-step{background:#f1f5f9;border:1px solid #cbd5e1;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;color:#1e3a8a}
+.flow-arrow{color:#94a3b8;margin:0 8px;font-size:16px}
+.qa-item{border:1px solid #e2e8f0;border-radius:8px;margin-bottom:8px;overflow:hidden}
+.qa-q{background:#f1f5f9;padding:12px 16px;font-weight:600;color:#1e3a8a;cursor:pointer;display:flex;justify-content:space-between;user-select:none}
+.qa-q:hover{background:#dbeafe}
+.qa-a{display:none;padding:12px 16px;color:#334155;font-size:14px;line-height:1.65;background:#fff}
+.qa-a.open{display:block}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+@media(max-width:700px){.two-col{grid-template-columns:1fr}}
+
+
+
+/* Home Button */
+.home-btn{
+    position:fixed;
+    top:20px;
+    right:20px;
+    z-index:9999;
+    background:linear-gradient(135deg,#0f172a,#2563eb);
+    color:#fff;
+    text-decoration:none;
+    padding:12px 20px;
+    border-radius:50px;
+    font-weight:600;
+    font-family:Arial,sans-serif;
+    box-shadow:0 5px 15px rgba(0,0,0,0.3);
+    animation:pulseHome 2s infinite;
+    transition:0.3s;
+}
+
+.home-btn:hover{
+    transform:translateY(-3px) scale(1.05);
+}
+
+@keyframes pulseHome{
+    0%{
+        box-shadow:0 0 0 0 rgba(37,99,235,0.7);
+    }
+    70%{
+        box-shadow:0 0 0 15px rgba(37,99,235,0);
+    }
+    100%{
+        box-shadow:0 0 0 0 rgba(37,99,235,0);
+    }
+}
+
+/* WhatsApp Button */
+.whatsapp-float{
+    position:fixed;
+    width:65px;
+    height:65px;
+    bottom:25px;
+    right:25px;
+    background:#25D366;
+    color:white;
+    border-radius:50%;
+    text-align:center;
+    font-size:34px;
+    line-height:65px;
+    text-decoration:none;
+    z-index:9999;
+    box-shadow:0 5px 20px rgba(0,0,0,0.3);
+    animation:whatsappBounce 1.5s infinite;
+}
+
+.whatsapp-float:hover{
+    transform:scale(1.1);
+}
+
+@keyframes whatsappBounce{
+    0%,100%{
+        transform:translateY(0);
+    }
+    50%{
+        transform:translateY(-10px);
+    }
+}
+
+/* Mobile Responsive */
+@media(max-width:768px){
+    .home-btn{
+        top:10px;
+        right:10px;
+        padding:10px 15px;
+        font-size:14px;
+    }
+
+    .whatsapp-float{
+        width:55px;
+        height:55px;
+        line-height:55px;
+        font-size:28px;
+        bottom:15px;
+        right:15px;
+    }
+}
+
+</style>
+</head>
+<body>
+
+
+<a href="ai.html" class="home-btn">
+    🏠 Home
+</a>
+
+<!-- WHATSAPP FLOATING BUTTON -->
+<a href="https://wa.me/918220033325?text=Hello%20I%20would%20like%20to%20know%20more"
+   class="whatsapp-float"
+   target="_blank">
+    💬
+</a>
+
+<div class="sidebar">
+<h2>Chapter 17</h2>
+<a href="#intro">1. Introduction</a>
+<a href="#why">2. Why Deep Learning?</a>
+<a href="#ann">3. Neural Networks</a>
+<a href="#perceptron">4. Perceptron</a>
+<a href="#activation">5. Activation Functions</a>
+<a href="#forward">6. Forward Propagation</a>
+<a href="#backprop">7. Backpropagation</a>
+<a href="#loss">8. Loss Functions</a>
+<a href="#optimizers">9. Optimizers</a>
+<a href="#cnn">10. CNN</a>
+<a href="#rnn">11. RNN &amp; LSTM</a>
+<a href="#transformers">12. Transformers</a>
+<a href="#frameworks">13. Frameworks</a>
+<a href="#applications">14. Applications</a>
+<a href="#project">15. Mini Project</a>
+<a href="#mcq">16. Q &amp; A</a>
+</div>
+
+<div class="content">
+
+<h1>Chapter 17: Deep Learning Fundamentals</h1>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2 id="intro">1. Introduction to Deep Learning</h2>
+
+<p>Deep Learning is a subset of Machine Learning that uses Artificial Neural Networks with multiple layers to automatically learn hierarchical representations from raw data. Unlike classical ML, no manual feature engineering is required — the network discovers features on its own given enough data.</p>
+
+<p>Deep Learning powers modern technologies such as ChatGPT, image recognition systems, voice assistants, autonomous vehicles, recommendation engines, and medical diagnosis systems.</p>
+
+<div class="note">
+  <strong>The AI Hierarchy:</strong> Artificial Intelligence &nbsp;⊃&nbsp; Machine Learning &nbsp;⊃&nbsp; Deep Learning
+</div>
+
+<h3>Key Application Areas</h3>
+<div class="card-grid">
+  <div class="card"><h4>Language AI</h4><p>ChatGPT, Claude, Gemini, Llama — all powered by Transformer-based deep learning models.</p></div>
+  <div class="card"><h4>Computer Vision</h4><p>Object detection, face recognition, and medical imaging rely on Convolutional Neural Networks.</p></div>
+  <div class="card"><h4>Autonomous Systems</h4><p>Self-driving vehicles use real-time deep learning to perceive and respond to their environment.</p></div>
+  <div class="card"><h4>Medical Diagnosis</h4><p>Models detect diseases from X-rays, MRIs, and pathology slides at near-radiologist accuracy.</p></div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2 id="why">2. Why Deep Learning?</h2>
+
+<p>Traditional machine learning requires domain experts to manually craft features (edges, frequencies, shapes). Deep learning removes this bottleneck — given sufficient data and compute, it discovers those features automatically and improves continuously as data grows.</p>
+
+<table>
+<tr><th>Capability</th><th>Traditional ML</th><th>Deep Learning</th></tr>
+<tr><td>Feature engineering</td><td>Manual</td><td>Automatic</td></tr>
+<tr><td>Performance on big data</td><td>Plateaus</td><td>Keeps improving</td></tr>
+<tr><td>Unstructured data (images, text)</td><td>Limited</td><td>Excellent</td></tr>
+<tr><td>Interpretability</td><td>Higher</td><td>Lower (black-box)</td></tr>
+<tr><td>Training compute required</td><td>Low</td><td>High</td></tr>
+</table>
+
+<br>
+<div class="note">
+  <strong>When to use Deep Learning:</strong> Use it when you have large labelled datasets, high-dimensional inputs like images or long text, and sufficient compute. For small structured datasets, classical methods (gradient boosting, logistic regression) often perform better.
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2 id="ann">3. Artificial Neural Networks (ANN)</h2>
+
+<p>Artificial Neural Networks are inspired by the human brain. They consist of interconnected neurons organised into layers. Each neuron receives weighted inputs, adds a bias, applies a non-linear activation function, and passes its output to the next layer.</p>
+
+<pre>
+Input Layer       (raw features — pixel values, sensor readings, etc.)
+      ↓
+Hidden Layer 1    (detects low-level patterns — edges, tones)
+      ↓
+Hidden Layer 2    (combines patterns — shapes, phrases)
+      ↓
+Output Layer      (final prediction — class probability or value)
+</pre>
+
+<p>Each neuron receives input, performs calculations and passes information forward.</p>
+
+<div class="card-grid">
+  <div class="card"><h4>Shallow Network</h4><p>1–2 hidden layers. Good for simpler tasks. Faster to train, lower memory cost.</p></div>
+  <div class="card"><h4>Deep Network</h4><p>3+ hidden layers. Learns abstract, hierarchical representations. Needs more data and compute.</p></div>
+  <div class="card"><h4>Wide Network</h4><p>Many neurons per layer. Increases model capacity but also memory and inference cost.</p></div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2 id="perceptron">4. Perceptron</h2>
+
+<p>A perceptron is the simplest neural network unit — a single artificial neuron that maps a vector of inputs to a scalar output.</p>
+
+<pre>
+Output = Activation( Σ(wᵢ · xᵢ) + b )
+</pre>
+
+<h3>Components</h3>
+<div class="card-grid">
+  <div class="card"><h4>xᵢ — Inputs</h4><p>Raw values fed into the neuron, e.g. pixel intensities, sensor readings, or word embeddings.</p></div>
+  <div class="card"><h4>wᵢ — Weights</h4><p>Learnable parameters. A large positive weight creates a strong excitatory connection to the next layer.</p></div>
+  <div class="card"><h4>b — Bias</h4><p>A learnable offset that shifts the activation threshold, giving the neuron additional flexibility.</p></div>
+  <div class="card"><h4>Activation Function</h4><p>A non-linear function (ReLU, Sigmoid, Tanh) applied to the weighted sum before producing output.</p></div>
+  <div class="card"><h4>Output</h4><p>The final value passed on to neurons in the next layer, or as the network's prediction.</p></div>
+</div>
+
+<div class="note">
+  <strong>Multi-Layer Perceptron (MLP):</strong> Stack many perceptrons in layers and you get an MLP — the classic fully-connected feedforward network. Adding depth lets the network compose simple functions into highly complex ones.
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2 id="activation">5. Activation Functions</h2>
+
+<p>Activation functions introduce non-linearity into neural networks. Without them, stacking multiple linear layers still produces a single linear function — depth would buy nothing.</p>
+
+<table>
+<tr><th>Function</th><th>Formula</th><th>Range</th><th>Best Used For</th><th>Weakness</th></tr>
+<tr><td>Sigmoid</td><td>1 / (1 + e⁻ˣ)</td><td>(0, 1)</td><td>Binary classification output</td><td>Vanishing gradient for large |x|</td></tr>
+<tr><td>Tanh</td><td>(eˣ − e⁻ˣ) / (eˣ + e⁻ˣ)</td><td>(−1, 1)</td><td>Hidden layers in RNNs</td><td>Vanishing gradient</td></tr>
+<tr><td>ReLU</td><td>max(0, x)</td><td>[0, ∞)</td><td>Hidden layers (default)</td><td>Dying ReLU for x &lt; 0</td></tr>
+<tr><td>Leaky ReLU</td><td>max(0.01x, x)</td><td>(−∞, ∞)</td><td>Fixes dying ReLU</td><td>Slight gradient noise</td></tr>
+<tr><td>Softmax</td><td>eˣⁱ / Σ eˣʲ</td><td>(0,1), sum = 1</td><td>Multi-class output layer</td><td>Numerically unstable at large values</td></tr>
+</table>
+
+<h3>ReLU</h3>
+<pre>
+f(x) = max(0, x)
+</pre>
+
+<p>ReLU is computationally trivial (just a max operation), avoids vanishing gradients for positive inputs, and empirically trains faster than sigmoid/tanh. It has been the default choice for hidden layers since AlexNet (2012).</p>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2 id="forward">6. Forward Propagation</h2>
+
+<p>Forward propagation is the inference pass. Given input data, each layer transforms it in sequence until an output (prediction) is produced. No weights are updated during this stage.</p>
+
+<pre>
+Input x
+      ↓
+Layer 1:  z₁ = W₁·x + b₁,  a₁ = σ(z₁)
+      ↓
+Layer 2:  z₂ = W₂·a₁ + b₂, a₂ = σ(z₂)
+      ↓
+Output ŷ  (class probability or regression value)
+</pre>
+
+<p>Predictions are generated during this stage.</p>
+
+<div class="card-grid">
+  <div class="card"><h4>Linear Transform</h4><p>z = Wx + b rotates and scales the data in weight space, projecting it into a new representation.</p></div>
+  <div class="card"><h4>Activation</h4><p>a = σ(z) applies the non-linearity, allowing the network to bend decision boundaries.</p></div>
+  <div class="card"><h4>Prediction</h4><p>The final layer outputs class probabilities via softmax (classification) or a raw value (regression).</p></div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2 id="backprop">7. Backpropagation</h2>
+
+<p>Backpropagation is the algorithm that trains a neural network. Using the chain rule of calculus, it computes how much each weight contributed to the error, then nudges weights in the direction that reduces the loss.</p>
+
+<pre>
+Forward Pass → Prediction ŷ
+      ↓
+Calculate Loss:  L(y, ŷ)
+      ↓
+Compute Gradients:  ∂L/∂W  via chain rule (backwards through layers)
+      ↓
+Update Weights:  W ← W − η · ∂L/∂W
+      ↓
+Repeat until convergence
+</pre>
+
+<div class="note">
+  <strong>W_new = W_old − learning_rate × gradient</strong><br><br>
+  <strong>Epoch vs Iteration:</strong> One <em>epoch</em> is a full pass over the training data. One <em>iteration</em> is a single weight-update step over a mini-batch. Training typically runs for tens to hundreds of epochs.
+</div>
+
+<div class="card-grid">
+  <div class="card"><h4>Learning Rate (η)</h4><p>Controls the step size. Too large → the model diverges. Too small → very slow convergence. Typically 1e-3 for Adam.</p></div>
+  <div class="card"><h4>Vanishing Gradient</h4><p>Gradients shrink as they propagate through deep sigmoid layers, making early layers learn extremely slowly.</p></div>
+  <div class="card"><h4>Exploding Gradient</h4><p>Gradients grow exponentially through deep networks. Solved with gradient clipping or batch normalisation.</p></div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2 id="loss">8. Loss Functions</h2>
+
+<p>Loss functions measure how far predictions are from actual values. It is the signal that backpropagation uses — minimising the loss is the entire objective of training.</p>
+
+<table>
+<tr><th>Loss Function</th><th>Formula (simplified)</th><th>Use Case</th></tr>
+<tr><td>Mean Squared Error (MSE)</td><td>mean( (y − ŷ)² )</td><td>Regression</td></tr>
+<tr><td>Mean Absolute Error (MAE)</td><td>mean( |y − ŷ| )</td><td>Regression (robust to outliers)</td></tr>
+<tr><td>Binary Cross-Entropy</td><td>−( y log ŷ + (1−y) log(1−ŷ) )</td><td>Binary Classification</td></tr>
+<tr><td>Categorical Cross-Entropy</td><td>−Σ yᵢ log ŷᵢ</td><td>Multi-Class Classification</td></tr>
+<tr><td>Huber Loss</td><td>MSE for small errors, MAE for large</td><td>Regression + outlier tolerance</td></tr>
+</table>
+
+<br>
+<div class="note">
+  <strong>Cross-Entropy Intuition:</strong> If the model is confident and correct, cross-entropy is near zero. If the model is confident but wrong, the log term applies a very large penalty. This encourages well-calibrated probability outputs, not just correct labels.
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2 id="optimizers">9. Optimizers</h2>
+
+<p>Optimizers implement the rule for updating weights after gradients are computed. Modern optimizers converge faster and handle noisy gradients far better than vanilla gradient descent.</p>
+
+<table>
+<tr><th>Optimizer</th><th>Description</th><th>Best For</th></tr>
+<tr><td>Gradient Descent (GD)</td><td>Computes exact gradient over entire dataset. Slow for large data.</td><td>Small datasets</td></tr>
+<tr><td>SGD (Stochastic)</td><td>Updates weights after each single example. Noisy but fast.</td><td>Online learning</td></tr>
+<tr><td>Mini-batch SGD</td><td>Updates on batches of 32–512 examples. Practical default.</td><td>Most tasks</td></tr>
+<tr><td>RMSProp</td><td>Scales learning rate by recent gradient magnitudes. Adaptive.</td><td>RNNs, non-stationary problems</td></tr>
+<tr><td>Adam</td><td>Combines momentum + RMSProp. Per-parameter adaptive rates.</td><td>Most tasks (default choice)</td></tr>
+<tr><td>AdamW</td><td>Adam with decoupled weight decay. Prevents over-regularisation.</td><td>Transformer training (GPT, BERT)</td></tr>
+</table>
+
+<br>
+<div class="note">
+  <strong>Key Hyperparameters:</strong> Learning rate is the most important. Default for Adam: <code>1e-3</code>. Batch size affects gradient noise — larger batches converge faster per epoch but may generalise slightly worse.
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2 id="cnn">10. Convolutional Neural Networks (CNN)</h2>
+
+<p>CNNs are specialized neural networks that exploit the spatial structure of images. A small learnable filter (kernel) slides across the image computing dot products — detecting local patterns like edges, textures, and shapes regardless of where they appear.</p>
+
+<pre>
+Input Image  (H × W × C)
+      ↓
+Convolution + ReLU     (extract feature maps)
+      ↓
+Batch Normalisation    (stabilise training)
+      ↓
+Pooling Layer          (downsample, retain dominant features)
+      ↓
+[Repeat Conv blocks…]
+      ↓
+Flatten → Fully Connected
+      ↓
+Prediction (Softmax)
+</pre>
+
+<h3>CNN Layer Types</h3>
+<table>
+<tr><th>Layer Type</th><th>Purpose</th></tr>
+<tr><td>Convolutional</td><td>Detects spatial features using learnable kernels sliding over the input</td></tr>
+<tr><td>Batch Normalisation</td><td>Stabilises training, reduces sensitivity to weight initialisation</td></tr>
+<tr><td>Max Pooling</td><td>Reduces spatial dimensions while retaining the most prominent features</td></tr>
+<tr><td>Dropout</td><td>Randomly zeroes neurons during training to prevent overfitting</td></tr>
+<tr><td>Fully Connected</td><td>Aggregates all spatial features for the final classification decision</td></tr>
+</table>
+
+<h3>Applications</h3>
+<ul>
+<li><strong>Face Recognition</strong> — compares CNN embeddings to identify individuals</li>
+<li><strong>Medical Imaging</strong> — detects tumours, retinal disease, and fractures from scans</li>
+<li><strong>Object Detection</strong> — YOLO and Faster R-CNN locate and classify objects in real time</li>
+<li><strong>Image Classification</strong> — assigns a category label to an entire image</li>
+<li><strong>Image Generation</strong> — GANs and diffusion models use CNNs to synthesise photorealistic images</li>
+</ul>
+
+<div class="note">
+  <strong>Landmark Architectures:</strong> AlexNet (2012) started the deep learning era. VGG, GoogLeNet, and ResNet followed. ResNet introduced <em>skip connections</em> (residual connections), allowing training of 100+ layer networks by solving the vanishing gradient problem.
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2 id="rnn">11. RNN and LSTM</h2>
+
+<p>Standard feedforward networks treat each input independently. Recurrent Neural Networks (RNNs) add recurrent connections so the hidden state carries information across time steps — essential for sequences like text, audio, and sensor streams.</p>
+
+<pre>
+hₜ = tanh( Wₓ·xₜ  +  Wₕ·hₜ₋₁  +  b )
+</pre>
+
+<h3>Applications</h3>
+<ul>
+<li><strong>Language Translation</strong> — encoding source and decoding target sequences</li>
+<li><strong>Speech Recognition</strong> — processing audio frames in sequence</li>
+<li><strong>Text Prediction</strong> — predicting the next word or character</li>
+<li><strong>Time Series Forecasting</strong> — stock prices, weather, sensor data</li>
+</ul>
+
+<p>LSTM networks overcome the memory limitations of standard RNNs.</p>
+
+<div class="note">
+  <strong>Vanishing Gradient in RNNs:</strong> When backpropagating through many time steps, gradients get multiplied repeatedly and shrink to near zero. The network then fails to learn long-range dependencies — e.g. connecting a pronoun to a noun 50 words earlier.
+</div>
+
+<h3>RNN Variants</h3>
+<div class="card-grid">
+  <div class="card"><h4>LSTM (Long Short-Term Memory)</h4><p>Three gates — input, forget, output — control what to keep, discard, or expose from the cell state. Solves vanishing gradients over long sequences.</p></div>
+  <div class="card"><h4>GRU (Gated Recurrent Unit)</h4><p>A simpler variant of LSTM with fewer parameters (two gates). Often achieves comparable performance with faster training.</p></div>
+  <div class="card"><h4>Bidirectional RNN</h4><p>Processes the sequence in both directions (forward and backward), giving each time step access to full context.</p></div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2 id="transformers">12. Transformers</h2>
+
+<p>Transformers are modern deep learning architectures that revolutionised Natural Language Processing. Introduced in the 2017 paper <em>"Attention Is All You Need"</em>, the Transformer replaced recurrence with self-attention — every token directly attends to every other token in a single pass.</p>
+
+<p>Large Language Models such as GPT, Gemini, Claude and Llama are built on Transformer architectures.</p>
+
+<pre>
+Attention(Q, K, V) = softmax( Q·Kᵀ / √dₖ ) · V
+</pre>
+
+<pre>
+Input Text
+     ↓
+Token Embeddings + Positional Encoding
+     ↓
+Multi-Head Self-Attention
+     ↓
+Feed-Forward Block  (×N layers)
+     ↓
+Generated Output
+</pre>
+
+<h3>Key Components</h3>
+<div class="card-grid">
+  <div class="card"><h4>Self-Attention</h4><p>Each token builds a weighted combination of all other tokens, learning rich contextual relationships within the sequence.</p></div>
+  <div class="card"><h4>Multi-Head Attention</h4><p>Runs attention in parallel across multiple subspaces, capturing different types of relationships simultaneously.</p></div>
+  <div class="card"><h4>Positional Encoding</h4><p>Injects token position into embeddings — necessary because attention itself is permutation-invariant.</p></div>
+  <div class="card"><h4>Layer Normalisation</h4><p>Stabilises training inside residual blocks. Applied before attention (Pre-LN) in most modern models.</p></div>
+</div>
+
+<h3>Advantages</h3>
+<ul>
+<li><strong>Parallel Processing</strong> — unlike RNNs, all positions are computed simultaneously during training</li>
+<li><strong>Long Context Handling</strong> — long-range dependencies are trivial via direct attention</li>
+<li><strong>Scalable Training</strong> — scaling parameters and data reliably improves capability ("scaling laws")</li>
+<li><strong>State-of-the-Art Performance</strong> — dominates NLP, vision (ViT), audio, and multimodal tasks</li>
+</ul>
+
+<div class="note">
+  <strong>Notable LLMs built on Transformers:</strong>
+  <span class="badge badge-blue">GPT-4o</span>
+  <span class="badge badge-teal">Claude</span>
+  <span class="badge badge-purple">Gemini</span>
+  <span class="badge badge-amber">Llama 3</span>
+  <span class="badge badge-coral">Mistral</span>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2 id="frameworks">13. Popular Deep Learning Frameworks</h2>
+
+<p>Frameworks provide automatic differentiation (autograd), GPU acceleration, and high-level APIs for building and training models. You almost never write raw gradient code by hand.</p>
+
+<table>
+<tr><th>Framework</th><th>Creator</th><th>Description</th><th>Best For</th></tr>
+<tr><td>TensorFlow 2 / Keras</td><td>Google</td><td>Keras is the high-level API on top. Excellent production deployment (TF Serving, TFLite, TF.js).</td><td>Production, mobile, embedded</td></tr>
+<tr><td>PyTorch</td><td>Meta</td><td>Dynamic computation graph makes debugging intuitive. Dominant in research. Powers Hugging Face.</td><td>Research, prototyping</td></tr>
+<tr><td>JAX</td><td>Google</td><td>Functional autograd + XLA JIT compiler. Favourite for large-scale research (DeepMind, Google Brain).</td><td>High-performance computing, TPUs</td></tr>
+<tr><td>Hugging Face Transformers</td><td>Hugging Face</td><td>Model hub + training library with pre-trained models for NLP, vision, and audio. Runs on PyTorch or TF.</td><td>NLP, vision, fine-tuning</td></tr>
+</table>
+
+<br>
+<div class="note">
+  <strong>Which to learn first?</strong> Start with <strong>PyTorch</strong> — it has the richest tutorial ecosystem, the largest research community, and modern papers almost always include PyTorch code. Learn Keras/TensorFlow if you need mobile or embedded deployment.
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2 id="applications">14. Real-World Applications</h2>
+
+<p>Deep learning is embedded in the products and infrastructure most people use daily — often invisibly.</p>
+
+<div class="card-grid">
+  <div class="card"><h4>AI Assistants</h4><p>ChatGPT, Claude, Gemini — Transformer LLMs that converse, reason, write code, and generate images.</p></div>
+  <div class="card"><h4>Self-Driving Cars</h4><p>Tesla Autopilot and Waymo fuse camera, radar, and LiDAR data via CNNs and Transformers for real-time perception.</p></div>
+  <div class="card"><h4>Fraud Detection</h4><p>Banks use deep learning to flag anomalous transactions in real time across millions of events per second.</p></div>
+  <div class="card"><h4>Medical Diagnosis</h4><p>Models detect diabetic retinopathy, skin cancer, and pulmonary embolism from images with radiologist-level accuracy.</p></div>
+  <div class="card"><h4>Voice Recognition</h4><p>Whisper, Siri, and Google Assistant use Transformer-based speech recognition and text-to-speech synthesis.</p></div>
+  <div class="card"><h4>Image Generation</h4><p>Stable Diffusion, DALL·E, Sora — diffusion models and video Transformers create images and video from text prompts.</p></div>
+  <div class="card"><h4>Recommendation Systems</h4><p>Netflix, Spotify, YouTube use deep collaborative filtering and sequence models to personalise feeds.</p></div>
+  <div class="card"><h4>Protein Folding</h4><p>AlphaFold 2 predicted the 3D structure of virtually every known protein — a breakthrough decades in the making.</p></div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2 id="project">15. Mini Project Idea</h2>
+
+<p>Build an Image Classification System that identifies whether an uploaded image contains a cat or a dog using a CNN model.</p>
+
+<div class="note">
+  <strong>Suggested stack:</strong> Python · TensorFlow/Keras or PyTorch · Kaggle Dogs vs. Cats dataset · Transfer learning from a pre-trained ResNet or MobileNet · Flask or Streamlit for the web interface.
+</div>
+
+<h3>Project Steps</h3>
+<ol>
+  <li>Download and preprocess the Dogs vs. Cats dataset (resize to 224×224, normalise pixel values)</li>
+  <li>Load a pre-trained CNN (e.g. MobileNetV2) and freeze its base layers</li>
+  <li>Add a custom classification head (GlobalAveragePooling → Dense(128) → Dense(1, sigmoid))</li>
+  <li>Train for 5–10 epochs with Adam and Binary Cross-Entropy loss</li>
+  <li>Evaluate on the validation set; aim for &gt;95% accuracy</li>
+  <li>Build a simple web UI where users can upload an image and see the prediction</li>
+</ol>
+
+<!-- ═══════════════════════════════════════════ -->
+<h2 id="mcq">16. Q &amp; A</h2>
+
+<p>Click any question to reveal the answer.</p>
+
+<div id="qa-container"></div>
+
+<script>
+const qas = [
+  ["Deep Learning is a subset of?", "Machine Learning. More specifically: AI ⊃ ML ⊃ Deep Learning."],
+  ["What is ANN?", "Artificial Neural Network — a computational model inspired by biological neurons, organised into input, hidden, and output layers."],
+  ["Why are activation functions necessary?", "They introduce non-linearity. Without them, stacking multiple linear layers still produces a single linear function, and the network cannot learn complex patterns."],
+  ["Which activation function is most popular in hidden layers?", "ReLU (Rectified Linear Unit): f(x) = max(0, x). It is computationally efficient, avoids vanishing gradients for positive inputs, and trains faster than sigmoid/tanh."],
+  ["Which network architecture is used for images?", "CNN (Convolutional Neural Network). It exploits spatial structure using sliding kernel filters to detect local patterns like edges and textures."],
+  ["Which network handles sequential data?", "RNN (Recurrent Neural Network) and its improved variants LSTM and GRU, which maintain a hidden state across time steps."],
+  ["What does LSTM solve?", "The vanishing gradient problem in standard RNNs, allowing the network to learn long-term dependencies across many time steps via input, forget, and output gates."],
+  ["Which architecture powers modern LLMs?", "The Transformer, introduced in the 2017 paper 'Attention Is All You Need'. It uses self-attention instead of recurrence, enabling parallel processing and long-context understanding."],
+  ["What does CNN stand for?", "Convolutional Neural Network — a neural network designed for grid-like data (images, audio spectrograms) using learnable convolutional filters."],
+  ["Most popular optimizer?", "Adam (Adaptive Moment Estimation). It combines momentum and adaptive per-parameter learning rates. AdamW (Adam + decoupled weight decay) is standard for training Transformers."],
+  ["What is the purpose of a loss function?", "To measure how far predictions are from true labels. Backpropagation minimises the loss by computing gradients and updating weights."],
+  ["What is overfitting?", "When a model memorises training data and performs poorly on unseen examples. Mitigated with dropout, weight decay, data augmentation, or early stopping."],
+  ["What is transfer learning?", "Re-using a pre-trained model's weights as a starting point for a new task, dramatically reducing the data and compute needed to achieve good performance."],
+  ["What is the vanishing gradient problem?", "Gradients shrink to near zero as they backpropagate through many layers (especially sigmoid activations), preventing early layers from learning. Addressed by ReLU, batch norm, and residual connections."],
+  ["Name three CNN applications.", "Face recognition, medical image diagnosis, and real-time object detection (e.g. YOLO for autonomous vehicles)."]
+];
+
+const container = document.getElementById('qa-container');
+qas.forEach(([q, a], i) => {
+  const item = document.createElement('div');
+  item.className = 'qa-item';
+  item.innerHTML = `
+    <div class="qa-q" onclick="toggle(${i})">
+      <span>${i+1}. ${q}</span><span id="icon-${i}">+</span>
+    </div>
+    <div class="qa-a" id="ans-${i}">${a}</div>`;
+  container.appendChild(item);
+});
+
+function toggle(i) {
+  const ans = document.getElementById('ans-' + i);
+  const icon = document.getElementById('icon-' + i);
+  const open = ans.classList.toggle('open');
+  icon.textContent = open ? '−' : '+';
+}
+</script>
+
+</div>
+</body>
+</html>

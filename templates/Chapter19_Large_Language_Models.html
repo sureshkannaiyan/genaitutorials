@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 19 - Large Language Models (LLMs)</title>
+<style>
+body{font-family:Segoe UI,Arial,sans-serif;margin:0;display:flex;background:#f8fafc}
+.sidebar{width:320px;position:fixed;height:100vh;overflow:auto;background:#0f172a;color:white}
+.sidebar h2{padding:20px;text-align:center}
+.sidebar a{display:block;color:white;text-decoration:none;padding:10px 20px}
+.sidebar a:hover{background:#1e293b}
+.content{margin-left:320px;padding:30px;max-width:1300px}
+h1,h2,h3,h4{color:#1e3a8a}
+pre{background:#f1f5f9;padding:12px;border-left:5px solid #2563eb;overflow:auto}
+.note{background:#dbeafe;padding:15px;border-radius:8px}
+table{width:100%;border-collapse:collapse}
+th,td{border:1px solid #ccc;padding:8px}
+th{background:#f1f5f9;color:#1e3a8a}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:16px 0}
+.card{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:16px 18px;box-shadow:0 1px 4px rgba(0,0,0,0.05)}
+.card h4{color:#1e3a8a;margin:0 0 6px;font-size:15px}
+.card p{margin:0;color:#475569;font-size:14px;line-height:1.6}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+@media(max-width:700px){.two-col{grid-template-columns:1fr}}
+.badge{display:inline-block;padding:3px 10px;border-radius:99px;font-size:12px;font-weight:600;margin:3px}
+.badge-blue{background:#dbeafe;color:#1e40af}
+.badge-teal{background:#d1fae5;color:#065f46}
+.badge-amber{background:#fef3c7;color:#92400e}
+.badge-red{background:#fee2e2;color:#991b1b}
+.badge-purple{background:#ede9fe;color:#4c1d95}
+.badge-gray{background:#f1f5f9;color:#334155}
+.badge-green{background:#dcfce7;color:#166534}
+.qa-item{border:1px solid #e2e8f0;border-radius:8px;margin-bottom:8px;overflow:hidden}
+.qa-q{background:#f1f5f9;padding:12px 16px;font-weight:600;color:#1e3a8a;cursor:pointer;display:flex;justify-content:space-between;user-select:none}
+.qa-q:hover{background:#dbeafe}
+.qa-a{display:none;padding:12px 16px;color:#334155;font-size:14px;line-height:1.65;background:#fff}
+.qa-a.open{display:block}
+.step{display:flex;gap:14px;align-items:flex-start;margin-bottom:14px}
+.step-num{min-width:30px;height:30px;background:#1e3a8a;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;margin-top:2px;flex-shrink:0}
+.step-body h4{margin:0 0 4px;color:#1e3a8a;font-size:15px}
+.step-body p{margin:0;color:#475569;font-size:14px;line-height:1.6}
+.compare-box{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:16px 18px}
+.compare-box h4{margin:0 0 8px;font-size:14px}
+.compare-box.open-src{border-left:5px solid #22c55e}
+.compare-box.open-src h4{color:#16a34a}
+.compare-box.closed-src{border-left:5px solid #3b82f6}
+.compare-box.closed-src h4{color:#1d4ed8}
+
+/* Home Button */
+.home-btn{
+    position:fixed;
+    top:20px;
+    right:20px;
+    z-index:9999;
+    background:linear-gradient(135deg,#0f172a,#2563eb);
+    color:#fff;
+    text-decoration:none;
+    padding:12px 20px;
+    border-radius:50px;
+    font-weight:600;
+    font-family:Arial,sans-serif;
+    box-shadow:0 5px 15px rgba(0,0,0,0.3);
+    animation:pulseHome 2s infinite;
+    transition:0.3s;
+}
+
+.home-btn:hover{
+    transform:translateY(-3px) scale(1.05);
+}
+
+@keyframes pulseHome{
+    0%{
+        box-shadow:0 0 0 0 rgba(37,99,235,0.7);
+    }
+    70%{
+        box-shadow:0 0 0 15px rgba(37,99,235,0);
+    }
+    100%{
+        box-shadow:0 0 0 0 rgba(37,99,235,0);
+    }
+}
+
+/* WhatsApp Button */
+.whatsapp-float{
+    position:fixed;
+    width:65px;
+    height:65px;
+    bottom:25px;
+    right:25px;
+    background:#25D366;
+    color:white;
+    border-radius:50%;
+    text-align:center;
+    font-size:34px;
+    line-height:65px;
+    text-decoration:none;
+    z-index:9999;
+    box-shadow:0 5px 20px rgba(0,0,0,0.3);
+    animation:whatsappBounce 1.5s infinite;
+}
+
+.whatsapp-float:hover{
+    transform:scale(1.1);
+}
+
+@keyframes whatsappBounce{
+    0%,100%{
+        transform:translateY(0);
+    }
+    50%{
+        transform:translateY(-10px);
+    }
+}
+
+/* Mobile Responsive */
+@media(max-width:768px){
+    .home-btn{
+        top:10px;
+        right:10px;
+        padding:10px 15px;
+        font-size:14px;
+    }
+
+    .whatsapp-float{
+        width:55px;
+        height:55px;
+        line-height:55px;
+        font-size:28px;
+        bottom:15px;
+        right:15px;
+    }
+}
+</style>
+</head>
+<body>
+
+
+
+<a href="ai.html" class="home-btn">
+    🏠 Home
+</a>
+
+<!-- WHATSAPP FLOATING BUTTON -->
+<a href="https://wa.me/918220033325?text=Hello%20I%20would%20like%20to%20know%20more"
+   class="whatsapp-float"
+   target="_blank">
+    💬
+</a>
+
+<div class="sidebar">
+<h2>Chapter 19. Large Language Models</h2>
+<a href="#intro">1. Introduction</a>
+<a href="#evolution">2. Evolution of LLMs</a>
+<a href="#tokens">3. Tokens &amp; Tokenization</a>
+<a href="#embeddings">4. Embeddings</a>
+<a href="#transformers">5. Transformer Architecture</a>
+<a href="#attention">6. Attention Mechanism</a>
+<a href="#context">7. Context Windows</a>
+<a href="#training">8. Training LLMs</a>
+<a href="#finetuning">9. Fine-Tuning</a>
+<a href="#rlhf">10. RLHF &amp; Alignment</a>
+<a href="#inference">11. Inference</a>
+<a href="#models">12. Popular LLMs</a>
+<a href="#opensource">13. Open vs Closed Models</a>
+<a href="#rag">14. RAG</a>
+<a href="#applications">15. Applications</a>
+<a href="#limitations">16. Limitations</a>
+<a href="#project">17. Mini Project</a>
+<a href="#mcq">18. Q &amp; A</a>
+</div>
+
+<div class="content">
+
+<h1>Chapter 19: Large Language Models (LLMs)</h1>
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="intro">1. Introduction to Large Language Models</h2>
+
+<p>Large Language Models (LLMs) are advanced AI systems trained on vast amounts of text data to understand, generate, summarise, translate, and reason using human language. They represent the current state of the art in Natural Language Processing and form the backbone of modern Generative AI.</p>
+
+<p>LLMs form the foundation of systems such as ChatGPT, Gemini, Claude, and Llama. What makes them "large" is the combination of massive training datasets (trillions of tokens), enormous model sizes (billions to trillions of parameters), and unprecedented compute used during training.</p>
+
+<div class="note">
+  <strong>Core mechanism:</strong> LLMs predict the next most likely token (word or word-fragment) based on all preceding context. This simple objective — repeated billions of times — gives rise to emergent capabilities like reasoning, translation, code generation, and creative writing.
+</div>
+
+<h3>What Makes LLMs Different from Earlier NLP</h3>
+<div class="card-grid">
+  <div class="card"><h4>Scale</h4><p>GPT-4 has an estimated 1 trillion+ parameters. Earlier models had millions. This scale enables emergent abilities not seen in smaller models.</p></div>
+  <div class="card"><h4>Few-Shot Learning</h4><p>LLMs can learn a new task from just 2–3 examples in the prompt — no retraining required. Earlier models needed thousands of labelled examples.</p></div>
+  <div class="card"><h4>Generality</h4><p>A single LLM handles translation, coding, summarisation, maths, and conversation — tasks that previously required separate specialised models.</p></div>
+  <div class="card"><h4>Emergent Reasoning</h4><p>Beyond memorisation, large enough models exhibit genuine multi-step reasoning, analogy, and problem-solving abilities that were not explicitly trained.</p></div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="evolution">2. Evolution of Language Models</h2>
+
+<p>Language modelling has gone through five distinct generations over six decades, each driven by a breakthrough in either architecture, data, or compute.</p>
+
+<table>
+<tr><th>Era</th><th>Generation</th><th>Key Idea</th><th>Limitation</th></tr>
+<tr><td>1950s–1980s</td><td>Rule-Based Systems</td><td>Handcrafted grammar rules and dictionaries (e.g. ELIZA)</td><td>Brittle — couldn't handle anything outside the rules</td></tr>
+<tr><td>1990s–2000s</td><td>Statistical Models (N-grams)</td><td>Predict next word using frequency counts from a corpus</td><td>No semantic understanding; exponential data growth needed for longer context</td></tr>
+<tr><td>2013–2017</td><td>Neural Networks (Word2Vec, RNN, LSTM)</td><td>Word embeddings capture semantics; RNNs process sequences</td><td>Sequential processing limits parallelism; vanishing gradient for long sequences</td></tr>
+<tr><td>2017–2018</td><td>Transformers (BERT, GPT-1)</td><td>Self-attention replaces recurrence; parallel processing; pre-training + fine-tuning</td><td>Models still relatively small; fine-tuning required per task</td></tr>
+<tr><td>2019–present</td><td>Large Language Models (GPT-3/4, Claude, Gemini)</td><td>Scale laws: bigger model + more data = better performance; few-shot and zero-shot capability</td><td>High cost, hallucinations, alignment challenges</td></tr>
+</table>
+
+<div class="note">
+  <strong>The Scaling Hypothesis:</strong> Researchers at OpenAI and DeepMind discovered that LLM performance improves predictably as you scale model size, training data, and compute — a relationship known as the "Chinchilla scaling laws."
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="tokens">3. Tokens and Tokenization</h2>
+
+<p>Before any text is processed by an LLM, it must be converted into tokens — the basic units the model operates on. A token is not always a complete word; it can be a word, a syllable, a punctuation mark, or a common sub-word fragment.</p>
+
+<pre>
+Sentence: "Artificial Intelligence is amazing."
+
+Tokens (approximate):
+["Art", "ificial", " Intelligence", " is", " amazing", "."]
+
+Each token is mapped to a unique integer ID in the model's vocabulary.
+"Art"         → 8502
+"ificial"     → 9542
+" Intelligence" → 22478
+...
+</pre>
+
+<h3>Why Sub-word Tokenization?</h3>
+<div class="card-grid">
+  <div class="card"><h4>Handles Unknown Words</h4><p>"Tokenization" breaks into "Token" + "ization" — both known sub-words. The model can process new compound words without an "unknown" token.</p></div>
+  <div class="card"><h4>Vocabulary Efficiency</h4><p>A vocabulary of ~50,000 sub-word tokens covers virtually all English text. A word-level vocabulary would need millions of entries.</p></div>
+  <div class="card"><h4>Multilingual</h4><p>Sub-word tokenizers like BPE (Byte-Pair Encoding) and SentencePiece work across languages without separate per-language vocabularies.</p></div>
+</div>
+
+<h3>Tokenization Algorithms</h3>
+<table>
+<tr><th>Algorithm</th><th>Used By</th><th>How It Works</th></tr>
+<tr><td>Byte-Pair Encoding (BPE)</td><td>GPT-2, GPT-4, Llama</td><td>Iteratively merges the most frequent adjacent byte pairs into new tokens</td></tr>
+<tr><td>WordPiece</td><td>BERT, Gemini</td><td>Similar to BPE but chooses merges that maximise training data likelihood</td></tr>
+<tr><td>SentencePiece</td><td>T5, Llama 2, Mistral</td><td>Language-agnostic; works directly on raw text without pre-tokenisation</td></tr>
+<tr><td>Tiktoken</td><td>GPT-3.5, GPT-4</td><td>OpenAI's fast BPE implementation optimised for speed and consistency</td></tr>
+</table>
+
+<div class="note">
+  <strong>Token cost matters:</strong> Most LLM APIs charge per token. 1 token ≈ 0.75 English words on average. A 1,000-word document is roughly 1,300–1,500 tokens. Understanding tokenisation helps estimate API costs and context window usage.
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="embeddings">4. Embeddings</h2>
+
+<p>Embeddings convert tokens, sentences, or entire documents into dense numerical vectors (arrays of floating-point numbers) that capture semantic meaning. Words with similar meanings are mapped to nearby points in this high-dimensional vector space.</p>
+
+<pre>
+Word vector examples (simplified to 3 dimensions):
+
+"King"   → [0.92, 0.10, 0.74]
+"Queen"  → [0.89, 0.11, 0.71]
+"Man"    → [0.91, 0.08, 0.42]
+"Woman"  → [0.88, 0.09, 0.40]
+
+Famous relationship:
+Vector("King") − Vector("Man") + Vector("Woman") ≈ Vector("Queen")
+</pre>
+
+<h3>Types of Embeddings</h3>
+<table>
+<tr><th>Type</th><th>Scope</th><th>Example Models</th><th>Use Case</th></tr>
+<tr><td>Word Embeddings</td><td>Single word</td><td>Word2Vec, GloVe, FastText</td><td>Classic NLP tasks, similarity search</td></tr>
+<tr><td>Sentence Embeddings</td><td>Sentence or paragraph</td><td>Sentence-BERT, E5, text-embedding-3</td><td>Semantic search, document retrieval</td></tr>
+<tr><td>Contextual Embeddings</td><td>Token in context</td><td>BERT, GPT hidden states</td><td>Named entity recognition, classification</td></tr>
+<tr><td>Multimodal Embeddings</td><td>Text + image/audio</td><td>CLIP, ImageBind</td><td>Cross-modal search, image captioning</td></tr>
+</table>
+
+<h3>Applications of Embeddings</h3>
+<div class="card-grid">
+  <div class="card"><h4>Semantic Search</h4><p>Instead of exact keyword matching, embeddings find results that mean the same thing even if they use different words.</p></div>
+  <div class="card"><h4>Recommendation Systems</h4><p>Embed user preferences and item descriptions into the same space. Recommend items whose vectors are close to the user's preference vector.</p></div>
+  <div class="card"><h4>Vector Databases</h4><p>Tools like Pinecone, Weaviate, and pgvector store and index millions of embedding vectors for fast nearest-neighbour retrieval.</p></div>
+  <div class="card"><h4>RAG (Retrieval-Augmented Generation)</h4><p>Document chunks are embedded and stored. At query time, the most semantically similar chunks are retrieved and injected into the LLM prompt.</p></div>
+  <div class="card"><h4>Clustering &amp; Classification</h4><p>Embeddings allow unsupervised clustering of documents by topic, or few-shot classification using cosine similarity instead of a trained classifier.</p></div>
+  <div class="card"><h4>Anomaly Detection</h4><p>Unusual text (fraud, abuse, outliers) appears far from normal clusters in embedding space and can be flagged automatically.</p></div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="transformers">5. Transformer Architecture</h2>
+
+<p>The Transformer, introduced in the 2017 paper <em>"Attention Is All You Need"</em> (Vaswani et al.), replaced recurrent networks with self-attention, enabling full parallelism during training and direct modelling of relationships between any two tokens regardless of their distance.</p>
+
+<pre>
+Input Tokens
+      ↓
+Token Embeddings + Positional Encoding
+      ↓
+┌────────────────────────────────────┐
+│  Transformer Block × N             │
+│  ┌──────────────────────────────┐  │
+│  │ Multi-Head Self-Attention    │  │
+│  │ + Residual Connection + LN  │  │
+│  └──────────────────────────────┘  │
+│  ┌──────────────────────────────┐  │
+│  │ Feed-Forward Network (FFN)   │  │
+│  │ + Residual Connection + LN  │  │
+│  └──────────────────────────────┘  │
+└────────────────────────────────────┘
+      ↓
+Output Logits (next-token probabilities)
+</pre>
+
+<h3>Key Components</h3>
+<table>
+<tr><th>Component</th><th>Purpose</th></tr>
+<tr><td>Token Embedding</td><td>Converts each token ID into a dense vector of size d_model (e.g. 4096 for LLaMA-7B)</td></tr>
+<tr><td>Positional Encoding</td><td>Injects token position information — attention itself is order-agnostic</td></tr>
+<tr><td>Multi-Head Self-Attention</td><td>Each token attends to all other tokens across multiple parallel "heads"</td></tr>
+<tr><td>Feed-Forward Network (FFN)</td><td>Two linear layers with a non-linearity; applies token-wise transformations</td></tr>
+<tr><td>Residual Connections</td><td>Skip connections (x + sublayer(x)) prevent vanishing gradients in deep networks</td></tr>
+<tr><td>Layer Normalisation</td><td>Stabilises activations within each block; applied before (Pre-LN) in modern models</td></tr>
+</table>
+
+<h3>Encoder vs Decoder vs Encoder-Decoder</h3>
+<div class="card-grid">
+  <div class="card"><h4>Encoder-Only (BERT)</h4><p>Reads the full input bidirectionally. Best for understanding tasks: classification, NER, semantic search. Not used for text generation.</p></div>
+  <div class="card"><h4>Decoder-Only (GPT, LLaMA, Claude)</h4><p>Generates text autoregressively — one token at a time, left to right. The dominant architecture for modern LLMs and chat models.</p></div>
+  <div class="card"><h4>Encoder-Decoder (T5, BART)</h4><p>Encoder processes the input; decoder generates the output. Used for translation, summarisation, and question answering.</p></div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="attention">6. Attention Mechanism</h2>
+
+<p>Attention is the core innovation of the Transformer. It allows every token to directly "look at" every other token in the sequence and decide how much weight to assign each one when building its own representation.</p>
+
+<pre>
+Attention(Q, K, V) = softmax( Q·Kᵀ / √dₖ ) · V
+
+Where:
+  Q = Query matrix  (what am I looking for?)
+  K = Key matrix    (what do I contain?)
+  V = Value matrix  (what do I pass forward?)
+  dₖ = dimension of key vectors (scaling factor)
+</pre>
+
+<h3>Intuition Example</h3>
+<pre>
+"The cat sat on the mat because it was tired."
+
+When generating a response, the model must resolve "it".
+The attention mechanism assigns high weight to "cat" 
+when processing "it" — learning this coreference
+from billions of training examples.
+</pre>
+
+<h3>Multi-Head Attention</h3>
+<p>Instead of one attention operation, the model runs attention in parallel across multiple "heads" (e.g. 32 heads for LLaMA-7B). Each head can learn to attend to different types of relationships — syntax, coreference, topic, position.</p>
+
+<h3>Types of Attention Used in LLMs</h3>
+<table>
+<tr><th>Type</th><th>Description</th><th>Used By</th></tr>
+<tr><td>Full Self-Attention</td><td>Every token attends to every other. O(n²) memory cost.</td><td>Original GPT, BERT</td></tr>
+<tr><td>Causal (Masked) Attention</td><td>Each token only attends to previous tokens. Required for autoregressive generation.</td><td>GPT-4, LLaMA, Claude</td></tr>
+<tr><td>Grouped Query Attention (GQA)</td><td>Multiple query heads share a single key-value head. Reduces memory at inference.</td><td>LLaMA-2/3, Gemma</td></tr>
+<tr><td>Flash Attention</td><td>Hardware-optimised attention that avoids materialising the full attention matrix in VRAM.</td><td>Most modern LLMs</td></tr>
+</table>
+
+<div class="note">
+  <strong>Why attention beats RNNs:</strong> RNNs process tokens one-by-one sequentially — information from 50 steps ago gets diluted through many multiplications. Attention gives every token direct access to every other token in O(1) steps, regardless of distance.
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="context">7. Context Windows</h2>
+
+<p>The context window is the maximum number of tokens an LLM can process in a single forward pass — both the input prompt and the generated output combined. Everything outside the window is invisible to the model.</p>
+
+<table>
+<tr><th>Model</th><th>Context Window</th><th>Approx. Pages of Text</th></tr>
+<tr><td>GPT-3 (2020)</td><td>4,096 tokens</td><td>~6 pages</td></tr>
+<tr><td>GPT-4 (2023)</td><td>128,000 tokens</td><td>~200 pages</td></tr>
+<tr><td>Claude 3 (2024)</td><td>200,000 tokens</td><td>~500 pages</td></tr>
+<tr><td>Gemini 1.5 Pro (2024)</td><td>1,000,000 tokens</td><td>~1,500 pages</td></tr>
+<tr><td>LLaMA-3 (2024)</td><td>128,000 tokens</td><td>~200 pages</td></tr>
+</table>
+
+<h3>Why Context Window Size Matters</h3>
+<div class="card-grid">
+  <div class="card"><h4>Long Document Analysis</h4><p>A 200K token window lets you feed entire books, legal contracts, or codebases into a single prompt for analysis.</p></div>
+  <div class="card"><h4>Multi-Turn Conversations</h4><p>Longer context means the model remembers earlier parts of a conversation without the chat history being truncated.</p></div>
+  <div class="card"><h4>RAG Reduction</h4><p>With very large windows, you can inject entire knowledge bases directly, reducing the need for retrieval pipelines.</p></div>
+  <div class="card"><h4>Cost and Latency</h4><p>Attention scales as O(n²) with sequence length. Larger context = more compute and higher API cost per call.</p></div>
+</div>
+
+<div class="note">
+  <strong>"Lost in the Middle" problem:</strong> Research shows LLMs perform best on information at the start and end of the context window. Information buried in the middle of very long contexts is less reliably recalled — even when technically within the window.
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="training">8. Training Large Language Models</h2>
+
+<p>Training an LLM is a multi-stage, massively distributed process that requires petabytes of data, thousands of GPUs, and months of computation. The objective is simple — predict the next token — but the scale makes it one of the most expensive engineering endeavours in history.</p>
+
+<pre>
+Stage 1: Data Collection
+      ↓
+Stage 2: Data Cleaning &amp; Filtering
+      ↓
+Stage 3: Tokenization (build vocabulary + tokenize corpus)
+      ↓
+Stage 4: Pre-training (next-token prediction on all data)
+      ↓
+Stage 5: Evaluation (perplexity, benchmarks)
+      ↓
+Stage 6: Alignment (RLHF / DPO — see Section 10)
+      ↓
+Stage 7: Safety Evaluation &amp; Red-Teaming
+      ↓
+Stage 8: Deployment
+</pre>
+
+<h3>Pre-Training Data Sources</h3>
+<table>
+<tr><th>Source</th><th>Examples</th><th>Proportion (approx.)</th></tr>
+<tr><td>Web crawl</td><td>Common Crawl, C4</td><td>~50–70%</td></tr>
+<tr><td>Books</td><td>Books3, Project Gutenberg</td><td>~10–15%</td></tr>
+<tr><td>Code</td><td>GitHub, Stack Overflow</td><td>~10–20%</td></tr>
+<tr><td>Wikipedia</td><td>All languages</td><td>~3–5%</td></tr>
+<tr><td>Scientific papers</td><td>ArXiv, PubMed</td><td>~2–5%</td></tr>
+<tr><td>Curated datasets</td><td>OpenWebText, The Pile</td><td>Varies</td></tr>
+</table>
+
+<h3>Compute Requirements</h3>
+<div class="card-grid">
+  <div class="card"><h4>GPT-3 (2020)</h4><p>175B parameters. ~3,640 petaflop/s-days of compute. Estimated cost: $4–12 million USD.</p></div>
+  <div class="card"><h4>LLaMA-3-70B (2024)</h4><p>70B parameters. Trained on 15 trillion tokens. Run on 2,048 H100 GPUs.</p></div>
+  <div class="card"><h4>GPT-4 (estimated)</h4><p>Estimated ~1T parameters (mixture of experts). Training cost estimated at $50–100M USD.</p></div>
+  <div class="card"><h4>Key bottleneck</h4><p>GPU memory (VRAM) limits batch size. Distributed training across hundreds of nodes requires high-speed interconnects (NVLink, InfiniBand).</p></div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="finetuning">9. Fine-Tuning</h2>
+
+<p>Fine-tuning takes a pre-trained LLM and continues training it on a smaller, task-specific or domain-specific dataset. This adapts the model's behaviour without training from scratch, saving enormous compute cost.</p>
+
+<h3>Fine-Tuning Methods</h3>
+<table>
+<tr><th>Method</th><th>Description</th><th>Cost</th><th>Best For</th></tr>
+<tr><td>Full Fine-Tuning</td><td>All model weights are updated on the new dataset</td><td>Very High</td><td>Large organisations with dedicated GPU clusters</td></tr>
+<tr><td>LoRA (Low-Rank Adaptation)</td><td>Trains small low-rank matrices added to existing weight matrices. Only ~0.1% of parameters trained.</td><td>Low</td><td>Most practical fine-tuning tasks on consumer GPUs</td></tr>
+<tr><td>QLoRA</td><td>LoRA applied to a 4-bit quantised model. Further reduces VRAM requirements.</td><td>Very Low</td><td>Fine-tuning 7B–13B models on a single 24GB GPU</td></tr>
+<tr><td>Instruction Fine-Tuning</td><td>Trains on (instruction, response) pairs to make the model follow natural language instructions</td><td>Medium</td><td>Building chat assistants and instruction-following models</td></tr>
+<tr><td>PEFT (Parameter-Efficient FT)</td><td>Umbrella term for methods that train only a small fraction of parameters (LoRA, prefix tuning, adapters)</td><td>Low–Medium</td><td>Domain adaptation with limited resources</td></tr>
+</table>
+
+<h3>Domain Fine-Tuning Examples</h3>
+<div class="card-grid">
+  <div class="card"><h4>Medical Chatbot</h4><p>Fine-tuned on clinical notes, medical literature, and Q&amp;A pairs to provide accurate symptom guidance and drug information.</p></div>
+  <div class="card"><h4>Legal Assistant</h4><p>Fine-tuned on case law, contracts, and statutes to draft legal documents and answer jurisdiction-specific questions.</p></div>
+  <div class="card"><h4>Customer Support</h4><p>Fine-tuned on company FAQs and past support tickets to handle product-specific queries consistently.</p></div>
+  <div class="card"><h4>Financial Analysis</h4><p>Fine-tuned on earnings reports, SEC filings, and analyst notes to interpret financial language and generate summaries.</p></div>
+  <div class="card"><h4>Code Assistant</h4><p>Fine-tuned on proprietary codebases to suggest completions and explain internal APIs not seen during pre-training.</p></div>
+  <div class="card"><h4>Language Localisation</h4><p>Fine-tuned on low-resource language data (e.g. Tamil, Swahili) to improve performance in languages underrepresented in pre-training.</p></div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="rlhf">10. RLHF and Alignment</h2>
+
+<p>A raw pre-trained LLM predicts the statistically likely next token — but "likely" is not the same as "helpful, harmless, and honest." Alignment techniques shape model behaviour to match human values and follow instructions reliably.</p>
+
+<h3>Reinforcement Learning from Human Feedback (RLHF)</h3>
+
+<div class="step">
+  <div class="step-num">1</div>
+  <div class="step-body"><h4>Supervised Fine-Tuning (SFT)</h4><p>Human trainers write example responses to prompts. The model is fine-tuned on these high-quality demonstrations to produce instruction-following behaviour.</p></div>
+</div>
+<div class="step">
+  <div class="step-num">2</div>
+  <div class="step-body"><h4>Reward Model Training</h4><p>Human raters rank multiple model responses to the same prompt. A separate "reward model" is trained to predict human preference scores.</p></div>
+</div>
+<div class="step">
+  <div class="step-num">3</div>
+  <div class="step-body"><h4>PPO Optimisation</h4><p>The LLM is optimised using Proximal Policy Optimisation (PPO) — a reinforcement learning algorithm — to generate responses that maximise the reward model's score.</p></div>
+</div>
+
+<div class="note">
+  <strong>DPO (Direct Preference Optimisation):</strong> A newer, simpler alternative to RLHF that skips the reward model entirely. The LLM is directly fine-tuned on (preferred, rejected) response pairs. Used by Llama-3 and Mistral fine-tunes. Computationally cheaper and often equally effective.
+</div>
+
+<h3>Alignment Objectives</h3>
+<table>
+<tr><th>Property</th><th>Meaning</th><th>Example Failure Without It</th></tr>
+<tr><td>Helpful</td><td>Actually answers the user's question fully and accurately</td><td>Giving vague non-answers to avoid any risk</td></tr>
+<tr><td>Harmless</td><td>Refuses to produce dangerous, abusive, or illegal content</td><td>Generating instructions for harmful activities</td></tr>
+<tr><td>Honest</td><td>Acknowledges uncertainty; doesn't fabricate or deceive</td><td>Confidently stating false facts (hallucination)</td></tr>
+</table>
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="inference">11. Inference</h2>
+
+<p>Inference is the process of using a trained model to generate outputs for new inputs. Every time you send a message to ChatGPT or Claude, inference is happening. Unlike training (which updates weights), inference is a read-only forward pass.</p>
+
+<pre>
+User Prompt: "Explain Machine Learning in simple terms."
+      ↓
+Tokenize prompt
+      ↓
+Forward pass through all transformer layers
+      ↓
+Softmax over vocabulary → probability distribution
+      ↓
+Sample next token (e.g. "Machine")
+      ↓
+Append token → repeat until [END] token or max length
+      ↓
+Detokenize → return text to user
+</pre>
+
+<h3>Inference Parameters</h3>
+<table>
+<tr><th>Parameter</th><th>Effect</th><th>Typical Range</th></tr>
+<tr><td>Temperature</td><td>Controls randomness. 0 = deterministic (most likely token); 1 = creative; &gt;1 = chaotic.</td><td>0.0 – 2.0</td></tr>
+<tr><td>Top-p (nucleus sampling)</td><td>Samples from the smallest set of tokens whose cumulative probability ≥ p. Balances diversity and quality.</td><td>0.8 – 1.0</td></tr>
+<tr><td>Top-k</td><td>Restricts sampling to the k most likely next tokens.</td><td>10 – 100</td></tr>
+<tr><td>Max tokens</td><td>Maximum number of tokens to generate in a single response.</td><td>128 – 4096</td></tr>
+<tr><td>Frequency penalty</td><td>Reduces the probability of tokens that have already appeared, discouraging repetition.</td><td>0.0 – 2.0</td></tr>
+</table>
+
+<h3>Inference Optimisation Techniques</h3>
+<div class="card-grid">
+  <div class="card"><h4>Quantisation</h4><p>Reduce model weights from 32-bit or 16-bit floats to 8-bit or 4-bit integers. Cuts VRAM usage by 4×–8× with minimal quality loss.</p></div>
+  <div class="card"><h4>KV Cache</h4><p>Caches the key-value attention matrices for the prompt, avoiding recomputation on each new token generation step.</p></div>
+  <div class="card"><h4>Speculative Decoding</h4><p>A small draft model proposes multiple tokens; the large model verifies them in parallel. Speeds up inference 2–3×.</p></div>
+  <div class="card"><h4>Batching</h4><p>Processing multiple requests simultaneously on the same GPU to improve hardware utilisation and throughput.</p></div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="models">12. Popular Large Language Models</h2>
+
+<p>The LLM landscape has evolved rapidly since 2020. Here are the most widely used models as of 2024, covering both proprietary and open-weight options.</p>
+
+<table>
+<tr><th>Model</th><th>Developer</th><th>Type</th><th>Context Window</th><th>Notable Strength</th></tr>
+<tr><td>GPT-4o</td><td>OpenAI</td><td>Closed</td><td>128K tokens</td><td>Multimodal (text + image + voice); strongest general reasoning</td></tr>
+<tr><td>Claude 3.5 Sonnet</td><td>Anthropic</td><td>Closed</td><td>200K tokens</td><td>Long context; low hallucination; nuanced instruction following</td></tr>
+<tr><td>Gemini 1.5 Pro</td><td>Google</td><td>Closed</td><td>1M tokens</td><td>Largest context window; strong on multimodal and code tasks</td></tr>
+<tr><td>LLaMA-3 70B</td><td>Meta</td><td>Open</td><td>128K tokens</td><td>Best open-weight model; self-hostable; strong on reasoning</td></tr>
+<tr><td>Mistral Large</td><td>Mistral AI</td><td>Closed/Open</td><td>128K tokens</td><td>Strong multilingual; efficient architecture; European provider</td></tr>
+<tr><td>Mixtral 8×7B</td><td>Mistral AI</td><td>Open</td><td>32K tokens</td><td>Mixture-of-experts; matches GPT-3.5 at lower inference cost</td></tr>
+<tr><td>Gemma 2</td><td>Google</td><td>Open</td><td>8K tokens</td><td>Lightweight; runs on consumer hardware; strong for its size</td></tr>
+<tr><td>Phi-3 Mini</td><td>Microsoft</td><td>Open</td><td>128K tokens</td><td>3.8B parameters; runs on a phone; impressive small-model performance</td></tr>
+</table>
+
+<div class="note">
+  <strong>Model naming conventions:</strong> Numbers often refer to parameter counts (7B = 7 billion parameters). "Instruct" or "Chat" suffix means the model has been fine-tuned to follow instructions. "Base" means the raw pre-trained model without alignment.
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="opensource">13. Open Source vs Closed Source Models</h2>
+
+<p>Choosing between open-weight and closed (API-only) models involves trade-offs across cost, control, privacy, and ease of use.</p>
+
+<div class="two-col">
+  <div class="compare-box open-src">
+    <h4>✅ Open-Weight Models (LLaMA, Mistral, Gemma)</h4>
+    <ul>
+      <li>Weights are publicly downloadable</li>
+      <li>Can be self-hosted on your own infrastructure</li>
+      <li>Full control over data — nothing leaves your servers</li>
+      <li>Can be fine-tuned, quantised, and modified freely</li>
+      <li>No per-token API cost (pay only for compute)</li>
+      <li>Requires ML engineering expertise to deploy and maintain</li>
+      <li>Security and updates are your responsibility</li>
+    </ul>
+  </div>
+  <div class="compare-box closed-src">
+    <h4>🔒 Closed / API Models (GPT-4, Claude, Gemini)</h4>
+    <ul>
+      <li>Access via REST API — no infrastructure needed</li>
+      <li>Managed updates, scaling, and uptime by provider</li>
+      <li>State-of-the-art performance, especially on complex reasoning</li>
+      <li>Pay-per-token pricing — cost scales with usage</li>
+      <li>Data sent to provider's servers (privacy considerations)</li>
+      <li>No access to model weights; cannot fine-tune base model</li>
+      <li>Dependent on provider's pricing, availability, and policies</li>
+    </ul>
+  </div>
+</div>
+
+<h3>Decision Guide</h3>
+<table>
+<tr><th>Scenario</th><th>Recommended Approach</th></tr>
+<tr><td>Prototype / proof of concept</td><td>Closed API (fastest to get started)</td></tr>
+<tr><td>Sensitive data / on-premises requirement</td><td>Open-weight, self-hosted</td></tr>
+<tr><td>Domain-specific fine-tuning needed</td><td>Open-weight (LoRA / QLoRA)</td></tr>
+<tr><td>Maximum performance, budget available</td><td>Closed API (GPT-4o / Claude 3.5)</td></tr>
+<tr><td>High-volume, cost-sensitive production</td><td>Open-weight or smaller closed models</td></tr>
+<tr><td>Edge / mobile deployment</td><td>Open-weight quantised (Phi-3, Gemma 2)</td></tr>
+</table>
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="rag">14. Retrieval-Augmented Generation (RAG)</h2>
+
+<p>RAG is an architecture that enhances LLM responses by retrieving relevant documents from an external knowledge base at query time and injecting them into the prompt. This grounds the model in verified, up-to-date information and dramatically reduces hallucinations.</p>
+
+<pre>
+User Query
+      ↓
+Embed query → query vector
+      ↓
+Search vector database (cosine similarity)
+      ↓
+Retrieve top-k relevant document chunks
+      ↓
+Inject chunks into LLM prompt as context
+      ↓
+LLM generates answer grounded in retrieved documents
+      ↓
+Response to user (with source citations)
+</pre>
+
+<h3>RAG Components</h3>
+<div class="card-grid">
+  <div class="card"><h4>Document Chunking</h4><p>Source documents are split into overlapping chunks (e.g. 512 tokens with 50-token overlap) to preserve context across chunk boundaries.</p></div>
+  <div class="card"><h4>Embedding Model</h4><p>Each chunk is converted to a vector using an embedding model (e.g. text-embedding-3-small, E5-large). Stored in the vector DB.</p></div>
+  <div class="card"><h4>Vector Database</h4><p>Stores and indexes embedding vectors for fast approximate nearest-neighbour search. Examples: Pinecone, Weaviate, Chroma, pgvector.</p></div>
+  <div class="card"><h4>Retriever</h4><p>At query time, embeds the user's question and retrieves the top-k most similar document chunks from the vector DB.</p></div>
+  <div class="card"><h4>Prompt Assembly</h4><p>Retrieved chunks are formatted and injected into the LLM prompt as context, along with the user's question and instructions.</p></div>
+  <div class="card"><h4>Generator (LLM)</h4><p>Answers the question using only the provided context. Often instructed: "If the answer is not in the context, say so."</p></div>
+</div>
+
+<div class="note">
+  <strong>RAG vs Fine-Tuning:</strong> Use RAG when knowledge changes frequently (news, product docs, regulations). Use fine-tuning when you want the model to change its style, tone, or domain vocabulary. For best results, combine both.
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="applications">15. Applications of LLMs</h2>
+
+<p>LLMs are being deployed across virtually every industry. Below are the most impactful use cases in production today.</p>
+
+<div class="card-grid">
+  <div class="card"><h4>Conversational AI</h4><p>Customer service bots, HR assistants, and virtual agents that handle complex multi-turn conversations with context retention.</p></div>
+  <div class="card"><h4>Code Generation &amp; Review</h4><p>GitHub Copilot, Cursor, and Claude in IDEs autocomplete code, explain functions, generate tests, and review PRs.</p></div>
+  <div class="card"><h4>Content Generation</h4><p>Marketing copy, blog posts, product descriptions, and social media content generated at scale from structured briefs.</p></div>
+  <div class="card"><h4>Document Summarisation</h4><p>Condensing legal contracts, research papers, earnings calls, and meeting transcripts into concise summaries.</p></div>
+  <div class="card"><h4>Language Translation</h4><p>High-quality translation across 100+ languages, including nuanced domain-specific terminology (medical, legal, technical).</p></div>
+  <div class="card"><h4>Question Answering</h4><p>Enterprise search systems where employees ask questions about internal documents, policies, and knowledge bases.</p></div>
+  <div class="card"><h4>Medical &amp; Clinical AI</h4><p>Summarising patient records, suggesting differential diagnoses, and drafting clinical notes from doctor-patient conversations.</p></div>
+  <div class="card"><h4>Education &amp; Tutoring</h4><p>Personalised tutoring that adapts explanations to the student's level, generates practice problems, and gives instant feedback.</p></div>
+  <div class="card"><h4>Data Extraction</h4><p>Extracting structured data (names, dates, entities, relationships) from unstructured documents like invoices, forms, and reports.</p></div>
+  <div class="card"><h4>Software Testing</h4><p>Generating unit tests, edge case scenarios, and regression test suites from code or specification documents.</p></div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="limitations">16. Limitations of LLMs</h2>
+
+<p>Despite their impressive capabilities, LLMs have significant and well-documented limitations that must be understood before deploying them in production.</p>
+
+<table>
+<tr><th>Limitation</th><th>Description</th><th>Mitigation</th></tr>
+<tr><td>Hallucinations</td><td>Model generates confident but factually incorrect information</td><td>RAG, grounding prompts, human review, temperature=0</td></tr>
+<tr><td>Knowledge Cutoff</td><td>Model has no knowledge of events after training data cutoff</td><td>RAG with live data sources, web search tools</td></tr>
+<tr><td>Bias in Responses</td><td>Reflects biases present in training data — demographic, cultural, political</td><td>Diverse training data, RLHF, bias audits</td></tr>
+<tr><td>High Computational Cost</td><td>Training and inference require expensive GPUs and significant energy</td><td>Quantisation, smaller distilled models, efficient serving</td></tr>
+<tr><td>Privacy Concerns</td><td>User prompts may be logged and used for training; PII risks</td><td>On-premise deployment, data processing agreements</td></tr>
+<tr><td>Lack of Reasoning</td><td>Struggles with multi-step logical and mathematical reasoning without CoT prompting</td><td>Chain-of-thought prompting, tool use (code execution)</td></tr>
+<tr><td>Context Window Limits</td><td>Cannot process arbitrarily long documents in a single call</td><td>RAG, chunking strategies, models with larger windows</td></tr>
+<tr><td>No Real-World Grounding</td><td>No ability to verify claims, check facts, or access real-time information</td><td>Tool use, web search integration, RAG</td></tr>
+<tr><td>Inconsistency</td><td>Same prompt can produce different answers at different temperatures or runs</td><td>Temperature=0, structured output formats, validation layers</td></tr>
+</table>
+
+<div class="note">
+  <strong>Responsible AI Deployment:</strong> Organisations deploying LLMs should implement human-in-the-loop review for high-stakes decisions (medical, legal, financial), establish output validation pipelines, maintain audit logs, and clearly disclose to users when they are interacting with an AI system.
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="project">17. Mini Project Idea</h2>
+
+<p>Build a <strong>Document Question-Answering Assistant</strong> using an LLM API and a RAG pipeline that answers questions grounded in company or course documents.</p>
+
+<div class="note">
+  <strong>Suggested stack:</strong> Python · LangChain or LlamaIndex · OpenAI / Groq API · Chroma or FAISS vector DB · Streamlit for the UI · PyPDF2 or pdfplumber for document parsing.
+</div>
+
+<h3>Project Steps</h3>
+<div class="step">
+  <div class="step-num">1</div>
+  <div class="step-body"><h4>Document Ingestion</h4><p>Load PDF or text documents using PyPDF2 or pdfplumber. Handle multi-page documents and preserve section structure.</p></div>
+</div>
+<div class="step">
+  <div class="step-num">2</div>
+  <div class="step-body"><h4>Chunking &amp; Embedding</h4><p>Split documents into 512-token chunks with 50-token overlap. Embed each chunk using text-embedding-3-small (OpenAI) or a local model.</p></div>
+</div>
+<div class="step">
+  <div class="step-num">3</div>
+  <div class="step-body"><h4>Vector Store</h4><p>Store embeddings in a Chroma or FAISS vector database. Build an index for fast cosine similarity search.</p></div>
+</div>
+<div class="step">
+  <div class="step-num">4</div>
+  <div class="step-body"><h4>Retrieval Pipeline</h4><p>When a user asks a question, embed it and retrieve the top-3 most similar document chunks from the vector store.</p></div>
+</div>
+<div class="step">
+  <div class="step-num">5</div>
+  <div class="step-body"><h4>Prompt Assembly &amp; Generation</h4><p>Construct a prompt that includes the retrieved chunks as context and instructs the LLM to answer only from the provided information.</p></div>
+</div>
+<div class="step">
+  <div class="step-num">6</div>
+  <div class="step-body"><h4>Streamlit UI</h4><p>Build a chat-style interface where users can upload PDFs, ask questions, and see both the answer and the source chunks it was derived from.</p></div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="mcq">18. Q &amp; A</h2>
+
+<p>Click any question to reveal the answer.</p>
+
+<div id="qa-container"></div>
+
+<script>
+const qas = [
+  ["What does LLM stand for?",
+   "Large Language Model — an AI system trained on massive text datasets to understand and generate human language using transformer architectures."],
+  ["What architecture powers modern LLMs?",
+   "The Transformer, introduced in the 2017 paper 'Attention Is All You Need'. It uses self-attention to process all tokens in parallel and models relationships between any two positions directly."],
+  ["What is tokenization?",
+   "The process of breaking raw text into smaller units called tokens before feeding it to an LLM. Tokens can be words, sub-words, or characters. Most LLMs use sub-word algorithms like BPE or SentencePiece."],
+  ["What are embeddings?",
+   "Dense numerical vectors that represent the semantic meaning of words, sentences, or documents. Words with similar meanings have similar vectors. Used for semantic search, RAG, and recommendation systems."],
+  ["What is the Attention mechanism?",
+   "A mathematical operation that allows each token to directly attend to every other token in the sequence. It computes weighted combinations of value vectors guided by query-key similarity: Attention(Q,K,V) = softmax(QKᵀ/√dₖ)·V."],
+  ["What is a context window?",
+   "The maximum number of tokens an LLM can process in a single forward pass (input + output combined). Modern models range from 8K (Gemma 2) to 1M+ tokens (Gemini 1.5 Pro)."],
+  ["What is fine-tuning?",
+   "Continuing the training of a pre-trained model on a smaller, task-specific or domain-specific dataset to adapt its behaviour. Methods include full fine-tuning, LoRA, QLoRA, and instruction fine-tuning."],
+  ["What is RLHF?",
+   "Reinforcement Learning from Human Feedback — a three-stage alignment process: (1) supervised fine-tuning on human demonstrations, (2) training a reward model from human preference rankings, (3) optimising the LLM with PPO to maximise the reward model's score."],
+  ["What is inference?",
+   "The process of using a trained model to generate outputs for new inputs. The model tokenizes the prompt, runs a forward pass through all transformer layers, samples the next token, and repeats until the response is complete."],
+  ["What is RAG?",
+   "Retrieval-Augmented Generation — an architecture that retrieves relevant document chunks from a vector database at query time and injects them into the LLM prompt as context, grounding responses in verified information."],
+  ["What is a common LLM limitation?",
+   "Hallucination — when the model generates confident but factually incorrect or fabricated information. Caused by training data gaps, ambiguous prompts, and the model's tendency to produce fluent-sounding text even without knowledge."],
+  ["What is LoRA?",
+   "Low-Rank Adaptation — a parameter-efficient fine-tuning method that adds small trainable low-rank matrices to existing weight matrices. Only ~0.1% of parameters are trained, dramatically reducing GPU memory and compute requirements."],
+  ["What is the difference between open and closed LLMs?",
+   "Open-weight models (LLaMA, Mistral) publish their weights publicly — they can be downloaded, self-hosted, and fine-tuned freely. Closed models (GPT-4, Claude) are accessible only via API; weights are proprietary."],
+  ["What is temperature in LLM inference?",
+   "A parameter that controls output randomness. Temperature=0 produces the most likely (deterministic) output. Temperature=1 is standard creative sampling. Higher values produce more random, diverse, but potentially incoherent output."],
+  ["What is the 'lost in the middle' problem?",
+   "Research finding that LLMs recall information at the start and end of the context window more reliably than information buried in the middle — even when all content is technically within the context limit."],
+  ["Name three real-world LLM applications.",
+   "Code generation (GitHub Copilot), document summarisation (legal/medical), and enterprise question answering (RAG-based internal knowledge bases). Other examples: translation, content generation, and clinical note drafting."]
+];
+
+const container = document.getElementById('qa-container');
+qas.forEach(([q, a], i) => {
+  const item = document.createElement('div');
+  item.className = 'qa-item';
+  item.innerHTML = `
+    <div class="qa-q" onclick="toggle(${i})">
+      <span>${i + 1}. ${q}</span><span id="icon-${i}">+</span>
+    </div>
+    <div class="qa-a" id="ans-${i}">${a}</div>`;
+  container.appendChild(item);
+});
+
+function toggle(i) {
+  const ans = document.getElementById('ans-' + i);
+  const icon = document.getElementById('icon-' + i);
+  const open = ans.classList.toggle('open');
+  icon.textContent = open ? '−' : '+';
+}
+</script>
+
+</div>
+</body>
+</html>

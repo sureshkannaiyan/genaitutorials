@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 18 - Prompt Engineering</title>
+<style>
+body{font-family:Segoe UI,Arial,sans-serif;margin:0;display:flex;background:#f8fafc}
+.sidebar{width:320px;position:fixed;height:100vh;overflow:auto;background:#0f172a;color:white}
+.sidebar h2{padding:20px;text-align:center}
+.sidebar a{display:block;color:white;text-decoration:none;padding:10px 20px}
+.sidebar a:hover{background:#1e293b}
+.content{margin-left:320px;padding:30px;max-width:1300px}
+h1,h2,h3{color:#1e3a8a}
+pre{background:#f1f5f9;padding:12px;border-left:5px solid #2563eb;overflow:auto}
+.note{background:#dbeafe;padding:15px;border-radius:8px}
+table{width:100%;border-collapse:collapse}
+th,td{border:1px solid #ccc;padding:8px}
+th{background:#f1f5f9;color:#1e3a8a}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:16px 0}
+.card{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:16px 18px;box-shadow:0 1px 4px rgba(0,0,0,0.05)}
+.card h4{color:#1e3a8a;margin:0 0 6px;font-size:15px}
+.card p{margin:0;color:#475569;font-size:14px;line-height:1.6}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+@media(max-width:700px){.two-col{grid-template-columns:1fr}}
+.compare-box{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:16px 18px}
+.compare-box h4{margin:0 0 8px;font-size:14px}
+.compare-box.bad{border-left:5px solid #ef4444}
+.compare-box.bad h4{color:#ef4444}
+.compare-box.good{border-left:5px solid #22c55e}
+.compare-box.good h4{color:#16a34a}
+.badge{display:inline-block;padding:3px 10px;border-radius:99px;font-size:12px;font-weight:600;margin:3px}
+.badge-blue{background:#dbeafe;color:#1e40af}
+.badge-teal{background:#d1fae5;color:#065f46}
+.badge-amber{background:#fef3c7;color:#92400e}
+.badge-red{background:#fee2e2;color:#991b1b}
+.badge-purple{background:#ede9fe;color:#4c1d95}
+.badge-gray{background:#f1f5f9;color:#334155}
+.qa-item{border:1px solid #e2e8f0;border-radius:8px;margin-bottom:8px;overflow:hidden}
+.qa-q{background:#f1f5f9;padding:12px 16px;font-weight:600;color:#1e3a8a;cursor:pointer;display:flex;justify-content:space-between;user-select:none}
+.qa-q:hover{background:#dbeafe}
+.qa-a{display:none;padding:12px 16px;color:#334155;font-size:14px;line-height:1.65;background:#fff}
+.qa-a.open{display:block}
+.step{display:flex;gap:14px;align-items:flex-start;margin-bottom:14px}
+.step-num{min-width:30px;height:30px;background:#1e3a8a;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;margin-top:2px}
+.step-body h4{margin:0 0 4px;color:#1e3a8a;font-size:15px}
+.step-body p{margin:0;color:#475569;font-size:14px;line-height:1.6}
+
+
+/* Home Button */
+.home-btn{
+    position:fixed;
+    top:20px;
+    right:20px;
+    z-index:9999;
+    background:linear-gradient(135deg,#0f172a,#2563eb);
+    color:#fff;
+    text-decoration:none;
+    padding:12px 20px;
+    border-radius:50px;
+    font-weight:600;
+    font-family:Arial,sans-serif;
+    box-shadow:0 5px 15px rgba(0,0,0,0.3);
+    animation:pulseHome 2s infinite;
+    transition:0.3s;
+}
+
+.home-btn:hover{
+    transform:translateY(-3px) scale(1.05);
+}
+
+@keyframes pulseHome{
+    0%{
+        box-shadow:0 0 0 0 rgba(37,99,235,0.7);
+    }
+    70%{
+        box-shadow:0 0 0 15px rgba(37,99,235,0);
+    }
+    100%{
+        box-shadow:0 0 0 0 rgba(37,99,235,0);
+    }
+}
+
+/* WhatsApp Button */
+.whatsapp-float{
+    position:fixed;
+    width:65px;
+    height:65px;
+    bottom:25px;
+    right:25px;
+    background:#25D366;
+    color:white;
+    border-radius:50%;
+    text-align:center;
+    font-size:34px;
+    line-height:65px;
+    text-decoration:none;
+    z-index:9999;
+    box-shadow:0 5px 20px rgba(0,0,0,0.3);
+    animation:whatsappBounce 1.5s infinite;
+}
+
+.whatsapp-float:hover{
+    transform:scale(1.1);
+}
+
+@keyframes whatsappBounce{
+    0%,100%{
+        transform:translateY(0);
+    }
+    50%{
+        transform:translateY(-10px);
+    }
+}
+
+/* Mobile Responsive */
+@media(max-width:768px){
+    .home-btn{
+        top:10px;
+        right:10px;
+        padding:10px 15px;
+        font-size:14px;
+    }
+
+    .whatsapp-float{
+        width:55px;
+        height:55px;
+        line-height:55px;
+        font-size:28px;
+        bottom:15px;
+        right:15px;
+    }
+}
+
+</style>
+</head>
+<body>
+
+
+<a href="ai.html" class="home-btn">
+    🏠 Home
+</a>
+
+<!-- WHATSAPP FLOATING BUTTON -->
+<a href="https://wa.me/918220033325?text=Hello%20I%20would%20like%20to%20know%20more"
+   class="whatsapp-float"
+   target="_blank">
+    💬
+</a>
+
+<div class="sidebar">
+<h2>Chapter 18. Prompt Engineering</h2>
+<a href="#intro">1. Introduction</a>
+<a href="#importance">2. Why Prompt Engineering?</a>
+<a href="#anatomy">3. Anatomy of a Prompt</a>
+<a href="#zero">4. Zero-Shot Prompting</a>
+<a href="#one">5. One-Shot Prompting</a>
+<a href="#few">6. Few-Shot Prompting</a>
+<a href="#cot">7. Chain of Thought</a>
+<a href="#role">8. Role Prompting</a>
+<a href="#structured">9. Structured Outputs</a>
+<a href="#templates">10. Prompt Templates</a>
+<a href="#hallucination">11. Hallucinations</a>
+<a href="#best">12. Best Practices</a>
+<a href="#advanced">13. Advanced Techniques</a>
+<a href="#examples">14. Prompt Examples</a>
+<a href="#project">15. Mini Project</a>
+<a href="#mcq">16. Q &amp; A</a>
+</div>
+
+<div class="content">
+
+<h1>Chapter 18: Prompt Engineering</h1>
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="intro">1. Introduction to Prompt Engineering</h2>
+
+<p>Prompt Engineering is the practice of designing, refining, and optimising the instructions given to AI language models so they produce accurate, useful, and relevant responses. It is a critical skill for anyone working with modern AI systems such as ChatGPT, Claude, Gemini, or any LLM-powered application.</p>
+
+<p>A prompt acts as a communication bridge between humans and AI systems. The quality of the output depends heavily on the quality of the prompt — a well-structured prompt can dramatically improve response accuracy, tone, and usefulness.</p>
+
+<div class="note">
+  <strong>Core principle:</strong> Better Prompt → Better Response. The same model will produce very different results depending on how it is instructed.
+</div>
+
+<h3>Where Prompt Engineering is Used</h3>
+<div class="card-grid">
+  <div class="card"><h4>Chatbots &amp; Assistants</h4><p>Customer support bots, HR assistants, and virtual agents all rely on carefully crafted system prompts to stay on-topic and on-brand.</p></div>
+  <div class="card"><h4>Code Generation</h4><p>Tools like GitHub Copilot and Cursor use prompts to generate, explain, debug, and refactor code across languages.</p></div>
+  <div class="card"><h4>Content Creation</h4><p>Marketing teams use prompt templates to produce blog posts, social media captions, and ad copy at scale.</p></div>
+  <div class="card"><h4>Data Extraction</h4><p>Structured prompts instruct models to extract named entities, sentiment, or key facts from unstructured text.</p></div>
+  <div class="card"><h4>Education</h4><p>Personalised tutoring systems use prompts to adapt explanations to a student's age, subject, and skill level.</p></div>
+  <div class="card"><h4>Research &amp; Analysis</h4><p>Analysts prompt LLMs to summarise documents, compare sources, and generate literature review drafts.</p></div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="importance">2. Why Prompt Engineering Matters</h2>
+
+<p>The same underlying model can give dramatically different quality outputs depending on how it is prompted. Prompt engineering bridges the gap between a model's raw capability and what it actually produces in practice.</p>
+
+<div class="two-col">
+  <div class="compare-box bad">
+    <h4>❌ Weak Prompt</h4>
+    <pre style="margin:0">Write about AI.</pre>
+    <p style="font-size:13px;color:#475569;margin-top:8px">Too vague. The model must guess the audience, length, tone, and purpose. Output is generic and often unusable.</p>
+  </div>
+  <div class="compare-box good">
+    <h4>✅ Strong Prompt</h4>
+    <pre style="margin:0">Write a 300-word introduction to Artificial Intelligence for first-year engineering students. Use simple language, include a real-world example, and end with why it matters for their careers.</pre>
+    <p style="font-size:13px;color:#475569;margin-top:8px">Specific audience, length, tone, content requirement, and closing instruction. Output is targeted and immediately usable.</p>
+  </div>
+</div>
+
+<h3>Benefits of Good Prompt Engineering</h3>
+<table>
+<tr><th>Benefit</th><th>Explanation</th></tr>
+<tr><td>Improves response quality</td><td>Specific instructions guide the model toward accurate, relevant output</td></tr>
+<tr><td>Reduces ambiguity</td><td>Clear context leaves less room for misinterpretation</td></tr>
+<tr><td>Generates consistent outputs</td><td>Reusable templates produce reliable results across many runs</td></tr>
+<tr><td>Saves time and effort</td><td>Good prompts reduce back-and-forth iteration cycles</td></tr>
+<tr><td>Enhances productivity</td><td>Automating repetitive tasks with reliable prompts frees human effort</td></tr>
+<tr><td>Reduces hallucinations</td><td>Grounded, contextual prompts lower the chance of fabricated facts</td></tr>
+</table>
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="anatomy">3. Anatomy of a Good Prompt</h2>
+
+<p>Every effective prompt is built from a set of core components. Not all components are required every time, but knowing each one helps you construct prompts that leave no room for misinterpretation.</p>
+
+<table>
+<tr><th>Component</th><th>Purpose</th><th>Example</th></tr>
+<tr><td><strong>Task</strong></td><td>What should the AI do?</td><td>"Summarise the following article"</td></tr>
+<tr><td><strong>Context</strong></td><td>Background information the model needs</td><td>"The article is from a medical journal targeting general readers"</td></tr>
+<tr><td><strong>Constraints</strong></td><td>Rules, limits, or things to avoid</td><td>"In under 150 words. Do not use jargon."</td></tr>
+<tr><td><strong>Output Format</strong></td><td>How the response should be structured</td><td>"Return as 3 bullet points"</td></tr>
+<tr><td><strong>Audience</strong></td><td>Who will read or use the output</td><td>"For a non-technical executive audience"</td></tr>
+<tr><td><strong>Tone / Style</strong></td><td>Desired voice or register</td><td>"Professional but approachable"</td></tr>
+<tr><td><strong>Examples</strong></td><td>Demonstrations of expected output</td><td>One-shot or few-shot examples (see sections 5–6)</td></tr>
+</table>
+
+<h3>Full Example Using All Components</h3>
+<pre>
+Task:        Explain Machine Learning
+
+Context:     For a workshop aimed at business managers who have no technical background
+
+Audience:    Non-technical professionals
+
+Length:      300 words maximum
+
+Format:      Bullet points, each starting with a bold keyword
+
+Tone:        Friendly and encouraging
+
+Avoid:       Mathematical formulas, code snippets
+</pre>
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="zero">4. Zero-Shot Prompting</h2>
+
+<p>In zero-shot prompting, the AI is asked to perform a task with no examples provided. The model relies entirely on its pre-trained knowledge and the clarity of the instruction. This works well for tasks the model has seen many times during training.</p>
+
+<pre>
+Translate the following sentence into Tamil:
+"Artificial Intelligence is transforming industries."
+</pre>
+
+<div class="two-col">
+  <div class="compare-box good">
+    <h4>✅ Zero-Shot — Classification</h4>
+    <pre style="margin:0">Classify the following review as Positive, Negative, or Neutral:
+
+"The delivery was fast but the product quality was disappointing."</pre>
+  </div>
+  <div class="compare-box good">
+    <h4>✅ Zero-Shot — Summarisation</h4>
+    <pre style="margin:0">Summarise the following paragraph in one sentence:
+
+"Large language models are trained on massive datasets..."</pre>
+  </div>
+</div>
+
+<div class="note">
+  <strong>When to use Zero-Shot:</strong> Simple, well-defined tasks like translation, classification, summarisation, or factual Q&amp;A. If the output quality is low, add examples (one-shot or few-shot).
+</div>
+
+<h3>Zero-Shot vs. Few-Shot Performance</h3>
+<table>
+<tr><th>Task Type</th><th>Zero-Shot Reliability</th><th>Notes</th></tr>
+<tr><td>Translation</td><td>High</td><td>LLMs are extensively trained on multilingual data</td></tr>
+<tr><td>Sentiment Classification</td><td>High</td><td>Works well with clear categories</td></tr>
+<tr><td>Custom Format Output</td><td>Low–Medium</td><td>Examples help the model understand the exact format needed</td></tr>
+<tr><td>Domain-Specific Reasoning</td><td>Low</td><td>Few-shot or RAG recommended</td></tr>
+</table>
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="one">5. One-Shot Prompting</h2>
+
+<p>One-shot prompting provides a single example of the input-output pair before asking the model to perform the task. The example anchors the model's understanding of the expected format, tone, and style.</p>
+
+<pre>
+Example:
+Input:  Hello
+Output: Vanakkam
+
+Now translate:
+Input:  Good Morning
+Output:
+</pre>
+
+<div class="note">
+  <strong>Why one example helps:</strong> The model doesn't have to guess what "translate to Tamil" means in your specific context. The example shows the desired format (no punctuation, casual register, etc.) which would be hard to specify in words alone.
+</div>
+
+<h3>One-Shot for Formatting Tasks</h3>
+<pre>
+Example:
+Input:  "The product arrived broken."
+Output: {"sentiment": "Negative", "issue": "Product damage", "priority": "High"}
+
+Now process:
+Input:  "Delivery was on time and the item looks great!"
+Output:
+</pre>
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="few">6. Few-Shot Prompting</h2>
+
+<p>Few-shot prompting provides multiple (typically 3–5) input-output examples before the actual task. This gives the model a clearer pattern to follow and significantly improves accuracy on tasks that require a specific structure, vocabulary, or classification scheme.</p>
+
+<pre>
+Input: Cat      → Output: Animal
+Input: Rose     → Output: Flower
+Input: Eagle    → Output: Bird
+Input: Salmon   → Output: Fish
+
+Input: Mango    → Output:
+</pre>
+
+<p>Few-shot prompting often improves accuracy significantly, especially for custom classification, data extraction, and domain-specific generation tasks.</p>
+
+<div class="card-grid">
+  <div class="card"><h4>How Many Examples?</h4><p>3–5 examples are usually enough. More examples consume context window tokens and can confuse the model if they are inconsistent.</p></div>
+  <div class="card"><h4>Example Quality Matters</h4><p>Diverse, representative examples outperform repetitive ones. Cover edge cases and different sub-categories in your examples.</p></div>
+  <div class="card"><h4>Order Matters</h4><p>Research shows the last example in the list has the most influence. Place your most representative example last.</p></div>
+</div>
+
+<h3>Few-Shot for Sentiment + Reason</h3>
+<pre>
+Input: "The app crashes every time I open it."
+Output: Sentiment: Negative | Reason: Stability issue
+
+Input: "Great battery life, very impressed."
+Output: Sentiment: Positive | Reason: Hardware quality
+
+Input: "It works fine but the UI is confusing."
+Output: Sentiment: Mixed | Reason: Usability concern
+
+Input: "Absolutely love the new update!"
+Output:
+</pre>
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="cot">7. Chain of Thought (CoT) Prompting</h2>
+
+<p>Chain of Thought prompting instructs the model to reason step by step before giving a final answer. This dramatically improves performance on tasks that require multi-step reasoning — mathematics, logic puzzles, code debugging, and cause-effect analysis.</p>
+
+<pre>
+Solve the following problem step by step:
+
+If a train travels 60 km in 1 hour,
+how far will it travel in 5 hours?
+
+Think through each step before giving the final answer.
+</pre>
+
+<h3>Why CoT Works</h3>
+<div class="card-grid">
+  <div class="card"><h4>Forces Intermediate Steps</h4><p>The model must generate intermediate tokens for each reasoning step, catching errors that direct answering would skip.</p></div>
+  <div class="card"><h4>Improves Accuracy on Math</h4><p>GPT-4 and Claude solve significantly more grade-school math problems correctly with CoT than without it.</p></div>
+  <div class="card"><h4>Makes Reasoning Auditable</h4><p>You can inspect each step to find where the model went wrong, making debugging much easier.</p></div>
+</div>
+
+<h3>CoT Trigger Phrases</h3>
+<table>
+<tr><th>Phrase</th><th>Effect</th></tr>
+<tr><td>"Think step by step."</td><td>General-purpose CoT trigger — works on most LLMs</td></tr>
+<tr><td>"Let's reason through this carefully."</td><td>Encourages slower, more deliberate reasoning</td></tr>
+<tr><td>"Show your working."</td><td>Useful for maths and logic</td></tr>
+<tr><td>"Before answering, list the facts given."</td><td>Grounds the model in provided information first</td></tr>
+<tr><td>"What are the possible approaches? Then choose the best."</td><td>Encourages exploration before committing to an answer</td></tr>
+</table>
+
+<h3>Zero-Shot CoT Example</h3>
+<pre>
+Q: A farmer has 17 sheep. All but 9 die. How many are left?
+
+A: Let's think step by step.
+   "All but 9 die" means 9 sheep survive.
+   Therefore, 9 sheep are left.
+</pre>
+
+<div class="note">
+  <strong>Zero-Shot CoT:</strong> Simply appending "Let's think step by step." to a prompt (without any example reasoning) is enough to trigger chain-of-thought behaviour in GPT-4 class models.
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="role">8. Role Prompting</h2>
+
+<p>Role prompting assigns a persona or professional identity to the model. This shapes vocabulary, depth of expertise, communication style, and the assumptions the model makes about the user.</p>
+
+<pre>
+You are a senior Python trainer with 10 years of experience
+teaching beginners.
+
+Explain functions in Python using a simple analogy and
+a short code example. Avoid jargon.
+</pre>
+
+<h3>How Role Affects Output</h3>
+<table>
+<tr><th>Role Assigned</th><th>How Output Changes</th></tr>
+<tr><td>Senior Software Architect</td><td>Focuses on design patterns, scalability, trade-offs</td></tr>
+<tr><td>Primary School Teacher</td><td>Uses simple language, analogies, avoids technical terms</td></tr>
+<tr><td>Financial Analyst</td><td>Emphasises numbers, risk, ROI, regulatory considerations</td></tr>
+<tr><td>Sceptical Reviewer</td><td>Challenges assumptions, identifies weaknesses</td></tr>
+<tr><td>Career Counsellor</td><td>Focuses on goals, motivations, and actionable next steps</td></tr>
+<tr><td>Devil's Advocate</td><td>Argues the opposite position to stress-test an idea</td></tr>
+</table>
+
+<h3>Advanced Role Prompt Example</h3>
+<pre>
+You are an experienced UX researcher conducting a usability review.
+
+Your job is to evaluate the following mobile app onboarding flow
+and identify 3 usability issues with specific improvement suggestions.
+
+Be critical and specific. Reference established UX heuristics where relevant.
+
+[Paste onboarding flow description here]
+</pre>
+
+<div class="note">
+  <strong>Tip:</strong> Combine role prompting with context and constraints for best results. A role alone helps — a role with a specific task, audience, and output format is far more powerful.
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="structured">9. Structured Outputs</h2>
+
+<p>Structured output prompting instructs the model to return its response in a machine-readable format. This is essential when the output will be parsed by code, stored in a database, or fed into another system.</p>
+
+<h3>JSON Output</h3>
+<pre>
+Extract the following details from the text and return as JSON.
+Do not add any explanation — return only the JSON object.
+
+Text: "Hi, I'm Priya Sharma, 28 years old, from Bangalore."
+
+Expected format:
+{
+  "name": "",
+  "age": "",
+  "city": ""
+}
+</pre>
+
+<h3>Supported Output Formats</h3>
+<table>
+<tr><th>Format</th><th>Use Case</th><th>Example Instruction</th></tr>
+<tr><td>JSON</td><td>APIs, databases, code integration</td><td>"Return only a valid JSON object."</td></tr>
+<tr><td>XML</td><td>Enterprise systems, document interchange</td><td>"Wrap the output in XML tags."</td></tr>
+<tr><td>Markdown</td><td>Documentation, wikis, README files</td><td>"Format as a Markdown table."</td></tr>
+<tr><td>CSV</td><td>Spreadsheets, data pipelines</td><td>"Return as comma-separated values with a header row."</td></tr>
+<tr><td>HTML</td><td>Web content, email templates</td><td>"Return as an HTML unordered list."</td></tr>
+<tr><td>YAML</td><td>Config files, DevOps pipelines</td><td>"Return as valid YAML."</td></tr>
+</table>
+
+<h3>Markdown Table Example</h3>
+<pre>
+List the top 5 programming languages in 2024 with their
+primary use case. Return as a Markdown table with columns:
+Language | Primary Use Case | Popularity Rank
+</pre>
+
+<div class="note">
+  <strong>Best Practice:</strong> Always include "Return only the [format]. Do not add any explanation or preamble." — this prevents the model from wrapping the output in prose before the JSON or CSV.
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="templates">10. Prompt Templates</h2>
+
+<p>Prompt templates are reusable prompt structures with placeholders that can be filled in for different inputs. They enforce consistency, reduce errors, and make it easy to automate prompt generation in applications.</p>
+
+<h3>General-Purpose Template</h3>
+<pre>
+Act as a [ROLE].
+
+Your audience is [AUDIENCE].
+
+Task: [TASK DESCRIPTION]
+
+Constraints:
+- Length: [WORD/CHARACTER LIMIT]
+- Tone: [TONE]
+- Avoid: [THINGS TO AVOID]
+
+Output format: [FORMAT]
+</pre>
+
+<h3>Practical Templates by Use Case</h3>
+
+<h4>Content Writing Template</h4>
+<pre>
+Write a [FORMAT] about [TOPIC] for [AUDIENCE].
+Length: [WORDS]. Tone: [TONE].
+Include: [REQUIRED ELEMENTS].
+Avoid: [THINGS TO AVOID].
+End with: [CALL TO ACTION].
+</pre>
+
+<h4>Code Generation Template</h4>
+<pre>
+Language: [LANGUAGE]
+Task: Write a [FUNCTION/CLASS/SCRIPT] that [DESCRIPTION].
+Input:  [INPUT DESCRIPTION]
+Output: [OUTPUT DESCRIPTION]
+Constraints: [PERFORMANCE, STYLE, LIBRARY RESTRICTIONS]
+Include inline comments explaining each key step.
+</pre>
+
+<h4>Data Extraction Template</h4>
+<pre>
+Extract the following fields from the text below.
+Return as JSON. If a field is not found, set it to null.
+
+Fields: [FIELD LIST]
+
+Text:
+"""
+[PASTE TEXT HERE]
+"""
+</pre>
+
+<div class="note">
+  <strong>Why Templates Matter:</strong> In production applications, prompt templates are version-controlled just like code. They allow teams to iterate, A/B test, and roll back prompts without rewriting application logic.
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="hallucination">11. AI Hallucinations</h2>
+
+<p>Hallucinations occur when an AI model generates information that sounds plausible but is factually incorrect, fabricated, or completely unsupported by its training data or the provided context. This is one of the most serious reliability challenges with LLMs.</p>
+
+<div class="card-grid">
+  <div class="card"><h4>Factual Hallucination</h4><p>The model invents facts — fake citations, wrong dates, non-existent products, or incorrect statistics — presented with full confidence.</p></div>
+  <div class="card"><h4>Contextual Hallucination</h4><p>The model ignores or contradicts information provided in the prompt and generates something inconsistent with the given context.</p></div>
+  <div class="card"><h4>Instruction Hallucination</h4><p>The model fails to follow the explicit instructions in the prompt, producing output in the wrong format, length, or style.</p></div>
+</div>
+
+<h3>Root Causes</h3>
+<table>
+<tr><th>Cause</th><th>Explanation</th></tr>
+<tr><td>Insufficient context</td><td>The model fills knowledge gaps with plausible-sounding but fabricated information</td></tr>
+<tr><td>Ambiguous prompts</td><td>Vague instructions leave the model too much creative freedom</td></tr>
+<tr><td>Training data gaps</td><td>Topics not well covered in training lead to guessing</td></tr>
+<tr><td>Overconfidence bias</td><td>Models are trained to give confident answers even when uncertain</td></tr>
+<tr><td>Knowledge cutoff</td><td>Events after the training cutoff are not known to the model</td></tr>
+</table>
+
+<h3>Reduction Techniques</h3>
+<table>
+<tr><th>Technique</th><th>How It Helps</th></tr>
+<tr><td>Provide more context</td><td>Grounding the model in specific facts reduces the need to fabricate</td></tr>
+<tr><td>Ask for citations</td><td>"Cite your source" forces the model to justify claims (verify externally)</td></tr>
+<tr><td>Retrieval-Augmented Generation (RAG)</td><td>Injects real, verified documents into the prompt at query time</td></tr>
+<tr><td>Instruct to say "I don't know"</td><td>"If you are not certain, say 'I don't know' rather than guessing"</td></tr>
+<tr><td>Temperature = 0</td><td>Reduces randomness — model sticks to highest-probability tokens</td></tr>
+<tr><td>Verify outputs</td><td>Human review or automated fact-checking pipelines catch errors</td></tr>
+</table>
+
+<h3>Anti-Hallucination Prompt Example</h3>
+<pre>
+Answer the following question using only the information
+provided below. If the answer is not in the text, respond
+with "The provided text does not contain this information."
+Do not use your general knowledge.
+
+Text: [PASTE DOCUMENT HERE]
+
+Question: [YOUR QUESTION]
+</pre>
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="best">12. Prompt Engineering Best Practices</h2>
+
+<div class="card-grid">
+  <div class="card"><h4>1. Be Specific</h4><p>Vague prompts produce vague answers. Include the topic, format, audience, length, and purpose in every prompt.</p></div>
+  <div class="card"><h4>2. Provide Context</h4><p>Tell the model what it needs to know. Include background, constraints, and the reason for the task.</p></div>
+  <div class="card"><h4>3. Define the Audience</h4><p>"For a 10-year-old" vs "for a PhD candidate" will produce completely different language and depth.</p></div>
+  <div class="card"><h4>4. Specify Output Format</h4><p>Tell the model exactly how to structure the output — JSON, bullet points, numbered steps, table, paragraph, etc.</p></div>
+  <div class="card"><h4>5. Break Complex Tasks into Steps</h4><p>Instead of one massive prompt, chain multiple simpler prompts. Each step's output feeds the next.</p></div>
+  <div class="card"><h4>6. Use Examples</h4><p>One-shot or few-shot examples are the fastest way to communicate a non-standard format or style requirement.</p></div>
+  <div class="card"><h4>7. Iterate and Refine</h4><p>Treat prompts like code — test, measure output quality, and improve. Keep a prompt log to track what works.</p></div>
+  <div class="card"><h4>8. Assign a Role</h4><p>Role prompting (e.g. "You are a senior data engineer") aligns the model's vocabulary, depth, and assumptions to your needs.</p></div>
+  <div class="card"><h4>9. Tell It What Not to Do</h4><p>Negative constraints ("Do not use jargon", "Do not repeat the question", "Avoid bullet points") are as important as positive ones.</p></div>
+  <div class="card"><h4>10. Use Delimiters</h4><p>Use triple quotes, XML tags, or dashes to clearly separate instructions from input content, preventing confusion.</p></div>
+</div>
+
+<h3>Using Delimiters — Example</h3>
+<pre>
+Summarise the text enclosed in triple quotes in 2 sentences.
+
+"""
+Large language models are neural networks trained on vast corpora
+of text. They learn to predict the next token in a sequence,
+which gives rise to emergent capabilities like reasoning,
+translation, and code generation...
+"""
+</pre>
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="advanced">13. Advanced Prompting Techniques</h2>
+
+<p>Beyond the core techniques, several advanced strategies help extract better performance from LLMs for complex or specialised tasks.</p>
+
+<h3>Self-Consistency Prompting</h3>
+<p>Generate the same prompt multiple times (with higher temperature), then take the majority-vote answer. Reduces the impact of single-run errors on reasoning tasks.</p>
+<pre>
+Solve this logic puzzle step by step. [PUZZLE]
+(Run this prompt 5 times and select the most common answer.)
+</pre>
+
+<h3>ReAct (Reason + Act)</h3>
+<p>The model alternates between reasoning steps and tool-use actions (web search, code execution, database queries). Used in agentic AI systems.</p>
+<pre>
+Thought: I need to find the current price of gold.
+Action: search("current gold price per gram India 2024")
+Observation: [search result]
+Thought: Now I can calculate the cost.
+Answer: ...
+</pre>
+
+<h3>Retrieval-Augmented Generation (RAG)</h3>
+<p>Instead of relying on the model's memory, relevant documents are retrieved from a vector database and injected into the prompt context at query time. Dramatically reduces hallucinations for factual tasks.</p>
+<pre>
+Use only the following context to answer the question.
+
+Context:
+[Retrieved document chunks injected here automatically]
+
+Question: [USER QUESTION]
+</pre>
+
+<h3>Prompt Chaining</h3>
+<p>Break a complex task into a sequence of simpler prompts. The output of each step becomes the input to the next.</p>
+<pre>
+Step 1 → Extract key facts from the article
+Step 2 → Identify the main argument using the key facts
+Step 3 → Write a critique of the argument
+Step 4 → Summarise the critique in 2 sentences
+</pre>
+
+<h3>Tree of Thought (ToT)</h3>
+<p>The model explores multiple reasoning branches simultaneously, evaluates each, and selects the most promising path — like a search tree for problem solving.</p>
+<pre>
+Consider three different approaches to solve this problem.
+For each approach, briefly explain the reasoning path.
+Then select the best approach and solve it fully.
+
+Problem: [YOUR PROBLEM]
+</pre>
+
+<div class="note">
+  <strong>Technique Selection Guide:</strong>
+  <span class="badge badge-blue">Simple tasks → Zero-Shot</span>
+  <span class="badge badge-teal">Format-sensitive → Few-Shot</span>
+  <span class="badge badge-amber">Multi-step reasoning → CoT / ToT</span>
+  <span class="badge badge-purple">Factual / document Q&amp;A → RAG</span>
+  <span class="badge badge-red">Tool-using agents → ReAct</span>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="examples">14. Real-World Prompt Examples</h2>
+
+<h3>Content Writing</h3>
+<pre>
+Write a LinkedIn post about Generative AI trends in 2024.
+Length: 200 words. Tone: professional but conversational.
+Include 2 concrete examples. End with a question to drive engagement.
+Add 3 relevant hashtags at the end.
+</pre>
+
+<h3>Programming</h3>
+<pre>
+Language: Python 3.11
+Task: Write a function that calculates the factorial of a number using recursion.
+Requirements:
+- Handle edge cases: negative numbers, zero, non-integers
+- Include a docstring in Google format
+- Add type hints
+- Return -1 for invalid inputs instead of raising an exception
+</pre>
+
+<h3>Education</h3>
+<pre>
+You are a friendly science teacher explaining concepts to a 10th-grade student.
+Explain how Neural Networks work using a simple real-world analogy.
+Avoid technical terms. Use at most 200 words.
+End with one question the student can think about.
+</pre>
+
+<h3>Business Analysis</h3>
+<pre>
+Act as a startup consultant with expertise in AI products.
+Create a 6-month go-to-market strategy for an AI-powered resume screening tool.
+Include: target customers, pricing model, top 3 acquisition channels, and key risks.
+Format: numbered sections with a brief summary at the top.
+</pre>
+
+<h3>Data Extraction</h3>
+<pre>
+Extract all person names, company names, and dates from the text below.
+Return as JSON with keys: "people", "companies", "dates".
+Each key should hold a list of strings. If none are found, return an empty list.
+
+Text:
+"""
+[PASTE TEXT HERE]
+"""
+</pre>
+
+<h3>Code Review</h3>
+<pre>
+You are a senior software engineer conducting a code review.
+Review the Python function below for:
+1. Correctness — does it do what the docstring claims?
+2. Edge cases — what inputs could break it?
+3. Performance — any unnecessary complexity?
+4. Style — PEP 8 compliance
+
+Provide specific line-by-line feedback where relevant.
+
+[PASTE CODE HERE]
+</pre>
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="project">15. Mini Project</h2>
+
+<p>Build a <strong>Prompt Library</strong> — a structured collection of reusable, tested prompts organised by domain and technique.</p>
+
+<div class="note">
+  <strong>Suggested stack:</strong> Python · JSON or SQLite for storage · Streamlit or Flask for a simple web UI · Optional: tag-based search and version tracking.
+</div>
+
+<h3>Project Steps</h3>
+
+<div class="step">
+  <div class="step-num">1</div>
+  <div class="step-body"><h4>Define Categories</h4><p>Organise prompts by domain: Content Creation, Code Generation, Customer Support, Education, Research, Data Extraction.</p></div>
+</div>
+<div class="step">
+  <div class="step-num">2</div>
+  <div class="step-body"><h4>Design the Data Model</h4><p>Each prompt entry should store: title, category, technique (zero-shot/CoT/etc.), template text, example output, tags, and version number.</p></div>
+</div>
+<div class="step">
+  <div class="step-num">3</div>
+  <div class="step-body"><h4>Write and Test Prompts</h4><p>Author at least 5 prompts per category. Test each on your target LLM and record output quality scores.</p></div>
+</div>
+<div class="step">
+  <div class="step-num">4</div>
+  <div class="step-body"><h4>Build the UI</h4><p>A simple Streamlit app with a search/filter panel, prompt preview, "Copy to Clipboard" button, and a form to add new prompts.</p></div>
+</div>
+<div class="step">
+  <div class="step-num">5</div>
+  <div class="step-body"><h4>Add Version Control</h4><p>Track changes to each prompt over time. Store previous versions so you can roll back if a new version underperforms.</p></div>
+</div>
+<div class="step">
+  <div class="step-num">6</div>
+  <div class="step-body"><h4>Export &amp; Share</h4><p>Allow export to JSON or CSV. Optionally publish to a public GitHub repo or internal team wiki.</p></div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<h2 id="mcq">16. Q &amp; A</h2>
+
+<p>Click any question to reveal the answer.</p>
+
+<div id="qa-container"></div>
+
+<script>
+const qas = [
+  ["What is Prompt Engineering?",
+   "The practice of designing, refining, and optimising instructions given to AI language models to produce accurate, useful, and relevant responses. It bridges human intent and model capability."],
+  ["What is Zero-Shot Prompting?",
+   "Asking the model to perform a task with no examples provided. The model relies entirely on its pre-trained knowledge and the clarity of the instruction."],
+  ["What is One-Shot Prompting?",
+   "Providing one input-output example before the actual task. The example anchors the model's understanding of the expected format, tone, and style."],
+  ["What is Few-Shot Prompting?",
+   "Providing 3–5 input-output examples to guide the model. It significantly improves accuracy for custom classification, extraction, and generation tasks."],
+  ["What is Chain of Thought (CoT) Prompting?",
+   "A technique that encourages the model to reason step by step before giving a final answer. Adding 'Think step by step' dramatically improves performance on multi-step reasoning and maths problems."],
+  ["What is Role Prompting?",
+   "Assigning a persona or professional identity to the model (e.g. 'You are a senior data engineer'). This shapes vocabulary, depth of expertise, and communication style."],
+  ["What are AI Hallucinations?",
+   "When a model generates plausible-sounding but factually incorrect or fabricated information. Common causes include insufficient context, ambiguous prompts, and knowledge cutoff limitations."],
+  ["How can hallucinations be reduced?",
+   "Provide grounded context, instruct the model to say 'I don't know' when uncertain, use Retrieval-Augmented Generation (RAG), set temperature to 0, and verify outputs externally."],
+  ["Why use Structured Outputs?",
+   "To make AI responses machine-readable and easy to parse by code. JSON, CSV, XML, and Markdown outputs can be directly consumed by applications without further processing."],
+  ["What format is most common for API integration?",
+   "JSON — it is lightweight, human-readable, and natively supported by virtually all programming languages and web APIs."],
+  ["What improves prompt quality the most?",
+   "Specificity. Clear task definition, audience, output format, constraints, and examples together reduce ambiguity and guide the model to the exact output you need."],
+  ["Why use Prompt Templates?",
+   "Templates provide reusable, version-controlled prompt structures with placeholders. They ensure consistency across an application and make it easy to iterate without changing application logic."],
+  ["What is Retrieval-Augmented Generation (RAG)?",
+   "A technique where relevant documents are retrieved from a vector database and injected into the prompt at query time, grounding the model in verified information and dramatically reducing hallucinations."],
+  ["What is Prompt Chaining?",
+   "Breaking a complex task into a sequence of simpler prompts where the output of each step becomes the input to the next. This improves accuracy and makes debugging easier."],
+  ["What is the Tree of Thought technique?",
+   "A prompting strategy where the model explores multiple reasoning branches simultaneously, evaluates each, and selects the most promising path — like a search tree for complex problem-solving."],
+  ["What are delimiters and why use them?",
+   "Delimiters (triple quotes, XML tags, dashes) clearly separate instructions from input content in a prompt, preventing the model from confusing the two and improving instruction-following accuracy."]
+];
+
+const container = document.getElementById('qa-container');
+qas.forEach(([q, a], i) => {
+  const item = document.createElement('div');
+  item.className = 'qa-item';
+  item.innerHTML = `
+    <div class="qa-q" onclick="toggle(${i})">
+      <span>${i + 1}. ${q}</span><span id="icon-${i}">+</span>
+    </div>
+    <div class="qa-a" id="ans-${i}">${a}</div>`;
+  container.appendChild(item);
+});
+
+function toggle(i) {
+  const ans = document.getElementById('ans-' + i);
+  const icon = document.getElementById('icon-' + i);
+  const open = ans.classList.toggle('open');
+  icon.textContent = open ? '−' : '+';
+}
+</script>
+
+</div>
+</body>
+</html>

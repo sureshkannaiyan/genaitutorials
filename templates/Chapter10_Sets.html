@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 10 - Sets and Hash Table</title>
+    <style>
+        body { margin: 0; font-family: 'Segoe UI', Arial, sans-serif; display: flex; background: #f8fafc; color: #334155; }
+        .sidebar { width: 320px; position: fixed; height: 100vh; overflow-y: auto; background: #0f172a; color: #fff; z-index: 100; }
+        .sidebar h2 { padding: 25px 20px; text-align: center; border-bottom: 1px solid #1e293b; margin: 0; font-size: 1.5rem; letter-spacing: 0.5px; }
+        .sidebar a { display: block; color: #cbd5e1; text-decoration: none; padding: 12px 20px; border-bottom: 1px solid #1e293b; font-size: 0.95rem; transition: all 0.2s ease; }
+        .sidebar a:hover { background: #1e293b; color: #fff; padding-left: 25px; }
+        .content { margin-left: 320px; padding: 40px; max-width: 1100px; line-height: 1.7; }
+        h1, h2, h3 { color: #1e3a8a; font-weight: 700; }
+        h1 { font-size: 2.5rem; border-bottom: 3px solid #e2e8f0; padding-bottom: 15px; margin-bottom: 30px; }
+        h2 { font-size: 1.8rem; margin-top: 40px; border-bottom: 1px solid #cbd5e1; padding-bottom: 8px; }
+        h3 { font-size: 1.3rem; margin-top: 25px; color: #2563eb; }
+        p { font-size: 1.05rem; margin-bottom: 20px; }
+        pre { background: #f1f5f9; padding: 18px; border-left: 5px solid #2563eb; overflow-x: auto; border-radius: 0 6px 6px 0; font-family: 'Fira Code', 'Courier New', Courier, monospace; font-size: 0.95rem; margin: 20px 0; }
+        table { width: 100%; border-collapse: collapse; margin: 25px 0; background: #fff; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border-radius: 8px; overflow: hidden; }
+        th, td { border: 1px solid #cbd5e1; padding: 14px; text-align: left; font-size: 0.95rem; }
+        th { background: #f1f5f9; color: #1e3a8a; font-weight: 600; }
+        tr:nth-child(even) { background: #f8fafc; }
+        .note { background: #dbeafe; padding: 18px; border-radius: 8px; border-left: 5px solid #3b82f6; margin: 25px 0; font-size: 1rem; }
+        .note strong { color: #1e3a8a; }
+        .warning { background: #fef2f2; padding: 18px; border-radius: 8px; border-left: 5px solid #ef4444; margin: 25px 0; color: #991b1b; font-size: 1rem; }
+        .warning strong { color: #991b1b; }
+        ul, ol { padding-left: 25px; margin-bottom: 20px; }
+        li { margin-bottom: 10px; font-size: 1.05rem; }
+        code { background: #e2e8f0; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 0.95rem; color: #0f172a; }
+		
+		
+/* Home Button */
+.home-btn{
+    position:fixed;
+    top:20px;
+    right:20px;
+    z-index:9999;
+    background:linear-gradient(135deg,#0f172a,#2563eb);
+    color:#fff;
+    text-decoration:none;
+    padding:12px 20px;
+    border-radius:50px;
+    font-weight:600;
+    font-family:Arial,sans-serif;
+    box-shadow:0 5px 15px rgba(0,0,0,0.3);
+    animation:pulseHome 2s infinite;
+    transition:0.3s;
+}
+
+.home-btn:hover{
+    transform:translateY(-3px) scale(1.05);
+}
+
+@keyframes pulseHome{
+    0%{
+        box-shadow:0 0 0 0 rgba(37,99,235,0.7);
+    }
+    70%{
+        box-shadow:0 0 0 15px rgba(37,99,235,0);
+    }
+    100%{
+        box-shadow:0 0 0 0 rgba(37,99,235,0);
+    }
+}
+
+/* WhatsApp Button */
+.whatsapp-float{
+    position:fixed;
+    width:65px;
+    height:65px;
+    bottom:25px;
+    right:25px;
+    background:#25D366;
+    color:white;
+    border-radius:50%;
+    text-align:center;
+    font-size:34px;
+    line-height:65px;
+    text-decoration:none;
+    z-index:9999;
+    box-shadow:0 5px 20px rgba(0,0,0,0.3);
+    animation:whatsappBounce 1.5s infinite;
+}
+
+.whatsapp-float:hover{
+    transform:scale(1.1);
+}
+
+@keyframes whatsappBounce{
+    0%,100%{
+        transform:translateY(0);
+    }
+    50%{
+        transform:translateY(-10px);
+    }
+}
+
+/* Mobile Responsive */
+@media(max-width:768px){
+    .home-btn{
+        top:10px;
+        right:10px;
+        padding:10px 15px;
+        font-size:14px;
+    }
+
+    .whatsapp-float{
+        width:55px;
+        height:55px;
+        line-height:55px;
+        font-size:28px;
+        bottom:15px;
+        right:15px;
+    }
+}
+		
+    </style>
+</head>
+<body>
+
+
+<a href="ai.html" class="home-btn">
+    🏠 Home
+</a>
+
+<!-- WHATSAPP FLOATING BUTTON -->
+<a href="https://wa.me/918220033325?text=Hello%20I%20would%20like%20to%20know%20more"
+   class="whatsapp-float"
+   target="_blank">
+    💬
+</a>
+
+<div class="sidebar">
+    <h2>Chapter 10. Sets</h2>
+    <a href="#obj">Learning Objectives</a>
+    <a href="#intro">1. Set Architecture</a>
+    <a href="#why">2. Why Sets?</a>
+    <a href="#create">3. Creating Sets</a>
+    <a href="#properties">4. Properties Matrix</a>
+    <a href="#memory">5. Hashing Mechanics</a>
+    <a href="#methods">6. Set Methods Matrix</a>
+    <a href="#operations">7. Set Operations Engine</a>
+    <a href="#subset">8. Subset & Superset Core</a>
+    <a href="#frozen">9. Frozen Sets & Immutability</a>
+    <a href="#comprehension">10. Set Comprehensions</a>
+    <a href="#applications">11. Real-World Applications</a>
+    <a href="#programs">12. Practical Programs</a>
+    <a href="#projects">13. Production Projects</a>
+    <a href="#errors">14. Anti-Patterns & Pitfalls</a>
+    <a href="#mcq">15. Q & A</a>
+</div>
+
+<div class="content">
+
+    <h1>Chapter 10: Sets and Hash Table</h1>
+
+    <h2 id="obj">Learning Objectives</h2>
+    <p>In this section, you will learn to:</p>
+    <ul>
+        <li>Analyze the underlying open-address hash table architecture that powers Python sets.</li>
+        <li> Differentiate between unhashable mutable objects and hashable immutable elements within set allocations.</li>
+        <li>Execute complex relational data queries using mathematical operators like Union, Intersection, and Symmetric Difference.</li>
+        <li>Deploy immutable `frozenset` objects as secure lookup keys within dictionary mappings.</li>
+    </ul>
+
+    <h2 id="intro">1. The Architecture of Python Sets</h2>
+    <p>In Python, a set (<code>set</code>) is an unordered, highly optimized collection of unique, hashable elements. Unlike lists or tuples which organize elements sequentially in linear chains, sets are built on an <strong>open-address hash table architecture</strong>. This underlying structural design eliminates item indexing, allows for instant data deduplication, and changes membership lookups from a slow linear scan into a direct memory address lookup.</p>
+
+<pre>
+# Initializing a production character set definition
+courses = {"Python", "AI", "ML"}
+print(courses) # Note: The printed layout order will vary unpredictably
+</pre>
+
+    <div class="note">
+        <strong>Enterprise Utility Note:</strong> Because sets are exceptionally fast, they serve as core building blocks inside database caching engines, high-throughput text analyzers, search pipelines, and preprocessing modules for machine learning datasets.
+    </div>
+
+    <h2 id="why">2. Why Sets? Operational Efficiency Analysis</h2>
+    <p>When working with large data collections, checking if an item exists inside a standard sequence type (like a list) requires scanning elements one by one from the beginning. This causes a linear time complexity of $O(N)$. Sets completely bypass this bottleneck by processing elements through a mathematical hash function, giving them a constant look-up time complexity of <strong>$O(1)$</strong>.</p>
+
+    <ul>
+        <li><strong>Automatic Deduplication:</strong> Duplicate entries are filtered out immediately during initialization.</li>
+        <li><strong>Fast Membership Checks:</strong> Verifying if an account token exists runs at near-instantaneous speed, regardless of dataset size.</li>
+        <li><strong>Set Operations:</strong> Mathematical functions like differences and intersections allow you to easily compare collections without writing slow, complex loops.</li>
+    </ul>
+
+<pre>
+# Automatic data stream deduplication mapping
+names = ["John", "Mary", "John", "David"]
+unique_names = set(names)
+print(unique_names) # Output: {'John', 'Mary', 'David'} (Duplicate values removed instantly)
+</pre>
+
+    <h2 id="create">3. Creating Sets and the Empty Set Trap</h2>
+    <p>Sets can be created by wrapping comma-separated items inside curly braces <code>{}</code> or by passing collections into the explicit <code>set()</code> constructor.</p>
+
+<pre>
+# Syntax declaration blueprints
+numbers = {1, 2, 3, 4}
+mixed_data = {10, "Python", 99.5, True} # Sets can store multiple data types safely
+</pre>
+
+    <h3>The Empty Set Trap vs. Dictionary Instantiation</h3>
+    <p>Because dictionaries and sets both use curly braces, writing an empty pair of braces <code>{}</code> defaults to building a standard dictionary object. To create an empty set, you must use the explicit <code>set()</code> function call.</p>
+
+<pre>
+# Tracking object class assignments
+x = {} 
+print(type(x))  # Output: &lt;class 'dict'&gt;
+
+y = set() 
+print(type(y))  # Output: &lt;class 'set'&gt;
+</pre>
+
+    <h2 id="properties">4. Properties Matrix</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Set Property</th>
+                <th>Underlying Architecture Mechanics</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Unordered</strong></td>
+                <td>Elements are not arranged in a linear sequence. Their layout inside the table depends entirely on the hash values computed for each item.</td>
+            </tr>
+            <tr>
+                <td><strong>Unique Entries</strong></td>
+                <td>The hash table structure allows only one entry per slot value. Adding a matching item simply overwrites the existing bucket reference.</td>
+            </tr>
+            <tr>
+                <td><strong>Mutable</strong></td>
+                <td>The set container can be modified after creation. Elements can be added or removed in place without creating a new set object.</td>
+            </tr>
+            <tr>
+                <td><strong>Hashable Requirements</strong></td>
+                <td>Every item inside a set must be immutable (like strings, numbers, or tuples) so it can generate a permanent hash value.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2 id="memory">5. Hashing Mechanics and Internal Storage Layout</h2>
+    <p>When you add an element to a set, Python passes it to an internal function called <code>hash()</code>. This function converts the object's contents into a stable integer value. Python then uses this integer to calculate a precise target index slot within a pre-allocated memory bucket matrix.</p>
+
+    <div class="note">
+        <strong>The Lookup Shortcut:</strong> When checking for membership (using the <code>in</code> operator), Python hashes your search term and jumps directly to its calculated memory slot. This design means the engine completely avoids scanning neighboring data buckets, keeping your searches exceptionally fast.
+    </div>
+
+<pre>
+# Direct membership verification
+courses = {"Python", "AI", "ML"}
+print("AI" in courses)  # Output: True (Calculated via high-speed hash lookups)
+</pre>
+
+    <h2 id="methods">6. Core Set Methods Matrix</h2>
+    <p>These built-in methods modify the set container directly in place while automatically managing the underlying hash table allocation matrix.</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Method Interface</th>
+                <th>Functional Processing Action</th>
+                <th>Example Code</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>add(item)</code></td>
+                <td>Inserts a single immutable element into the hash table structure.</td>
+                <td><code>skills.add("AI")</code></td>
+            </tr>
+            <tr>
+                <td><code>update(iterable)</code></td>
+                <td>Unpacks any collection and injects all unique items into the set.</td>
+                <td><code>skills.update(["ML", "DL"])</code></td>
+            </tr>
+            <tr>
+                <td><code>remove(value)</code></td>
+                <td>Deletes an entry from the set. Raises a <code>KeyError</code> if the item is missing.</td>
+                <td><code>skills.remove("SQL")</code></td>
+            </tr>
+            <tr>
+                <td><code>discard(value)</code></td>
+                <td>Safely deletes an entry from the set. If the value is missing, it skips the removal and avoids throwing an error.</td>
+                <td><code>skills.discard("Missing_Token")</code></td>
+            </tr>
+            <tr>
+                <td><code>pop()</code></td>
+                <td>Removes and returns an arbitrary element from the current hash table bucket.</td>
+                <td><code>extracted_item = skills.pop()</code></td>
+            </tr>
+            <tr>
+                <td><code>clear()</code></td>
+                <td>Flushes out all elements, leaving the set container completely empty.</td>
+                <td><code>skills.clear()</code></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2 id="operations">7. Core Mathematical Operations</h2>
+    <p>Python sets support standard mathematical operators and method alternatives, making it easy to perform high-speed database-style comparisons.</p>
+
+    <h3>A. Union (<code>|</code>)</h3>
+    <p>Combines all unique elements from both target sets.</p>
+<pre>
+a = {1, 2, 3}
+b = {3, 4, 5}
+print(a | b)  # Output: {1, 2, 3, 4, 5} (Alternatively use: a.union(b))
+</pre>
+
+    <h3>B. Intersection (<code>&amp;</code>)</h3>
+    <p>Extracts only the common elements found in both target sets.</p>
+<pre>
+print(a &amp; b)  # Output: {3} (Alternatively use: a.intersection(b))
+</pre>
+
+    <h3>C. Difference (<code>-</code>)</h3>
+    <p>Isolates the elements that exist in the first set but do not appear in the second set.</p>
+<pre>
+print(a - b)  # Output: {1, 2} (Alternatively use: a.difference(b))
+</pre>
+
+    <h3>D. Symmetric Difference (<code>^</code>)</h3>
+    <p>Collects all elements that are unique to each set, completely filtering out any items that appear in both.</p>
+<pre>
+print(a ^ b)  # Output: {1, 2, 4, 5} (Alternatively use: a.symmetric_difference(b))
+</pre>
+
+    <h2 id="subset">8. Set Inclusion Queries (Subset, Superset &amp; Disjoint Checks)</h2>
+    <p>You can use these logical validation operators to check relational boundaries and verify containment rules between different groups of data.</p>
+
+<pre>
+subset_candidates = {1, 2}
+master_universe   = {1, 2, 3, 4}
+
+# Verification checks
+print(subset_candidates.issubset(master_universe))   # Output: True (All candidate items exist inside the universe)
+print(master_universe.issuperset(subset_candidates)) # Output: True (The universe encapsulates the candidate collection)
+
+cluster_x = {1, 2}
+cluster_y = {5, 6}
+print(cluster_x.isdisjoint(cluster_y))               # Output: True (They share zero common elements)
+</pre>
+
+    <h2 id="frozen">9. Frozen Sets and Hashable Key Requirements</h2>
+    <p>Because normal sets are mutable, they cannot generate permanent hash values, meaning you cannot nest one set inside another or use a set as a lookup key inside a dictionary. To solve this, Python provides the <strong><code>frozenset</code></strong>—a completely immutable version of a set that is hashable and secure from structural modifications.</p>
+
+<pre>
+# Initializing an immutable frozen set structure
+locked_identity_matrix = frozenset([1, 2, 3, 4])
+
+# Frozen sets can be safely used as dictionary keys
+routing_matrix = {
+    frozenset(["Trichy_HQ", "Vapi_Node"]): "Active_Route_Path_Alpha"
+}
+print(routing_matrix[frozenset(["Trichy_HQ", "Vapi_Node"])]) # Output: Active_Route_Path_Alpha
+</pre>
+
+    <h2 id="comprehension">10. Set Comprehensions</h2>
+    <p>Set comprehensions let you transform and filter data fields into unique sets using a concise, single-line expression. They use the same layout as list comprehensions but wrap the operation in curly braces <code>{}</code> to automatically deduplicate the results.</p>
+
+<pre>
+# Building a set of perfect squares from a numerical loop sequence
+squared_uniques = {x * x for x in range(10)}
+print(squared_uniques)  # Output: {0, 1, 64, 4, 36, 9, 16, 49, 81, 25} (Unordered values)
+
+# Filtering out even values from a structural sequence range
+even_uniques = {x for x in range(20) if x % 2 == 0}
+</pre>
+
+    <h2 id="applications">11. Real-World Applications</h2>
+    <ul>
+        <li><strong>Email and User ID Deduplication:</strong> Instantly flushes away duplicate data entries from raw registration files.</li>
+        <li><strong>Access Control Verification:</strong> Evaluates active user permission tokens against system access matrices using rapid subset lookups.</li>
+        <li><strong>Recommendation Engine Filters:</strong> Identifies new content suggestions by running set difference operations between user history maps.</li>
+        <li><strong>AI Training Dataset Pipeline Optimization:</strong> Clears out redundant classification labels to ensure training data is uniform and lightweight.</li>
+    </ul>
+
+    <h2 id="programs">12. Practical Programs</h2>
+    <p>These standard code samples demonstrate how to use sets to clean up text streams and compare user data groups.</p>
+
+    <h3>Program A: Immediate In-Line Array Deduplication</h3>
+<pre>
+# Fast conversion pipeline to clean out sequential collections
+redundant_numerical_stream = [1, 2, 2, 3, 4, 4, 5]
+sanitized_list_output = list(set(redundant_numerical_stream))
+print(sanitized_list_output)  # Output: [1, 2, 3, 4, 5]
+</pre>
+
+    <h3>Program B: Cross-Platform Target Matching</h3>
+<pre>
+# Finding common elements across system student ledgers
+python_students_ledger = {"John", "Mary", "David"}
+ai_students_ledger     = {"Mary", "David", "James"}
+
+cross_enrolled_students = python_students_ledger &amp; ai_students_ledger
+print(f"Cross-Enrolled Cohort Array: {cross_enrolled_students}") # Output: {'Mary', 'David'}
+</pre>
+
+    <h3>Program C: Unique Word Counter Metrics</h3>
+<pre>
+# Parsing text streams to count unique word tokens
+raw_corpus_text = "python ai python ml ai"
+tokenized_words_set = set(raw_corpus_text.split()) # Splits text by spaces and loads it into a set
+print(f"Total Count of Unique Word Tokens: {len(tokenized_words_set)}")  # Output: 3
+</pre>
+
+    <h2 id="projects">13. Mini-Projects</h2>
+    <p>These functional, ready-to-run scripts show how to apply sets to solve real-world corporate automation tasks.</p>
+
+    <h3>Project 1: Multi-Day Workshop Attendance Analytics Portal</h3>
+    <p>This analytics service tracks user registrations across multi-day events, identifies perfect attendance histories using intersections, and finds absent signees using differences.</p>
+<pre>
+# Automated System Event Attendance Tracking Suite
+print("==================================================")
+print("    MENMOZHI ARCHIVAL EVENT MONITORING PORTAL     ")
+print("==================================================")
+
+day_01_attendance_logs = {"Suresh", "Iswarya", "Nitin", "Dev"}
+day_02_attendance_logs = {"Iswarya", "Arun", "Suresh", "Vijay"}
+
+def evaluate_attendance_metrics(day1, day2):
+    # Compute cross-day perfect attendance via set intersections
+    loyal_attendees = day1 &amp; day2
+    
+    # Identify users who missed the second session using difference maps
+    dropped_out_attendees = day1 - day2
+    
+    # Calculate global registration footprint across both sessions via unions
+    total_unique_participants = day1 | day2
+    
+    return {
+        "consistent_participants": loyal_attendees,
+        "session_two_dropouts": dropped_out_attendees,
+        "total_unique_count": len(total_unique_participants)
+    }
+
+# Execute the metrics compiler
+metrics_payload = evaluate_attendance_metrics(day_01_attendance_logs, day_02_attendance_logs)
+print(f"Perfect Multi-Day Attendance Group : {metrics_payload['consistent_participants']}")
+print(f"Session Two Dropouts Detected      : {metrics_payload['session_two_dropouts']}")
+print(f"Total Unique Registered Footprint  : {metrics_payload['total_unique_count']}")
+</pre>
+
+    <h3>Project 2: Real-Time Dynamic E-Commerce Recommendation Engine</h3>
+    <p>This recommendation framework computes profile crossovers between buyers, filters out products the user has already bought, and recommends new relevant upsell opportunities.</p>
+<pre>
+# E-Commerce Cross-Profile Affinity Recommendation Engine
+print("==================================================")
+print("     MENMOZHI CORPORATE MATCH RECOMMENDATION CORE ")
+print("==================================================")
+
+# Set profiles listing products purchased by each user account
+user_profile_alpha_history = {"Vapi_API_Pack", "Twilio_Voice_Module", "Exotel_Core_SIP"}
+user_profile_beta_history  = {"Twilio_Voice_Module", "Exotel_Core_SIP", "LangChain_AI_Agent", "CrewAI_Mesh"}
+
+def generate_product_recommendations(target_user, partner_user):
+    # Step 1: Find common products using an intersection check
+    shared_product_affinity = target_user &amp; partner_user
+    
+    # If the users share a strong product affinity, recommend items from the partner's history
+    if len(shared_product_affinity) >= 2:
+        # Step 2: Use set differences to find items the target user hasn't bought yet
+        recommended_upsells = partner_user - target_user
+        return recommended_upsells
+        
+    return set()
+
+# Run the recommendation generation pipeline
+suggested_products_list = generate_product_recommendations(user_profile_alpha_history, user_profile_beta_history)
+print(f"Target User Purchase History : {user_profile_alpha_history}")
+print(f"Generated Upsell Suggestions : {suggested_products_list}") 
+# Output: {'LangChain_AI_Agent', 'CrewAI_Mesh'}
+</pre>
+
+    <h2 id="errors">14. Code Anti-Patterns, Common Pitfalls & Corrections</h2>
+    <p>Avoid these common set design mistakes when building your production applications.</p>
+
+    <h3>Anti-Pattern 1: Index Fetching and Slice Extrapolations</h3>
+    <p>Sets are unordered hash tables, so they do not support indexing or slicing operations. Attempting to access an item by index triggers a runtime crash.</p>
+<pre>
+# Broken Processing Concept
+active_nodes_set = {"Node-Alpha", "Node-Beta", "Node-Gamma"}
+# node_target = active_nodes_set[0] -> Throws TypeError: 'set' object is not subscriptable
+
+# Correct Implementation Pattern
+# Option A: Safely pop an element out if item order doesn't matter
+extracted_node = active_nodes_set.pop()
+
+# Option B: Cast the set to a list if you require permanent index lookups
+indexed_nodes_list = list(active_nodes_set)
+node_target = indexed_nodes_list[0] # Works perfectly
+</pre>
+
+    <h3>Anti-Pattern 2: Injecting Mutable Objects into Set Fields</h3>
+    <p>Sets require all elements to be hashable and immutable. Passing mutable containers (like lists or other standard sets) into a set triggers an immediate unhashable type error.</p>
+<pre>
+# Broken Processing Concept
+# database_matrix = {[1, 2, 3], [4, 5, 6]} -> Throws TypeError: unhashable type: 'list'
+
+# Correct Implementation Pattern
+# Use immutable tuples instead of mutable lists to protect your row entries
+database_matrix = {(1, 2, 3), (4, 5, 6)} # Loaded and tracked successfully
+print(database_matrix)
+</pre>
+
+    <h2 id="mcq">15. Q & A</h2>
+    <ol>
+        <li>
+            <strong>Do sets allow duplicates?</strong><br>
+            No. Sets are structured to enforce uniqueness automatically; any duplicate elements passed during initialization or added later are silently discarded.
+        </li>
+        <li>
+            <strong>Which function creates an empty set?</strong><br>
+            The built-in <code>set()</code> constructor must be called explicitly. Writing an empty pair of curly braces <code>{}</code> creates a dictionary object instead.
+        </li>
+        <li>
+            <strong>Which operator performs union?</strong><br>
+            The pipe operator (<code>|</code>) or the built-in <code>.union()</code> method interface.
+        </li>
+        <li>
+            <strong>Which operator performs intersection?</strong><br>
+            The ampersand operator (<code>&amp;</code>) or the built-in <code>.intersection()</code> method interface.
+        </li>
+        <li>
+            <strong>Which set type is immutable?</strong><br>
+            The <code>frozenset</code> object type is immutable, hashable, and secure from updates after initialization.
+        </li>
+        <li>
+            <strong>Do sets support indexing?</strong><br>
+            No. Sets are unordered hash tables that do not map items to sequential positions or index numbers, meaning they do not support indexing or slicing.
+        </li>
+        <li>
+            <strong>Which method safely removes elements?</strong><br>
+            The <code>discard()</code> method safely deletes an element; if the value is missing, it skips the removal instead of crashing your program with an error.
+        </li>
+        <li>
+            <strong>What is hashing?</strong><br>
+            Hashing is a fast lookup mechanism that uses a mathematical function to convert data into a stable integer value. Python uses this integer to store and find elements in constant time ($O(1)$).
+        </li>
+        <li>
+            <strong>Can sets contain duplicates?</strong><br>
+            No. The hash table structure forces uniqueness, meaning duplicate values are completely filtered out.
+        </li>
+        <li>
+            <strong>Can sets store mixed datatypes?</strong><br>
+            Yes. Sets can store a mix of different data types (like strings, integers, floats, and booleans) simultaneously, as long as every element is immutable and hashable.
+        </li>
+    </ol>
+
+</div>
+</body>
+</html>

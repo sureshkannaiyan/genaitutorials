@@ -1,0 +1,1677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 14 - Object Oriented Programming in Python</title>
+    <style>
+        body { margin: 0; font-family: 'Segoe UI', Arial, sans-serif; display: flex; background: #f8fafc; color: #334155; }
+        .sidebar { width: 320px; position: fixed; height: 100vh; overflow-y: auto; background: #0f172a; color: #fff; z-index: 100; }
+        .sidebar h2 { padding: 25px 20px; text-align: center; border-bottom: 1px solid #1e293b; margin: 0; font-size: 1.35rem; letter-spacing: 0.5px; line-height: 1.4; }
+        .sidebar a { display: block; color: #cbd5e1; text-decoration: none; padding: 12px 20px; border-bottom: 1px solid #1e293b; font-size: 0.95rem; transition: all 0.2s ease; }
+        .sidebar a:hover { background: #1e293b; color: #fff; padding-left: 25px; }
+        .content { margin-left: 320px; padding: 40px; max-width: 1100px; line-height: 1.7; }
+        h1, h2, h3 { color: #1e3a8a; font-weight: 700; }
+        h1 { font-size: 2.5rem; border-bottom: 3px solid #e2e8f0; padding-bottom: 15px; margin-bottom: 30px; }
+        h2 { font-size: 1.8rem; margin-top: 40px; border-bottom: 1px solid #cbd5e1; padding-bottom: 8px; }
+        h3 { font-size: 1.3rem; margin-top: 25px; color: #2563eb; }
+        p { font-size: 1.05rem; margin-bottom: 20px; }
+        pre { background: #f1f5f9; padding: 18px; border-left: 5px solid #2563eb; overflow-x: auto; border-radius: 0 6px 6px 0; font-family: 'Fira Code', 'Courier New', Courier, monospace; font-size: 0.95rem; margin: 20px 0; }
+        table { width: 100%; border-collapse: collapse; margin: 25px 0; background: #fff; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border-radius: 8px; overflow: hidden; }
+        th, td { border: 1px solid #cbd5e1; padding: 14px; text-align: left; font-size: 0.95rem; }
+        th { background: #f1f5f9; color: #1e3a8a; font-weight: 600; }
+        tr:nth-child(even) { background: #f8fafc; }
+        .note { background: #dbeafe; padding: 18px; border-radius: 8px; border-left: 5px solid #3b82f6; margin: 25px 0; font-size: 1rem; }
+        .note strong { color: #1e3a8a; }
+        .warning { background: #fef2f2; padding: 18px; border-radius: 8px; border-left: 5px solid #ef4444; margin: 25px 0; color: #991b1b; font-size: 1rem; }
+        .warning strong { color: #991b1b; }
+        ul, ol { padding-left: 25px; margin-bottom: 20px; }
+        li { margin-bottom: 10px; font-size: 1.05rem; }
+        code { background: #e2e8f0; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 0.95rem; color: #0f172a; }
+		
+		
+/* Home Button */
+.home-btn{
+    position:fixed;
+    top:20px;
+    right:20px;
+    z-index:9999;
+    background:linear-gradient(135deg,#0f172a,#2563eb);
+    color:#fff;
+    text-decoration:none;
+    padding:12px 20px;
+    border-radius:50px;
+    font-weight:600;
+    font-family:Arial,sans-serif;
+    box-shadow:0 5px 15px rgba(0,0,0,0.3);
+    animation:pulseHome 2s infinite;
+    transition:0.3s;
+}
+
+.home-btn:hover{
+    transform:translateY(-3px) scale(1.05);
+}
+
+@keyframes pulseHome{
+    0%{
+        box-shadow:0 0 0 0 rgba(37,99,235,0.7);
+    }
+    70%{
+        box-shadow:0 0 0 15px rgba(37,99,235,0);
+    }
+    100%{
+        box-shadow:0 0 0 0 rgba(37,99,235,0);
+    }
+}
+
+/* WhatsApp Button */
+.whatsapp-float{
+    position:fixed;
+    width:65px;
+    height:65px;
+    bottom:25px;
+    right:25px;
+    background:#25D366;
+    color:white;
+    border-radius:50%;
+    text-align:center;
+    font-size:34px;
+    line-height:65px;
+    text-decoration:none;
+    z-index:9999;
+    box-shadow:0 5px 20px rgba(0,0,0,0.3);
+    animation:whatsappBounce 1.5s infinite;
+}
+
+.whatsapp-float:hover{
+    transform:scale(1.1);
+}
+
+@keyframes whatsappBounce{
+    0%,100%{
+        transform:translateY(0);
+    }
+    50%{
+        transform:translateY(-10px);
+    }
+}
+
+/* Mobile Responsive */
+@media(max-width:768px){
+    .home-btn{
+        top:10px;
+        right:10px;
+        padding:10px 15px;
+        font-size:14px;
+    }
+
+    .whatsapp-float{
+        width:55px;
+        height:55px;
+        line-height:55px;
+        font-size:28px;
+        bottom:15px;
+        right:15px;
+    }
+}
+		
+    </style>
+</head>
+<body>
+
+<a href="ai.html" class="home-btn">
+    🏠 Home
+</a>
+
+<!-- WHATSAPP FLOATING BUTTON -->
+<a href="https://wa.me/918220033325?text=Hello%20I%20would%20like%20to%20know%20more"
+   class="whatsapp-float"
+   target="_blank">
+    💬
+</a>
+<div class="sidebar">
+    <h2>Chapter 14. Object Oriented Programming</h2>
+    <a href="#obj">1. Learning Objectives</a>
+    <a href="#intro">2. Introduction to OOP</a>
+    <a href="#compare">3. Procedural vs OOP</a>
+    <a href="#class">4. Classes &amp; Objects</a>
+    <a href="#constructor">5. Constructors &amp; Variables</a>
+    <a href="#methods">6. Methods</a>
+    <a href="#encapsulation">7. Encapsulation</a>
+    <a href="#inheritance">8. Inheritance</a>
+    <a href="#poly">9. Polymorphism</a>
+    <a href="#abstraction">10. Abstraction</a>
+    <a href="#magic">11. Magic Methods</a>
+    <a href="#composition">12. Composition &amp; Aggregation</a>
+    <a href="#solid">13. SOLID Principles</a>
+    <a href="#realworld">14. Real World Applications</a>
+    <a href="#projects">15. Mini Projects</a>
+    <a href="#errors">16. Common Errors</a>
+</div>
+
+<div class="content">
+    <h1>Python Fundamentals Handbook</h1>
+    <h2>Chapter 14: Object-Oriented Programming (OOP) in Python</h2>
+
+    <!-- ===================== 1. LEARNING OBJECTIVES ===================== -->
+    <h2 id="obj">1. Learning Objectives</h2>
+    <p>By the end of this chapter, you will be able to:</p>
+    <ul>
+        <li>Understand object-oriented programming concepts and why they matter</li>
+        <li>Create classes and objects in Python with proper structure</li>
+        <li>Apply the four pillars of OOP: Encapsulation, Inheritance, Polymorphism, and Abstraction</li>
+        <li>Use constructors, instance variables, class variables, and all method types</li>
+        <li>Leverage magic (dunder) methods to make objects behave like built-in types</li>
+        <li>Distinguish between Composition and Aggregation</li>
+        <li>Follow SOLID design principles for high-quality, maintainable software</li>
+        <li>Build real-world mini projects using OOP patterns</li>
+        <li>Identify and fix common OOP errors</li>
+    </ul>
+
+    <!-- ===================== 2. INTRODUCTION ===================== -->
+    <h2 id="intro">2. Introduction to OOP</h2>
+    <p>Object-Oriented Programming (OOP) is a programming paradigm based on the concept of <strong>objects</strong>. An object combines <em>data</em> (called attributes or properties) with <em>behavior</em> (called methods or functions). By modeling software after real-world entities, OOP enables developers to build complex, scalable, and maintainable systems.</p>
+
+    <p>Think of a <strong>Car</strong> as an analogy. A car has attributes like color, brand, and speed, and it has behaviors like start, accelerate, and brake. In OOP, you capture this by creating a <code>Car</code> class with the corresponding attributes and methods. Every individual car you create (a red Toyota, a blue Honda) is an <em>instance</em> (object) of that class.</p>
+
+    <h3>The Four Pillars of OOP</h3>
+    <ul>
+        <li><strong>Encapsulation</strong> — Bundling data and methods together, hiding internal details</li>
+        <li><strong>Inheritance</strong> — A new class inherits attributes and methods from an existing class</li>
+        <li><strong>Polymorphism</strong> — The same interface can behave differently depending on the object</li>
+        <li><strong>Abstraction</strong> — Hiding complex implementation and exposing only what's necessary</li>
+    </ul>
+
+    <div class="note">
+        <strong>Note:</strong> Most enterprise applications, ERP systems, banking software, hospital management systems, games, AI applications, and web platforms use OOP. Python fully supports OOP and treats everything — including integers, strings, and functions — as objects.
+    </div>
+
+    <!-- ===================== 3. PROCEDURAL vs OOP ===================== -->
+    <h2 id="compare">3. Procedural Programming vs OOP</h2>
+    <p>Procedural programming executes a sequence of instructions one after another using functions. OOP organizes code around data and the objects that hold it. Here is a direct comparison:</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Feature</th>
+                <th>Procedural Programming</th>
+                <th>Object-Oriented Programming</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Focus</strong></td>
+                <td>Step-by-step instructions (functions)</td>
+                <td>Data and objects (classes)</td>
+            </tr>
+            <tr>
+                <td><strong>Data Security</strong></td>
+                <td>Data is global and exposed</td>
+                <td>Data is hidden (Encapsulation)</td>
+            </tr>
+            <tr>
+                <td><strong>Reusability</strong></td>
+                <td>Code reuse is difficult</td>
+                <td>High reuse via Inheritance and Composition</td>
+            </tr>
+            <tr>
+                <td><strong>Scalability</strong></td>
+                <td>Hard to maintain as logic grows</td>
+                <td>Modular and easy to scale</td>
+            </tr>
+            <tr>
+                <td><strong>Abstraction</strong></td>
+                <td>Limited abstraction capability</td>
+                <td>Strong abstraction using classes and interfaces</td>
+            </tr>
+            <tr>
+                <td><strong>Real-world modeling</strong></td>
+                <td>Poor mapping to real-world entities</td>
+                <td>Natural mapping to real-world objects</td>
+            </tr>
+            <tr>
+                <td><strong>Examples</strong></td>
+                <td>C, Pascal, early BASIC</td>
+                <td>Python, Java, C++, C#</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>Side-by-Side Code Comparison</h3>
+    <p>The same student record, written both ways:</p>
+
+<pre>
+# --- Procedural Style ---
+name = "Alice"
+roll_no = 101
+
+def display_student(name, roll_no):
+    print(f"Student: {name}, Roll No: {roll_no}")
+
+display_student(name, roll_no)
+</pre>
+
+<pre>
+# --- OOP Style ---
+class Student:
+    def __init__(self, name, roll_no):
+        self.name = name
+        self.roll_no = roll_no
+
+    def display(self):
+        print(f"Student: {self.name}, Roll No: {self.roll_no}")
+
+s1 = Student("Alice", 101)
+s1.display()
+</pre>
+
+    <p>As the system grows (more fields, more logic), the OOP version scales far more cleanly because all student-related data and behavior stays inside the <code>Student</code> class.</p>
+
+    <!-- ===================== 4. CLASSES AND OBJECTS ===================== -->
+    <h2 id="class">4. Classes and Objects</h2>
+    <p>A <strong>class</strong> is a user-defined blueprint or prototype from which objects are created. It defines a set of attributes and methods that characterize any object of that class. An <strong>object</strong> is a specific instance of a class — it occupies memory and holds its own state.</p>
+
+    <h3>Defining a Class</h3>
+    <p>Use the <code>class</code> keyword followed by the class name (by convention, use PascalCase):</p>
+<pre>
+class Student:
+    def __init__(self, name, roll_no, grade):
+        self.name = name          # Instance Variable
+        self.roll_no = roll_no    # Instance Variable
+        self.grade = grade        # Instance Variable
+
+    def display(self):
+        print(f"Name: {self.name} | Roll No: {self.roll_no} | Grade: {self.grade}")
+</pre>
+
+    <h3>Creating Objects (Instantiation)</h3>
+<pre>
+# Creating instances (objects) of the Student class
+s1 = Student("Alice", 101, "A")
+s2 = Student("Bob",   102, "B")
+
+s1.display()   # Name: Alice | Roll No: 101 | Grade: A
+s2.display()   # Name: Bob   | Roll No: 102 | Grade: B
+</pre>
+
+    <h3>Accessing and Modifying Attributes</h3>
+<pre>
+print(s1.name)       # Alice
+s1.grade = "A+"      # Modify attribute directly
+print(s1.grade)      # A+
+</pre>
+
+    <h3>The <code>self</code> Parameter</h3>
+    <p><code>self</code> refers to the current object instance. It is the first parameter of every instance method and is passed automatically by Python — you never pass it yourself when calling a method.</p>
+<pre>
+class Dog:
+    def __init__(self, name):
+        self.name = name      # 'self.name' belongs to this specific Dog
+
+    def bark(self):
+        print(f"{self.name} says: Woof!")
+
+d1 = Dog("Rex")
+d2 = Dog("Buddy")
+d1.bark()   # Rex says: Woof!
+d2.bark()   # Buddy says: Woof!
+</pre>
+
+    <div class="note">
+        <strong>Note:</strong> <code>self</code> is a convention, not a keyword. You could technically name it anything, but always use <code>self</code> to keep your code readable and conventional.
+    </div>
+
+    <h3>Checking an Object's Type</h3>
+<pre>
+s1 = Student("Alice", 101, "A")
+print(type(s1))            # &lt;class '__main__.Student'&gt;
+print(isinstance(s1, Student))  # True
+</pre>
+
+    <!-- ===================== 5. CONSTRUCTORS AND VARIABLES ===================== -->
+    <h2 id="constructor">5. Constructors and Variables</h2>
+
+    <h3>Constructors (<code>__init__</code>)</h3>
+    <p>The <code>__init__</code> method is a special method automatically called when an object is created. It initializes the object's attributes. A class can have only one <code>__init__</code>, but you can provide default values to make some arguments optional.</p>
+
+<pre>
+class Employee:
+    def __init__(self, name, salary, department="General"):
+        self.name = name
+        self.salary = salary
+        self.department = department
+
+e1 = Employee("Alice", 50000, "Engineering")
+e2 = Employee("Bob", 40000)           # Uses default department
+
+print(e1.department)   # Engineering
+print(e2.department)   # General
+</pre>
+
+    <h3>Instance Variables vs Class Variables</h3>
+    <ul>
+        <li><strong>Instance Variables:</strong> Declared inside methods using <code>self</code>. They are unique to every object — each instance gets its own copy.</li>
+        <li><strong>Class Variables:</strong> Declared inside the class but outside any method. They are shared across all instances of the class.</li>
+    </ul>
+
+<pre>
+class Student:
+    school = "ABC School"        # Class Variable — shared by all students
+    student_count = 0            # Class Variable — tracks total students
+
+    def __init__(self, name, roll_no):
+        self.name = name         # Instance Variable — unique per student
+        self.roll_no = roll_no   # Instance Variable — unique per student
+        Student.student_count += 1
+
+s1 = Student("Alice", 101)
+s2 = Student("Bob", 102)
+
+print(Student.school)        # ABC School
+print(s1.school)             # ABC School  (accessible via instance too)
+print(Student.student_count) # 2
+</pre>
+
+    <div class="warning">
+        <strong>Warning:</strong> If you assign to <code>self.school</code> on an instance, Python creates a new <em>instance variable</em> that shadows the class variable — it does not modify the shared class variable. Always modify class variables via the class name: <code>Student.school = "XYZ School"</code>.
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Declared</th>
+                <th>Accessed via</th>
+                <th>Shared?</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Instance Variable</strong></td>
+                <td>Inside <code>__init__</code> or other methods using <code>self</code></td>
+                <td><code>self.var</code> or <code>object.var</code></td>
+                <td>No — unique per object</td>
+            </tr>
+            <tr>
+                <td><strong>Class Variable</strong></td>
+                <td>Inside class body, outside methods</td>
+                <td><code>ClassName.var</code> or <code>self.var</code></td>
+                <td>Yes — all instances share it</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>Deleting Attributes and Objects</h3>
+<pre>
+s1 = Student("Alice", 101)
+del s1.roll_no        # Remove a specific attribute
+del s1                # Remove the entire object
+</pre>
+
+    <!-- ===================== 6. METHODS ===================== -->
+    <h2 id="methods">6. Methods</h2>
+    <p>Methods define the behavior of objects. Python supports three types of methods inside a class:</p>
+
+    <h3>Instance Methods</h3>
+    <p>The most common type. They can access and modify instance attributes using <code>self</code>, and can also access class variables.</p>
+<pre>
+class Circle:
+    PI = 3.14159          # Class variable
+
+    def __init__(self, radius):
+        self.radius = radius   # Instance variable
+
+    def area(self):
+        return Circle.PI * self.radius ** 2
+
+    def perimeter(self):
+        return 2 * Circle.PI * self.radius
+
+c = Circle(5)
+print(f"Area: {c.area():.2f}")        # Area: 78.54
+print(f"Perimeter: {c.perimeter():.2f}")  # Perimeter: 31.42
+</pre>
+
+    <h3>Class Methods</h3>
+    <p>Decorated with <code>@classmethod</code>. They receive the class itself (<code>cls</code>) as the first argument instead of an instance. Used to create alternative constructors or work with class-level state.</p>
+<pre>
+class Date:
+    def __init__(self, day, month, year):
+        self.day = day
+        self.month = month
+        self.year = year
+
+    @classmethod
+    def from_string(cls, date_string):
+        """Alternative constructor: parse 'DD-MM-YYYY' string."""
+        day, month, year = map(int, date_string.split("-"))
+        return cls(day, month, year)     # Creates a new Date object
+
+    def display(self):
+        print(f"{self.day:02d}-{self.month:02d}-{self.year}")
+
+d1 = Date(15, 8, 2024)
+d2 = Date.from_string("01-01-2025")    # Using class method constructor
+d1.display()   # 15-08-2024
+d2.display()   # 01-01-2025
+</pre>
+
+    <h3>Static Methods</h3>
+    <p>Decorated with <code>@staticmethod</code>. They have no access to <code>self</code> or <code>cls</code>. They behave like regular functions but live inside the class namespace because they are logically related to the class.</p>
+<pre>
+class MathUtils:
+    @staticmethod
+    def add(a, b):
+        return a + b
+
+    @staticmethod
+    def is_even(n):
+        return n % 2 == 0
+
+    @staticmethod
+    def factorial(n):
+        if n == 0:
+            return 1
+        return n * MathUtils.factorial(n - 1)
+
+print(MathUtils.add(3, 4))        # 7
+print(MathUtils.is_even(10))      # True
+print(MathUtils.factorial(5))     # 120
+</pre>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Method Type</th>
+                <th>First Parameter</th>
+                <th>Decorator</th>
+                <th>Can Access</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Instance Method</strong></td>
+                <td><code>self</code></td>
+                <td>None</td>
+                <td>Instance + class attributes</td>
+            </tr>
+            <tr>
+                <td><strong>Class Method</strong></td>
+                <td><code>cls</code></td>
+                <td><code>@classmethod</code></td>
+                <td>Class attributes only</td>
+            </tr>
+            <tr>
+                <td><strong>Static Method</strong></td>
+                <td>None</td>
+                <td><code>@staticmethod</code></td>
+                <td>Neither — acts like a utility function</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- ===================== 7. ENCAPSULATION ===================== -->
+    <h2 id="encapsulation">7. Encapsulation</h2>
+    <p>Encapsulation is the practice of bundling data (attributes) and the methods that operate on that data into a single unit (a class), and restricting direct access to some of those attributes. It protects an object's internal state from accidental or unauthorized modification.</p>
+
+    <h3>Access Modifiers in Python</h3>
+    <p>Python does not enforce access control at the language level, but uses naming conventions:</p>
+    <ul>
+        <li><strong>Public</strong> (<code>name</code>) — accessible from anywhere</li>
+        <li><strong>Protected</strong> (<code>_name</code>) — conventionally internal; accessible but not meant to be used outside the class or subclasses</li>
+        <li><strong>Private</strong> (<code>__name</code>) — name-mangled by Python, making it harder (but not impossible) to access from outside</li>
+    </ul>
+
+<pre>
+class BankAccount:
+    def __init__(self, owner, balance):
+        self.owner = owner          # Public
+        self._account_no = "ACC001" # Protected (convention)
+        self.__balance = balance    # Private (name-mangled)
+
+    def deposit(self, amount):
+        if amount > 0:
+            self.__balance += amount
+            print(f"Deposited ₹{amount}. New balance: ₹{self.__balance}")
+        else:
+            print("Deposit amount must be positive.")
+
+    def withdraw(self, amount):
+        if 0 < amount <= self.__balance:
+            self.__balance -= amount
+            print(f"Withdrawn ₹{amount}. Remaining balance: ₹{self.__balance}")
+        else:
+            print("Invalid withdrawal amount or insufficient funds.")
+
+    def get_balance(self):
+        """Getter method — controlled read access."""
+        return self.__balance
+
+
+acc = BankAccount("Alice", 10000)
+acc.deposit(5000)      # Deposited ₹5000. New balance: ₹15000
+acc.withdraw(2000)     # Withdrawn ₹2000. Remaining balance: ₹13000
+print(acc.get_balance())   # 13000
+
+# Direct access to __balance raises AttributeError:
+# print(acc.__balance)   # AttributeError!
+</pre>
+
+    <h3>Getters and Setters</h3>
+    <p>Python's <code>@property</code> decorator lets you define getter and setter logic while keeping attribute-style syntax clean:</p>
+<pre>
+class Temperature:
+    def __init__(self, celsius):
+        self.__celsius = celsius
+
+    @property
+    def celsius(self):
+        """Getter"""
+        return self.__celsius
+
+    @celsius.setter
+    def celsius(self, value):
+        """Setter with validation"""
+        if value < -273.15:
+            raise ValueError("Temperature cannot go below absolute zero!")
+        self.__celsius = value
+
+    @property
+    def fahrenheit(self):
+        """Computed property — no setter needed"""
+        return (self.__celsius * 9/5) + 32
+
+t = Temperature(25)
+print(t.celsius)       # 25
+print(t.fahrenheit)    # 77.0
+t.celsius = 100
+print(t.fahrenheit)    # 212.0
+</pre>
+
+    <h3>Benefits of Encapsulation</h3>
+    <ul>
+        <li><strong>Data Security</strong> — prevents accidental changes to internal state</li>
+        <li><strong>Controlled Access</strong> — validates data before accepting changes (e.g., balance can't go negative)</li>
+        <li><strong>Improved Maintainability</strong> — internal implementation can change without affecting external code</li>
+        <li><strong>Code Modularity</strong> — each class manages its own state independently</li>
+    </ul>
+
+    <!-- ===================== 8. INHERITANCE ===================== -->
+    <h2 id="inheritance">8. Inheritance</h2>
+    <p>Inheritance allows a new class (called the <strong>child</strong> or <strong>derived</strong> class) to inherit attributes and methods from an existing class (called the <strong>parent</strong> or <strong>base</strong> class). This promotes code reuse and establishes an "is-a" relationship.</p>
+
+<pre>
+class Animal:
+    def __init__(self, name, sound):
+        self.name = name
+        self.sound = sound
+
+    def speak(self):
+        print(f"{self.name} says {self.sound}")
+
+    def breathe(self):
+        print(f"{self.name} breathes air.")
+
+class Dog(Animal):
+    def fetch(self):
+        print(f"{self.name} fetches the ball!")
+
+class Cat(Animal):
+    def purr(self):
+        print(f"{self.name} purrs...")
+
+d = Dog("Rex", "Woof")
+c = Cat("Whiskers", "Meow")
+
+d.speak()    # Rex says Woof  (inherited from Animal)
+d.fetch()    # Rex fetches the ball!  (Dog-specific)
+c.speak()    # Whiskers says Meow
+c.purr()     # Whiskers purrs...
+</pre>
+
+    <h3>The <code>super()</code> Function</h3>
+    <p><code>super()</code> gives access to the parent class's methods. It is commonly used in <code>__init__</code> to call the parent constructor before adding child-specific initialization:</p>
+<pre>
+class Vehicle:
+    def __init__(self, brand, speed):
+        self.brand = brand
+        self.speed = speed
+
+    def info(self):
+        print(f"Brand: {self.brand} | Speed: {self.speed} km/h")
+
+class ElectricVehicle(Vehicle):
+    def __init__(self, brand, speed, battery_capacity):
+        super().__init__(brand, speed)          # Call parent __init__
+        self.battery_capacity = battery_capacity  # Add EV-specific attribute
+
+    def info(self):
+        super().info()                           # Call parent info()
+        print(f"Battery: {self.battery_capacity} kWh")
+
+ev = ElectricVehicle("Tesla", 250, 100)
+ev.info()
+# Brand: Tesla | Speed: 250 km/h
+# Battery: 100 kWh
+</pre>
+
+    <h3>Types of Inheritance</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Description</th>
+                <th>Example</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Single</strong></td>
+                <td>One child inherits from one parent</td>
+                <td><code>Dog(Animal)</code></td>
+            </tr>
+            <tr>
+                <td><strong>Multiple</strong></td>
+                <td>One child inherits from multiple parents</td>
+                <td><code>FlyingFish(Bird, Fish)</code></td>
+            </tr>
+            <tr>
+                <td><strong>Multilevel</strong></td>
+                <td>A chain of inheritance: A → B → C</td>
+                <td><code>Puppy(Dog)</code>, <code>Dog(Animal)</code></td>
+            </tr>
+            <tr>
+                <td><strong>Hierarchical</strong></td>
+                <td>Multiple children share one parent</td>
+                <td><code>Dog(Animal)</code>, <code>Cat(Animal)</code></td>
+            </tr>
+            <tr>
+                <td><strong>Hybrid</strong></td>
+                <td>Combination of two or more types</td>
+                <td>Mix of multiple + multilevel</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>Multiple Inheritance Example</h3>
+<pre>
+class Flyable:
+    def fly(self):
+        print("I can fly!")
+
+class Swimmable:
+    def swim(self):
+        print("I can swim!")
+
+class Duck(Flyable, Swimmable):
+    def quack(self):
+        print("Quack!")
+
+donald = Duck()
+donald.fly()    # I can fly!
+donald.swim()   # I can swim!
+donald.quack()  # Quack!
+</pre>
+
+    <div class="warning">
+        <strong>Warning:</strong> Multiple inheritance can lead to the "Diamond Problem" — ambiguity when two parent classes share a common ancestor. Python resolves this using the <strong>Method Resolution Order (MRO)</strong>. Use <code>ClassName.__mro__</code> or <code>help(ClassName)</code> to inspect it.
+    </div>
+
+    <h3>Checking Inheritance Relationships</h3>
+<pre>
+print(issubclass(Dog, Animal))    # True
+print(issubclass(Animal, Dog))    # False
+print(isinstance(d, Animal))      # True  (Dog IS-A Animal)
+</pre>
+
+    <!-- ===================== 9. POLYMORPHISM ===================== -->
+    <h2 id="poly">9. Polymorphism</h2>
+    <p>Polymorphism means "many forms." In OOP, it means that the same method name can behave differently depending on the object it is called on. This makes code more flexible and extensible.</p>
+
+    <h3>Method Overriding (Runtime Polymorphism)</h3>
+    <p>A child class provides its own implementation of a method already defined in the parent class:</p>
+<pre>
+class Shape:
+    def area(self):
+        return 0
+
+class Rectangle(Shape):
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+
+    def area(self):
+        return self.width * self.height
+
+class Circle(Shape):
+    PI = 3.14159
+
+    def __init__(self, radius):
+        self.radius = radius
+
+    def area(self):
+        return Circle.PI * self.radius ** 2
+
+class Triangle(Shape):
+    def __init__(self, base, height):
+        self.base = base
+        self.height = height
+
+    def area(self):
+        return 0.5 * self.base * self.height
+
+shapes = [Rectangle(4, 5), Circle(3), Triangle(6, 8)]
+
+for shape in shapes:
+    print(f"{shape.__class__.__name__}: area = {shape.area():.2f}")
+# Rectangle: area = 20.00
+# Circle: area = 28.27
+# Triangle: area = 24.00
+</pre>
+
+    <h3>Duck Typing</h3>
+    <p>Python uses <em>duck typing</em>: if an object has the right method, Python doesn't care what class it is. "If it walks like a duck and quacks like a duck, it is a duck."</p>
+<pre>
+class Dog:
+    def sound(self):
+        print("Bark!")
+
+class Cat:
+    def sound(self):
+        print("Meow!")
+
+class Robot:
+    def sound(self):
+        print("Beep boop!")
+
+def make_sound(animal):
+    animal.sound()    # Works for any object with a sound() method
+
+for obj in [Dog(), Cat(), Robot()]:
+    make_sound(obj)
+# Bark!
+# Meow!
+# Beep boop!
+</pre>
+
+    <h3>Operator Overloading (compile-time polymorphism)</h3>
+    <p>Python allows you to redefine the behaviour of operators (<code>+</code>, <code>-</code>, <code>==</code>, etc.) for your custom classes using special methods:</p>
+<pre>
+class Vector:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def __add__(self, other):
+        return Vector(self.x + other.x, self.y + other.y)
+
+    def __str__(self):
+        return f"Vector({self.x}, {self.y})"
+
+v1 = Vector(1, 2)
+v2 = Vector(3, 4)
+v3 = v1 + v2      # Calls __add__
+print(v3)         # Vector(4, 6)
+</pre>
+
+    <!-- ===================== 10. ABSTRACTION ===================== -->
+    <h2 id="abstraction">10. Abstraction</h2>
+    <p>Abstraction means hiding complex internal details and only exposing what is necessary to the outside world. It forces a clean contract: any class that inherits from an abstract class <em>must</em> implement the abstract methods — otherwise Python raises a <code>TypeError</code>.</p>
+    <p>In Python, abstraction is achieved using the <code>abc</code> module (Abstract Base Classes):</p>
+
+<pre>
+from abc import ABC, abstractmethod
+
+class Shape(ABC):
+    """Abstract base class — cannot be instantiated directly."""
+
+    @abstractmethod
+    def area(self):
+        pass
+
+    @abstractmethod
+    def perimeter(self):
+        pass
+
+    def describe(self):
+        """Concrete method — shared by all shapes."""
+        print(f"I am a {self.__class__.__name__} with area {self.area():.2f}")
+
+
+class Rectangle(Shape):
+    def __init__(self, w, h):
+        self.w = w
+        self.h = h
+
+    def area(self):
+        return self.w * self.h
+
+    def perimeter(self):
+        return 2 * (self.w + self.h)
+
+
+class Circle(Shape):
+    def __init__(self, r):
+        self.r = r
+
+    def area(self):
+        return 3.14159 * self.r ** 2
+
+    def perimeter(self):
+        return 2 * 3.14159 * self.r
+
+
+r = Rectangle(4, 6)
+c = Circle(5)
+r.describe()   # I am a Rectangle with area 24.00
+c.describe()   # I am a Circle with area 78.54
+
+# shape = Shape()  # TypeError: Can't instantiate abstract class Shape
+</pre>
+
+    <div class="note">
+        <strong>Note:</strong> Abstract classes can contain both abstract methods (which must be overridden) and concrete methods (which can be used as-is or overridden optionally). This lets you define shared behavior alongside enforced contracts.
+    </div>
+
+    <h3>Abstract Class vs Interface (Python context)</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Feature</th>
+                <th>Abstract Class (Python ABC)</th>
+                <th>Interface-like class (all abstract)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Can have concrete methods</td>
+                <td>Yes</td>
+                <td>No (by design)</td>
+            </tr>
+            <tr>
+                <td>Can have instance variables</td>
+                <td>Yes</td>
+                <td>No (by design)</td>
+            </tr>
+            <tr>
+                <td>Enforces method implementation</td>
+                <td>Yes (for @abstractmethod)</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>Python keyword</td>
+                <td><code>ABC</code>, <code>@abstractmethod</code></td>
+                <td>Same (all methods marked abstract)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- ===================== 11. MAGIC METHODS ===================== -->
+    <h2 id="magic">11. Magic Methods (Dunder Methods)</h2>
+    <p>Magic methods (also called <em>dunder methods</em> — double underscore) are special methods that Python calls automatically in certain situations. They allow your custom objects to integrate with Python's built-in operations and syntax.</p>
+
+    <h3>Common Magic Methods</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Method</th>
+                <th>Triggered By</th>
+                <th>Purpose</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>__init__</code></td>
+                <td><code>obj = MyClass()</code></td>
+                <td>Initialize the object</td>
+            </tr>
+            <tr>
+                <td><code>__str__</code></td>
+                <td><code>print(obj)</code> / <code>str(obj)</code></td>
+                <td>Human-readable string representation</td>
+            </tr>
+            <tr>
+                <td><code>__repr__</code></td>
+                <td><code>repr(obj)</code> / REPL display</td>
+                <td>Developer-facing debug string</td>
+            </tr>
+            <tr>
+                <td><code>__len__</code></td>
+                <td><code>len(obj)</code></td>
+                <td>Return the "length" of the object</td>
+            </tr>
+            <tr>
+                <td><code>__add__</code></td>
+                <td><code>obj1 + obj2</code></td>
+                <td>Addition operator</td>
+            </tr>
+            <tr>
+                <td><code>__eq__</code></td>
+                <td><code>obj1 == obj2</code></td>
+                <td>Equality comparison</td>
+            </tr>
+            <tr>
+                <td><code>__lt__</code></td>
+                <td><code>obj1 &lt; obj2</code></td>
+                <td>Less-than comparison</td>
+            </tr>
+            <tr>
+                <td><code>__del__</code></td>
+                <td>Object is garbage collected</td>
+                <td>Cleanup / destructor</td>
+            </tr>
+            <tr>
+                <td><code>__getitem__</code></td>
+                <td><code>obj[key]</code></td>
+                <td>Index / key access</td>
+            </tr>
+            <tr>
+                <td><code>__contains__</code></td>
+                <td><code>x in obj</code></td>
+                <td>Membership test</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>Full Example — A Custom <code>Book</code> Class</h3>
+<pre>
+class Book:
+    def __init__(self, title, author, pages):
+        self.title = title
+        self.author = author
+        self.pages = pages
+
+    def __str__(self):
+        return f'"{self.title}" by {self.author}'
+
+    def __repr__(self):
+        return f"Book(title={self.title!r}, author={self.author!r}, pages={self.pages})"
+
+    def __len__(self):
+        return self.pages
+
+    def __eq__(self, other):
+        return self.title == other.title and self.author == other.author
+
+    def __lt__(self, other):
+        return self.pages < other.pages
+
+b1 = Book("Python Basics", "John", 300)
+b2 = Book("Advanced Python", "Jane", 450)
+b3 = Book("Python Basics", "John", 300)
+
+print(b1)              # "Python Basics" by John
+print(repr(b1))        # Book(title='Python Basics', author='John', pages=300)
+print(len(b1))         # 300
+print(b1 == b3)        # True  (same title + author)
+print(b1 < b2)         # True  (300 < 450)
+
+books = [b2, b1]
+books.sort()           # Sorts using __lt__
+print([str(b) for b in books])
+# ['"Python Basics" by John', '"Advanced Python" by Jane']
+</pre>
+
+    <h3>Context Manager Magic: <code>__enter__</code> and <code>__exit__</code></h3>
+    <p>Implementing these two methods lets your class work with Python's <code>with</code> statement — perfect for managing resources like files or database connections:</p>
+<pre>
+class FileManager:
+    def __init__(self, filename, mode):
+        self.filename = filename
+        self.mode = mode
+        self.file = None
+
+    def __enter__(self):
+        self.file = open(self.filename, self.mode)
+        return self.file
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if self.file:
+            self.file.close()
+        print("File closed.")
+        return False   # Don't suppress exceptions
+
+with FileManager("data.txt", "w") as f:
+    f.write("Hello, OOP!")
+# File closed.   (automatic cleanup)
+</pre>
+
+    <!-- ===================== 12. COMPOSITION AND AGGREGATION ===================== -->
+    <h2 id="composition">12. Composition and Aggregation</h2>
+    <p>Inheritance models an "is-a" relationship. <strong>Composition</strong> and <strong>Aggregation</strong> model a "has-a" relationship — they describe how objects are built from other objects.</p>
+
+    <h3>Composition — Strong Ownership</h3>
+    <p>The contained object's lifecycle is managed by the container. If the container is destroyed, so is the contained object. Example: a <code>Car</code> <em>owns</em> its <code>Engine</code>.</p>
+<pre>
+class Engine:
+    def __init__(self, horsepower):
+        self.horsepower = horsepower
+
+    def start(self):
+        print(f"Engine with {self.horsepower}HP started.")
+
+class Car:
+    def __init__(self, brand, horsepower):
+        self.brand = brand
+        self.engine = Engine(horsepower)   # Car OWNS the Engine
+
+    def start(self):
+        print(f"{self.brand} car:")
+        self.engine.start()
+
+my_car = Car("Toyota", 120)
+my_car.start()
+# Toyota car:
+# Engine with 120HP started.
+</pre>
+
+    <h3>Aggregation — Weak Ownership</h3>
+    <p>The contained object exists independently. It is passed in from outside and can outlive the container. Example: a <code>Department</code> has <code>Employee</code>s, but employees can exist without the department.</p>
+<pre>
+class Employee:
+    def __init__(self, name):
+        self.name = name
+
+class Department:
+    def __init__(self, dept_name):
+        self.dept_name = dept_name
+        self.employees = []          # Aggregated — not created here
+
+    def add_employee(self, employee):
+        self.employees.append(employee)
+
+    def list_employees(self):
+        print(f"Department: {self.dept_name}")
+        for emp in self.employees:
+            print(f"  - {emp.name}")
+
+e1 = Employee("Alice")
+e2 = Employee("Bob")
+
+dept = Department("Engineering")
+dept.add_employee(e1)
+dept.add_employee(e2)
+dept.list_employees()
+# Department: Engineering
+#   - Alice
+#   - Bob
+
+# e1 and e2 still exist even if dept is deleted
+del dept
+print(e1.name)   # Alice — still accessible
+</pre>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Feature</th>
+                <th>Composition</th>
+                <th>Aggregation</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Relationship strength</td>
+                <td>Strong (owns)</td>
+                <td>Weak (uses/has)</td>
+            </tr>
+            <tr>
+                <td>Lifecycle</td>
+                <td>Part dies with the container</td>
+                <td>Part can exist independently</td>
+            </tr>
+            <tr>
+                <td>Object creation</td>
+                <td>Created inside the class</td>
+                <td>Passed in from outside</td>
+            </tr>
+            <tr>
+                <td>UML notation</td>
+                <td>Filled diamond ◆</td>
+                <td>Open diamond ◇</td>
+            </tr>
+            <tr>
+                <td>Example</td>
+                <td>Car ◆ Engine</td>
+                <td>Department ◇ Employee</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="note">
+        <strong>Design Tip:</strong> Prefer composition over inheritance when possible. Inheritance creates tight coupling between classes; composition is more flexible and easier to test.
+    </div>
+
+    <!-- ===================== 13. SOLID ===================== -->
+    <h2 id="solid">13. SOLID Principles</h2>
+    <p>SOLID is a set of five design principles that make software more understandable, flexible, and maintainable. They were popularized by Robert C. Martin ("Uncle Bob").</p>
+
+    <h3>S — Single Responsibility Principle (SRP)</h3>
+    <p>A class should have <em>one and only one</em> reason to change. Each class should do one job.</p>
+<pre>
+# Bad: One class doing too much
+class Student:
+    def enroll(self): ...
+    def calculate_grade(self): ...
+    def send_email(self): ...        # Unrelated responsibility!
+    def save_to_database(self): ...  # Unrelated responsibility!
+
+# Good: Responsibilities separated
+class Student:
+    def enroll(self): ...
+    def calculate_grade(self): ...
+
+class EmailService:
+    def send_email(self, student): ...
+
+class StudentRepository:
+    def save(self, student): ...
+</pre>
+
+    <h3>O — Open/Closed Principle (OCP)</h3>
+    <p>Classes should be <em>open for extension</em> but <em>closed for modification</em>. Add new behavior by creating new classes, not by changing existing ones.</p>
+<pre>
+from abc import ABC, abstractmethod
+
+class Discount(ABC):
+    @abstractmethod
+    def apply(self, price):
+        pass
+
+class NoDiscount(Discount):
+    def apply(self, price):
+        return price
+
+class TenPercentDiscount(Discount):
+    def apply(self, price):
+        return price * 0.90
+
+class SeasonalDiscount(Discount):     # Extended — no existing code modified
+    def apply(self, price):
+        return price * 0.75
+
+def checkout(price, discount: Discount):
+    return discount.apply(price)
+
+print(checkout(1000, TenPercentDiscount()))  # 900.0
+print(checkout(1000, SeasonalDiscount()))    # 750.0
+</pre>
+
+    <h3>L — Liskov Substitution Principle (LSP)</h3>
+    <p>Objects of a subclass should be replaceable with objects of the parent class without breaking the program. A child should <em>extend</em> the parent, not restrict or contradict it.</p>
+<pre>
+class Bird:
+    def move(self):
+        print("Moving...")
+
+class Sparrow(Bird):
+    def move(self):
+        print("Flying!")       # Extends behavior — OK
+
+class Penguin(Bird):
+    def move(self):
+        print("Swimming!")     # Still moves — LSP respected
+
+def let_bird_move(bird: Bird):
+    bird.move()
+
+let_bird_move(Sparrow())   # Flying!
+let_bird_move(Penguin())   # Swimming!
+</pre>
+
+    <h3>I — Interface Segregation Principle (ISP)</h3>
+    <p>Clients should not be forced to depend on methods they do not use. Create small, focused interfaces rather than one large general-purpose one.</p>
+<pre>
+from abc import ABC, abstractmethod
+
+# Bad: One big interface forces all classes to implement everything
+# class Worker(ABC):
+#     def work(self): ...
+#     def eat(self): ...     # Robots don't eat!
+
+# Good: Separate interfaces
+class Workable(ABC):
+    @abstractmethod
+    def work(self): pass
+
+class Eatable(ABC):
+    @abstractmethod
+    def eat(self): pass
+
+class HumanWorker(Workable, Eatable):
+    def work(self): print("Human working...")
+    def eat(self): print("Human eating...")
+
+class RobotWorker(Workable):
+    def work(self): print("Robot working...")
+    # No eat() — robots don't need it!
+</pre>
+
+    <h3>D — Dependency Inversion Principle (DIP)</h3>
+    <p>High-level modules should not depend on low-level modules. Both should depend on abstractions (interfaces/abstract classes).</p>
+<pre>
+from abc import ABC, abstractmethod
+
+class Database(ABC):
+    @abstractmethod
+    def save(self, data): pass
+
+class MySQLDatabase(Database):
+    def save(self, data):
+        print(f"Saving to MySQL: {data}")
+
+class MongoDatabase(Database):
+    def save(self, data):
+        print(f"Saving to MongoDB: {data}")
+
+class UserService:
+    def __init__(self, db: Database):   # Depends on abstraction, not concrete class
+        self.db = db
+
+    def create_user(self, name):
+        self.db.save(name)
+
+# Swap databases without changing UserService
+service = UserService(MySQLDatabase())
+service.create_user("Alice")   # Saving to MySQL: Alice
+
+service = UserService(MongoDatabase())
+service.create_user("Bob")     # Saving to MongoDB: Bob
+</pre>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Letter</th>
+                <th>Principle</th>
+                <th>One-line Rule</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>S</strong></td><td>Single Responsibility</td><td>One class, one job</td></tr>
+            <tr><td><strong>O</strong></td><td>Open/Closed</td><td>Extend without modifying</td></tr>
+            <tr><td><strong>L</strong></td><td>Liskov Substitution</td><td>Subclasses must honour parent's contract</td></tr>
+            <tr><td><strong>I</strong></td><td>Interface Segregation</td><td>Small, focused interfaces</td></tr>
+            <tr><td><strong>D</strong></td><td>Dependency Inversion</td><td>Depend on abstractions, not concretions</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ===================== 14. REAL WORLD APPLICATIONS ===================== -->
+    <h2 id="realworld">14. Real World Applications</h2>
+    <p>OOP is the foundation of virtually every major software system. Here is how the pillars appear in practice:</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Domain</th>
+                <th>OOP Concept</th>
+                <th>Example</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Banking Systems</td>
+                <td>Encapsulation</td>
+                <td>Account balance is private; only exposed via deposit/withdraw</td>
+            </tr>
+            <tr>
+                <td>Hospital Management</td>
+                <td>Inheritance</td>
+                <td><code>Doctor</code> and <code>Nurse</code> inherit from <code>StaffMember</code></td>
+            </tr>
+            <tr>
+                <td>E-Commerce</td>
+                <td>Polymorphism</td>
+                <td><code>PayPal</code>, <code>CreditCard</code>, <code>UPI</code> all implement <code>pay()</code></td>
+            </tr>
+            <tr>
+                <td>Game Development</td>
+                <td>Composition</td>
+                <td>A <code>Player</code> has an <code>Inventory</code>, <code>Health</code>, and <code>Weapon</code></td>
+            </tr>
+            <tr>
+                <td>Library Management</td>
+                <td>Aggregation</td>
+                <td>A <code>Library</code> aggregates many <code>Book</code> objects</td>
+            </tr>
+            <tr>
+                <td>AI &amp; Chatbots</td>
+                <td>Abstraction</td>
+                <td>Abstract <code>Model</code> class; concrete <code>GPT</code>, <code>Llama</code> implementations</td>
+            </tr>
+            <tr>
+                <td>Web Frameworks</td>
+                <td>All pillars</td>
+                <td>Django's <code>Model</code>, <code>View</code>, <code>Form</code> classes</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- ===================== 15. MINI PROJECTS ===================== -->
+    <h2 id="projects">15. Mini Projects</h2>
+
+    <h3>Project 1: Bank Account System</h3>
+    <p>A fully working bank account system with deposits, withdrawals, transaction history, and account types:</p>
+<pre>
+class BankAccount:
+    def __init__(self, account_no, owner, balance=0):
+        self.account_no = account_no
+        self.owner = owner
+        self.__balance = balance
+        self.__transactions = []
+
+    def deposit(self, amount):
+        if amount <= 0:
+            print("Amount must be positive.")
+            return
+        self.__balance += amount
+        self.__transactions.append(f"Deposit: +₹{amount}")
+        print(f"₹{amount} deposited. Balance: ₹{self.__balance}")
+
+    def withdraw(self, amount):
+        if amount <= 0:
+            print("Amount must be positive.")
+        elif amount > self.__balance:
+            print("Insufficient funds.")
+        else:
+            self.__balance -= amount
+            self.__transactions.append(f"Withdrawal: -₹{amount}")
+            print(f"₹{amount} withdrawn. Balance: ₹{self.__balance}")
+
+    def get_balance(self):
+        return self.__balance
+
+    def print_statement(self):
+        print(f"\n--- Statement for {self.owner} ({self.account_no}) ---")
+        for t in self.__transactions:
+            print(" ", t)
+        print(f"  Current Balance: ₹{self.__balance}\n")
+
+
+class SavingsAccount(BankAccount):
+    INTEREST_RATE = 0.04
+
+    def add_interest(self):
+        interest = self.get_balance() * SavingsAccount.INTEREST_RATE
+        self.deposit(interest)
+        print(f"Interest of ₹{interest:.2f} added.")
+
+
+# --- Usage ---
+acc = SavingsAccount("SA001", "Alice", 10000)
+acc.deposit(5000)
+acc.withdraw(2000)
+acc.add_interest()
+acc.print_statement()
+</pre>
+
+    <h3>Project 2: Library Management System</h3>
+    <p>Books, members, and borrowing logic using OOP:</p>
+<pre>
+class Book:
+    def __init__(self, isbn, title, author):
+        self.isbn = isbn
+        self.title = title
+        self.author = author
+        self.is_available = True
+
+    def __str__(self):
+        status = "Available" if self.is_available else "Borrowed"
+        return f'[{self.isbn}] "{self.title}" by {self.author} — {status}'
+
+
+class Member:
+    def __init__(self, member_id, name):
+        self.member_id = member_id
+        self.name = name
+        self.borrowed_books = []
+
+    def borrow(self, book):
+        if not book.is_available:
+            print(f'"{book.title}" is not available.')
+            return
+        book.is_available = False
+        self.borrowed_books.append(book)
+        print(f'{self.name} borrowed "{book.title}".')
+
+    def return_book(self, book):
+        if book in self.borrowed_books:
+            book.is_available = True
+            self.borrowed_books.remove(book)
+            print(f'{self.name} returned "{book.title}".')
+        else:
+            print("You didn't borrow this book.")
+
+
+class Library:
+    def __init__(self, name):
+        self.name = name
+        self.books = []
+
+    def add_book(self, book):
+        self.books.append(book)
+
+    def search(self, keyword):
+        results = [b for b in self.books if keyword.lower() in b.title.lower()]
+        if results:
+            for b in results:
+                print(b)
+        else:
+            print("No books found.")
+
+
+# --- Usage ---
+lib = Library("City Library")
+b1 = Book("001", "Python Basics", "John")
+b2 = Book("002", "Data Structures", "Jane")
+lib.add_book(b1)
+lib.add_book(b2)
+
+m1 = Member("M01", "Alice")
+m1.borrow(b1)
+m1.borrow(b1)    # Already borrowed
+m1.return_book(b1)
+
+lib.search("python")
+</pre>
+
+    <h3>Project 3: Student Management System</h3>
+    <p>Students, subjects, grades, and GPA calculation:</p>
+<pre>
+class Subject:
+    def __init__(self, name, marks, max_marks=100):
+        self.name = name
+        self.marks = marks
+        self.max_marks = max_marks
+
+    def grade(self):
+        pct = (self.marks / self.max_marks) * 100
+        if pct >= 90: return "A+"
+        elif pct >= 80: return "A"
+        elif pct >= 70: return "B"
+        elif pct >= 60: return "C"
+        elif pct >= 50: return "D"
+        else: return "F"
+
+
+class Student:
+    def __init__(self, roll_no, name):
+        self.roll_no = roll_no
+        self.name = name
+        self.__subjects = []
+
+    def add_subject(self, subject):
+        self.__subjects.append(subject)
+
+    def report_card(self):
+        print(f"\n===== Report Card: {self.name} (Roll: {self.roll_no}) =====")
+        total = 0
+        for s in self.__subjects:
+            print(f"  {s.name:20s} {s.marks:3}/{s.max_marks}  Grade: {s.grade()}")
+            total += s.marks
+        avg = total / len(self.__subjects) if self.__subjects else 0
+        print(f"  {'Total Average':20s} {avg:.1f}%")
+        print("=" * 50)
+
+
+# --- Usage ---
+s = Student("R001", "Alice")
+s.add_subject(Subject("Mathematics", 92))
+s.add_subject(Subject("Physics", 85))
+s.add_subject(Subject("Chemistry", 78))
+s.add_subject(Subject("English", 95))
+s.report_card()
+</pre>
+
+    <!-- ===================== 16. COMMON ERRORS ===================== -->
+    <h2 id="errors">16. Common Errors in OOP</h2>
+
+    <h3>1. Missing <code>self</code> Parameter</h3>
+<pre>
+# Wrong
+class Dog:
+    def bark():       # Missing self!
+        print("Woof")
+
+# Correct
+class Dog:
+    def bark(self):
+        print("Woof")
+</pre>
+    <div class="warning">
+        <strong>Error:</strong> <code>TypeError: bark() takes 0 positional arguments but 1 was given</code> — Python passes the instance automatically, but your method didn't declare <code>self</code> to receive it.
+    </div>
+
+    <h3>2. Not Calling the Parent Constructor</h3>
+<pre>
+# Wrong — parent attributes never initialized
+class Animal:
+    def __init__(self, name):
+        self.name = name
+
+class Dog(Animal):
+    def __init__(self, name, breed):
+        self.breed = breed    # Forgot super().__init__(name)!
+
+d = Dog("Rex", "Lab")
+print(d.name)   # AttributeError: 'Dog' object has no attribute 'name'
+
+# Correct
+class Dog(Animal):
+    def __init__(self, name, breed):
+        super().__init__(name)   # Initialize parent first
+        self.breed = breed
+</pre>
+
+    <h3>3. Confusing Class Variables with Instance Variables</h3>
+<pre>
+class Counter:
+    count = 0       # Class variable
+
+    def increment(self):
+        self.count += 1   # Creates an INSTANCE variable! Class variable unchanged.
+
+c1 = Counter()
+c1.increment()
+print(c1.count)       # 1 (instance variable)
+print(Counter.count)  # 0 (class variable unchanged!)
+
+# Correct way to modify class variable:
+class Counter:
+    count = 0
+
+    def increment(self):
+        Counter.count += 1   # Modify class variable correctly
+</pre>
+
+    <h3>4. Incorrect Inheritance Hierarchy</h3>
+<pre>
+# Wrong — hierarchy reversed
+class Dog(Puppy):    # Puppy is a type of Dog, not the other way!
+    pass
+
+# Correct
+class Dog:
+    pass
+
+class Puppy(Dog):    # Puppy IS-A Dog
+    pass
+</pre>
+
+    <h3>5. Modifying Private Attributes Directly</h3>
+<pre>
+class Account:
+    def __init__(self):
+        self.__balance = 1000
+
+acc = Account()
+# Wrong — bypasses validation
+acc.__balance = -5000   # This actually creates a NEW public attribute!
+print(acc.__balance)    # -5000 (but the real private one is still 1000)
+
+# Correct — use provided setter methods or @property
+</pre>
+    <div class="warning">
+        <strong>Warning:</strong> Python applies <em>name mangling</em> to private attributes: <code>__balance</code> becomes <code>_Account__balance</code> internally. Accessing <code>acc.__balance</code> from outside creates a <em>new</em> public attribute — it does not access the private one.
+    </div>
+
+    <h3>6. Forgetting <code>@abstractmethod</code> Leads to No Enforcement</h3>
+<pre>
+from abc import ABC
+
+class Shape(ABC):
+    def area(self):   # Not marked @abstractmethod!
+        pass
+
+class Rectangle(Shape):
+    pass              # No override — no error raised
+
+# Python allows this silently. Always use @abstractmethod for enforcement.
+</pre>
+
+    <h3>Quick Reference: Error Checklist</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Error</th>
+                <th>Symptom</th>
+                <th>Fix</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Missing <code>self</code></td>
+                <td><code>TypeError: takes 0 positional arguments but 1 was given</code></td>
+                <td>Add <code>self</code> as first parameter</td>
+            </tr>
+            <tr>
+                <td>No parent <code>super().__init__()</code></td>
+                <td><code>AttributeError</code> on parent attributes</td>
+                <td>Call <code>super().__init__(...)</code> in child</td>
+            </tr>
+            <tr>
+                <td>Wrong class variable update</td>
+                <td>Class variable doesn't change; instance gets shadow copy</td>
+                <td>Use <code>ClassName.var</code> to update class variable</td>
+            </tr>
+            <tr>
+                <td>Reversed inheritance</td>
+                <td>Logic errors; wrong methods resolved</td>
+                <td>Ensure child IS-A parent, not vice versa</td>
+            </tr>
+            <tr>
+                <td>Modifying private via <code>obj.__attr</code></td>
+                <td>Silently creates new attribute; real private unchanged</td>
+                <td>Use getters/setters or <code>@property</code></td>
+            </tr>
+            <tr>
+                <td>Abstract method not decorated</td>
+                <td>No enforcement; subclass can skip implementation silently</td>
+                <td>Always use <code>@abstractmethod</code></td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+</body>
+</html>
